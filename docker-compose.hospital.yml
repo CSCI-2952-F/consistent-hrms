@@ -1,0 +1,93 @@
+# Docker Compose file for a single hospital's microservice architecture.
+
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: ./build/frontend/Dockerfile
+    environment:
+      HOSPITAL_NAME: null
+    ports:
+      - '127.0.0.1:${FRONTEND_PORT:-8000}:80'
+    depends_on:
+      - api_gateway
+
+  api_gateway:
+    build:
+      context: .
+      dockerfile: ./build/nameko_service/Dockerfile
+      args:
+        module: api_gateway
+    command: run api_gateway --broker pyamqp://guest:guest@rabbitmq
+    networks:
+      - default
+      - rabbitmq
+    depends_on:
+      - rabbitmq
+      - patient_service
+      - physician_service
+
+  patient_service:
+    build:
+      context: .
+      dockerfile: ./build/nameko_service/Dockerfile
+      args:
+        module: patient_service
+    command: run patient_service --broker pyamqp://guest:guest@rabbitmq
+    networks:
+      - default
+      - rabbitmq
+    depends_on:
+      - rabbitmq
+      - consistent_storage
+      - redis
+
+  physician_service:
+    build:
+      context: .
+      dockerfile: ./build/nameko_service/Dockerfile
+      args:
+        module: physician_service
+    command: run physician_service --broker pyamqp://guest:guest@rabbitmq
+    networks:
+      - default
+      - rabbitmq
+    depends_on:
+      - rabbitmq
+      - consistent_storage
+      - redis
+
+  rabbitmq:
+    image: rabbitmq:3
+    networks:
+      - rabbitmq
+
+  consistent_storage:
+    build:
+      context: .
+      dockerfile: ./build/consistent_storage/Dockerfile
+    command: run consistent_storage --broker pyamqp://guest:guest@rabbitmq
+    networks:
+      - default
+      - rabbitmq
+      - hospital-2pc
+      - hospital-bigchain
+
+  redis:
+    image: redis
+    volumes:
+      - local-storage:/data
+
+volumes:
+  local-storage: {}
+
+networks:
+  rabbitmq: {}
+  hospital-2pc:
+    external:
+      name: hrms-hospital-2pc
+  hospital-bigchain:
+    external:
+      name: hrms-hospital-bigchain
