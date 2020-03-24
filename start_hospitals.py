@@ -7,7 +7,9 @@ import re
 import sys
 from subprocess import Popen, PIPE
 
-BASE_PORT = 8000
+BASE_FRONTEND_PORT = 8000
+BASE_API_GATEWAY_PORT = 8100
+
 DOCKER_COMPOSE_FILE = 'docker-compose.hospital.yml'
 HOSPITAL_NAMES_FILE = 'data/hospitals.txt'
 
@@ -40,15 +42,19 @@ def main():
         for i, line in enumerate(f):
             name = line.strip()
             slug = re.sub('[^a-z]+', '-', name.lower())
-            port = BASE_PORT + i
+
+            # Prepare ports
+            frontend_port = BASE_FRONTEND_PORT + i
+            api_gateway_port = BASE_API_GATEWAY_PORT + i
 
             # Prepare environment
             env = {
                 'HOSPITAL_NAME': name,
-                'FRONTEND_PORT': str(port),
+                'FRONTEND_PORT': str(frontend_port),
+                'API_GATEWAY_PORT': str(api_gateway_port),
             }
 
-            # Start containers in detached mode
+            # Build and start containers in detached mode
             dco(slug, ['up', '-d', '--build'], env=env)
 
 

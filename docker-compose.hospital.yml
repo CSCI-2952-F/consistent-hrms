@@ -21,6 +21,8 @@ services:
       args:
         module: api_gateway
     command: run api_gateway --broker pyamqp://guest:guest@rabbitmq
+    ports:
+      - '127.0.0.1:${API_GATEWAY_PORT:-8100}:80'
     networks:
       - default
       - rabbitmq
