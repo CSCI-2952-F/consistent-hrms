@@ -3,15 +3,18 @@
 
 FROM python:3
 
-ARG module
-
 WORKDIR /usr/src/app
 
 # Install requirements
-COPY build/nameko_service/requirements.txt requirements.txt
+COPY build/nameko/requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-# Copy source code
-COPY src/${module} ./${module}
+ARG module
 
-ENTRYPOINT [ "nameko" ]
+# Copy source code
+COPY src/${module} ./service
+
+# Copy config
+COPY build/nameko/config.yaml /etc/nameko/config.yaml
+
+ENTRYPOINT [ "nameko", "run", "service", "--config=/etc/nameko/config.yaml" ]

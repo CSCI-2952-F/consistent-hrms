@@ -17,10 +17,9 @@ services:
   api_gateway:
     build:
       context: .
-      dockerfile: ./build/nameko_service/Dockerfile
+      dockerfile: ./build/nameko/Dockerfile
       args:
         module: api_gateway
-    command: run api_gateway --broker pyamqp://guest:guest@rabbitmq
     ports:
       - '127.0.0.1:${API_GATEWAY_PORT:-8100}:80'
     networks:
@@ -34,10 +33,9 @@ services:
   patient_service:
     build:
       context: .
-      dockerfile: ./build/nameko_service/Dockerfile
+      dockerfile: ./build/nameko/Dockerfile
       args:
         module: patient_service
-    command: run patient_service --broker pyamqp://guest:guest@rabbitmq
     networks:
       - default
       - rabbitmq
@@ -49,10 +47,9 @@ services:
   physician_service:
     build:
       context: .
-      dockerfile: ./build/nameko_service/Dockerfile
+      dockerfile: ./build/nameko/Dockerfile
       args:
         module: physician_service
-    command: run physician_service --broker pyamqp://guest:guest@rabbitmq
     networks:
       - default
       - rabbitmq
@@ -69,8 +66,9 @@ services:
   consistent_storage:
     build:
       context: .
-      dockerfile: ./build/consistent_storage/Dockerfile
-    command: run consistent_storage --broker pyamqp://guest:guest@rabbitmq
+      dockerfile: ./build/nameko/Dockerfile
+      args:
+        module: consistent_storage
     networks:
       - default
       - rabbitmq
