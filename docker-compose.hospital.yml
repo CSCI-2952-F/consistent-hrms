@@ -8,7 +8,7 @@ services:
       context: .
       dockerfile: ./build/frontend/Dockerfile
     environment:
-      HOSPITAL_NAME: null
+      - HOSPITAL_NAME
     ports:
       - '127.0.0.1:${FRONTEND_PORT:-8000}:80'
     depends_on:
@@ -41,6 +41,8 @@ services:
       dockerfile: ./build/nameko/Dockerfile
       args:
         module: patient_service
+    environment:
+      - HOSPITAL_NAME
     networks:
       - default
       - rabbitmq
@@ -55,6 +57,8 @@ services:
       dockerfile: ./build/nameko/Dockerfile
       args:
         module: physician_service
+    environment:
+      - HOSPITAL_NAME
     networks:
       - default
       - rabbitmq
