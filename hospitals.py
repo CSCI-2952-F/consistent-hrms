@@ -37,7 +37,7 @@ def dco(project_name, command_args, env=None):
         ))
 
 
-def main():
+def execute(args):
     with open(HOSPITAL_NAMES_FILE, 'r') as f:
         for i, line in enumerate(f):
             name = line.strip()
@@ -55,8 +55,25 @@ def main():
             }
 
             # Build and start containers in detached mode
-            dco(slug, ['up', '-d', '--build'], env=env)
+            dco(slug, args, env=env)
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) < 2:
+        print('Usage: python hospitals.py [start|stop] [OPTIONS]')
+        sys.exit(1)
+
+    command = sys.argv[1]
+
+    if command == 'start':
+        execute(['up', '-d', '--build'])
+
+    elif command == 'stop':
+        execute(['stop'])
+
+    elif command == 'down':
+        execute(['down'])
+
+    else:
+        print('Usage: python hospitals.py [start|stop] [OPTIONS]')
+        sys.exit(1)

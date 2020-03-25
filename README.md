@@ -7,7 +7,7 @@ A useful Python script has been included to start various hospital namespaces, o
 To start all hospitals, run:
 
 ```sh
-python start_hospitals.py
+python hospitals.py start
 ```
 
 The frontend servers will be listening on the local interface, at ports starting from 8000.
@@ -22,4 +22,10 @@ For example, to view all containers for Rhode Island Hospital, do the following:
 
 ```sh
 docker-compose -f docker-compose.hospital.yml -p rhode-island-hospital ps
+```
+
+To terminate all containers, use the helper script again:
+
+```sh
+python hospitals.py stop
 ```
