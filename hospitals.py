@@ -18,7 +18,8 @@ def dco(project_name, command_args, env=None):
     if not env:
         env = {}
 
-    args = ['/usr/local/bin/docker-compose', '-f', DOCKER_COMPOSE_FILE]
+    # args = ['/usr/local/bin/docker-compose', '-f', DOCKER_COMPOSE_FILE]
+    args = ['/usr/bin/docker-compose', '-f', DOCKER_COMPOSE_FILE]
     if project_name:
         args += ['-p', project_name]
     args += command_args
