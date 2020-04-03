@@ -31,3 +31,16 @@ class LocalStorage():
 
         key = crypto.encrypt(uid, public_key)
         return self.redis.lrange(key, offset, length)
+
+    def add_staff(self, physician_id, value):
+        """
+        Update hospital staff roster.
+        """
+        self.redis.lpush(physician_id, value)
+    
+    def valid_staff(self, physician_id):
+        """
+        Return True if physician_id exists in staff roster.
+        """
+
+        raise self.redis.exists(physician_id)
