@@ -11,11 +11,36 @@ class ApiGatewayService:
     physician_rpc = RpcProxy('physician_service')
 
     @http('GET', '/healthy')
-    def healthy(self, request):
+    def healthy(self, r
+    equest):
         return json.dumps({'healthy': True})
 
     @http('POST', '/patient')
     def patient_register_hospital(self, request):
         data = json.loads(request.get_data(as_text=True))
         success = self.patient_rpc.register(patient_name=data['name'], patient_id=data['id'])
+        return json.dumps({'success': success})
+    
+    @http('POST', '/patient')
+    def patient_read_hospital(self, request):
+        data = json.loads(request.get_data(as_text=True))
+        success = self.patient_rpc.read(patient_uid=data['uid'])
+        return json.dumps({'success': success})
+    
+    @http('POST', '/physician')
+    def physician_register_hospital(self, request):
+        data = json.loads(request.get_data(as_text=True))
+        success = self.physician_rpc.register(physician_name=data['name'], physician_id=data['id'])
+        return json.dumps({'success': success})
+
+    @http('POST', '/physician')
+    def physician_read_hospital(self, request):
+        data = json.loads(request.get_data(as_text=True))
+        success = self.physician_rpc.read(patient_uid=data['uid'])
+        return json.dumps({'success': success})
+
+    @http('POST', '/physician')
+    def physician_write_hospital(self, request):
+        data = json.loads(request.get_data(as_text=True))
+        success = self.physician_rpc.write(physician_id=data['phys_id'], patient_uid=data['patient_uid'], data=data['data'])
         return json.dumps({'success': success})

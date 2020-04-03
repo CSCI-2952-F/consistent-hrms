@@ -26,7 +26,7 @@ class PatientService:
     @rpc
     def register(self, patient_name, patient_id):
         """
-        Registers the patient to this hospital and store the patient's
+        Registers the patient to this hospital and stores the patient's
         public key and patient ID in the consistent storage.
         Returns an error if the patient is already registered in another hospital.
         """
@@ -53,3 +53,25 @@ class PatientService:
         self.local_storage.insert_item(uid, pub_key, record)
 
         return card
+    
+    @rpc
+    def read(self, patient_uid)
+        """
+        Returns encrypted medical records for uid.
+        Returns an error if the patient has not registered with a hospital.
+        """
+        med_records = []
+
+        # Obtain the hashed UID.
+        hash_uid = hasher.hash(patient_uid)
+
+        # Get the public key from consistent storage if it exists.
+        try:
+            pub_key = self.consistent_storage.get(hash_uid)
+            # Obtain the encrypted medical records.
+            med_records = LocalStorage.get_items(uid, pub_key)
+        except Exception as e:
+            # TODO: Raise relevant exception
+            raise e
+        
+        return med_records
