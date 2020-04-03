@@ -55,7 +55,7 @@ class PatientService:
         return card
     
     @rpc
-    def read(self, patient_uid)
+    def read(self, patient_uid):
         """
         Returns encrypted medical records for uid.
         Returns an error if the patient has not registered with a hospital.

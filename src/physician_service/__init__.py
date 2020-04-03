@@ -3,8 +3,6 @@ import json
 from nameko.rpc import rpc
 
 from lib.local_storage import LocalStorage
-from lib.staff import Staff
-
 
 class PhysicianService:
     name = 'physician_service'
@@ -25,16 +23,16 @@ class PhysicianService:
         """
 
         try:
-            Staff.add(physician_id, physician_name)
+            LocalStorage.add_staff(physician_id, physician_name)
         except Exception as e:
-        # TODO: Raise relevant exception
-        raise e
+            # TODO: Raise relevant exception
+            raise e
 
         return True
         
     
     @rpc
-    def read(self, patient_uid)
+    def read(self, patient_uid):
         """
         Returns encrypted medical records for uid.
         Returns an error if the patient has not registered with a hospital.
@@ -56,7 +54,7 @@ class PhysicianService:
         return med_records
 
     @rpc
-    def write(self, physician_id, patient_uid, data)
+    def write(self, physician_id, patient_uid, data):
         """
         Create medical record for patient and put in local storage.
         Return True if successful.
@@ -66,7 +64,7 @@ class PhysicianService:
         # (blockchain attestation), conform data to medical record
 
         # Check that the physician has registered with this hospital.
-        if not Staff.valid(physician_id):
+        if not LocalStorage.valid_staff(physician_id):
             return False        
 
         # Obtain the hashed UID.
