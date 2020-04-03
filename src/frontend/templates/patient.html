@@ -1,0 +1,86 @@
+{% extends 'navbar.html' %} {% block container %}
+<div class="header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+  <h1 class="display-4">Patient Portal</h1>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="card w-50 mb-2 ml-2 mr-2">
+      <div class="card-body">
+        <h4 class="card-title">Patient Register</h4>
+        <p class="card-text">Register with {{ hospital_name }}.</p>
+        <form>
+          <div class="form-group">
+            <input type="text" class="form-control" id="patient_name" placeholder="Patient Name">
+            <input type="text" class="form-control" id="patient_id" placeholder="Patient ID">                
+            <a href="#" class="btn btn-primary" role="button" onclick="register()">Register</a>
+          </div>
+        </form>
+        <div class="card-subtitle mb-2 text-muted">Response:</div>
+        <div class="card-text" id="registration-output"></div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="card w-50 mb-2 ml-2 mr-2">
+      <div class="card-body">
+        <h4 class="card-title">Patient Read</h4>
+        <p class="card-text">Obtain patient medical records.</p>
+        <form>
+          <div class="form-group">
+            <input type="text" class="form-control" id="patient_uid" placeholder="Patient UID">
+            <a href="#" class="btn btn-primary" role="button" onclick="read()">Read</a>
+          </div>
+        </form>
+        <div class="card-subtitle mb-2 text-muted">Response:</div>
+        <div class="card-text" id="read-output"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function register() {
+    patient_name_div = $('#patient_name');
+    let patient_name = patient_name_div.val();
+    patient_id_div = $('#patient_id');
+    let patient_id = patient_id_div.val();
+
+    $.ajax({
+        url: "/patient_reg",
+        type: "POST",
+        dataType: 'json',
+        data: {name: patient_name, id: patient_id},
+        error: function (request, status, error) {
+            alert('Error: ' + error);
+        },
+        success: function (response) {
+          let reg_div = $('#registration-output');
+          reg_div.innerHTML = response;
+          alert(response)
+        }
+    });
+    patient_name_div.val('');
+    patient_id_div.val('');
+  }
+
+  function read() {
+    patient_uid_div = $('#patient_uid');
+    let patient_uid = patient_uid_div.val();
+
+    $.ajax({
+        url: "/patient_reg",
+        type: "POST",
+        dataType: 'json',
+        data: {uid: patient_uid},
+        error: function (request, status, error) {
+            alert('Error: ' + error);
+        },
+        success: function (response) {
+          let read_div = $('#read-output');
+          read_div.innerHTML = response;
+          alert(response)
+        }
+    });
+    patient_uid_div.val('');
+  }
+</script>
+{% endblock %}

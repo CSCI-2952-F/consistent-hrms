@@ -14,6 +14,13 @@ def home():
     }
     return render_template('home.html', **data)
 
+@app.route('/patient', methods=['GET'])
+def patient():
+    return render_template('patient.html')
+
+@app.route('/physician', methods=['GET'])
+def physician():
+    return render_template('physician.html')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=80)
