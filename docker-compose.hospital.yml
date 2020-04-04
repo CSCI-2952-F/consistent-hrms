@@ -9,6 +9,7 @@ services:
       dockerfile: ./build/frontend/Dockerfile
     environment:
       - HOSPITAL_NAME
+      - API_GATEWAY_PORT
     ports:
       - '127.0.0.1:${FRONTEND_PORT:-8000}:80'
     depends_on:
