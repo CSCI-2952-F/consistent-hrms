@@ -44,8 +44,12 @@
     patient_id_div = $('#patient_id');
     let patient_id = patient_id_div.val();
 
+    let api_gateway_port = {{ api_gateway_port }};
+    let url = 'http://localhost:8100/patient_reg'
+    console.log(url);
+
     $.ajax({
-        url: "/patient_reg",
+        url: url,
         type: "POST",
         dataType: 'json',
         data: {name: patient_name, id: patient_id},
@@ -67,7 +71,7 @@
     let patient_uid = patient_uid_div.val();
 
     $.ajax({
-        url: "/patient_reg",
+        url: "/patient_read",
         type: "POST",
         dataType: 'json',
         data: {uid: patient_uid},

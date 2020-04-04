@@ -6,12 +6,12 @@
   <div class="row">
     <div class="card w-50 mb-2 ml-2 mr-2">
       <div class="card-body">
-        <h4 class="card-title">Patient Register</h4>
+        <h4 class="card-title">Physician Register</h4>
         <p class="card-text">Register with {{ hospital_name }}.</p>
         <form>
           <div class="form-group">
-            <input type="text" class="form-control" id="patient_name" placeholder="Patient Name">
-            <input type="text" class="form-control" id="patient_id" placeholder="Patient ID">                
+            <input type="text" class="form-control" id="physician_name" placeholder="Physician Name">
+            <input type="text" class="form-control" id="physician_id" placeholder="Physician ID">                
             <a href="#" class="btn btn-primary" role="button" onclick="register()">Register</a>
           </div>
         </form>
@@ -23,7 +23,7 @@
   <div class="row">
     <div class="card w-50 mb-2 ml-2 mr-2">
       <div class="card-body">
-        <h4 class="card-title">Patient Read</h4>
+        <h4 class="card-title">Physician Read</h4>
         <p class="card-text">Obtain patient medical records.</p>
         <form>
           <div class="form-group">
@@ -36,19 +36,37 @@
       </div>
     </div>
   </div>
+  <div class="row">
+    <div class="card w-50 mb-2 ml-2 mr-2">
+      <div class="card-body">
+        <h4 class="card-title">Physician Write</h4>
+        <p class="card-text">Add patient medical record</p>
+        <form>
+          <div class="form-group">
+            <input type="text" class="form-control" id="physician_id" placeholder="Physician ID">
+            <input type="text" class="form-control" id="write_patient_uid" placeholder="Patient UID">
+            <input type="text" class="form-control" id="data" placeholder="Add a note...">                        
+            <a href="#" class="btn btn-primary" role="button" onclick="write()">Write</a>
+          </div>
+        </form>
+        <div class="card-subtitle mb-2 text-muted">Response:</div>
+        <div class="card-text" id="write-output"></div>
+      </div>
+    </div>
+  </div>
 </div>
 <script>
   function register() {
-    patient_name_div = $('#patient_name');
-    let patient_name = patient_name_div.val();
-    patient_id_div = $('#patient_id');
-    let patient_id = patient_id_div.val();
+    physician_name_div = $('#physician_name');
+    let physician_name = physician_name_div.val();
+    physician_id_div = $('#physician_id');
+    let physician_id = physician_id_div.val();
 
     $.ajax({
-        url: "/patient_reg",
+        url: "/physician_reg",
         type: "POST",
         dataType: 'json',
-        data: {name: patient_name, id: patient_id},
+        data: {name: physician_name, id: physician_id},
         error: function (request, status, error) {
             alert('Error: ' + error);
         },
@@ -58,8 +76,8 @@
           alert(response)
         }
     });
-    patient_name_div.val('');
-    patient_id_div.val('');
+    physician_name_div.val('');
+    physician_id_div.val('');
   }
 
   function read() {
@@ -67,7 +85,7 @@
     let patient_uid = patient_uid_div.val();
 
     $.ajax({
-        url: "/patient_reg",
+        url: "/physician_write",
         type: "POST",
         dataType: 'json',
         data: {uid: patient_uid},
@@ -81,6 +99,33 @@
         }
     });
     patient_uid_div.val('');
+  }
+
+  function write() {
+    physician_id_div = $('#physician_id');
+    let physician_id = physician_id_div.val();
+    write_patient_uid_div = $('#write_patient_uid')
+    let write_patient_uid = write_patient_uid_div.val();
+    data_div = $('#data')
+    let data = data_div.val();
+
+    $.ajax({
+        url: "/physician_read",
+        type: "POST",
+        dataType: 'json',
+        data: {phys_id: physician_id, patient_uid: write_patient_uid, data: data},
+        error: function (request, status, error) {
+            alert('Error: ' + error);
+        },
+        success: function (response) {
+          let write_div = $('#write-output');
+          write_div.innerHTML = response;
+          alert(response)
+        }
+    });
+    physician_id_div.val('')
+    write_patient_uid_div.val('')
+    data_div.val('')
   }
 </script>
 {% endblock %}
