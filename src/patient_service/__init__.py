@@ -1,15 +1,14 @@
 import json
 
-from nameko.rpc import RpcProxy, rpc
 from nameko.exceptions import RemoteError
+from nameko.rpc import RpcProxy, rpc
 
 from lib import crypto, hasher
 from lib.card import Card
-from lib.local_storage import LocalStorage
+from lib.exceptions import KeyExistsError
 from lib.hospital import get_hospital_name
+from lib.local_storage import LocalStorage
 from lib.medical_record import MedicalRecord
-
-from consistent_storage import KeyExistsError
 
 
 class PatientService:

@@ -2,14 +2,11 @@ import os
 
 from nameko.rpc import rpc
 
+from lib.exceptions import KeyExistsError
+
 from consistent_storage.sagas import SagasStorageClient
 
 BACKEND = os.getenv('CONSISTENT_STORAGE_BACKEND', 'sagas')
-
-
-class KeyExistsError(Exception):
-    def __init__(self, key):
-        super().__init__(f'Key "{key}" already exists')
 
 
 class ConsistentStorageProxy:
