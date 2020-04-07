@@ -87,6 +87,7 @@ services:
       - hospital-sagas
       - hospital-bigchain
     environment:
+      - CONSISTENT_STORAGE_BACKEND=${CONSISTENT_STORAGE_BACKEND:-sagas}
       - SAGAS_NUM_PARTITIONS
       - SAGAS_TOPIC_NAME
 

@@ -9,6 +9,8 @@ from lib.local_storage import LocalStorage
 from lib.hospital import get_hospital_name
 from lib.medical_record import MedicalRecord
 
+from consistent_storage import KeyExistsError
+
 
 class PatientService:
     name = 'patient_service'
@@ -41,8 +43,7 @@ class PatientService:
         # Check if hashed UID resides in consistent storage, otherwise store public key
         try:
             self.consistent_storage.put(hash_uid, crypto.b64encode(pub_key))
-        except Exception as e:
-            # TODO: Raise relevant exception
+        except RemoteError as e:
             raise e
 
         # Create patient card
