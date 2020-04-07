@@ -22,6 +22,12 @@ if not TOPIC_NAME:
 NUM_PARTITIONS = os.getenv('SAGAS_NUM_PARTITIONS')
 if not NUM_PARTITIONS:
     raise Exception('SAGAS_NUM_PARTITIONS not set')
+try:
+    NUM_PARTITIONS = int(NUM_PARTITIONS)
+except ValueError as e:
+    raise Exception('SAGAS_NUM_PARTITIONS is not a valid integer')
+if NUM_PARTITIONS <= 0:
+    raise Exception('SAGAS_NUM_PARTITIONS must be a positive integer')
 
 # Path to persistent file-backed storage
 PERSISTENCE_FILE_PATH = '/var/lib/sagas/data.json'
