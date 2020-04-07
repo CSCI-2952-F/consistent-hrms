@@ -5,7 +5,7 @@ from consistent_storage.sagas.storage import SagasStorage
 
 class SagasStorageClient:
     def __init__(self, timeout=10):
-        self._loop = asyncio.get_event_loop()
+        self._loop = asyncio.new_event_loop()
         self.timeout = timeout
         self.sagas = SagasStorage(loop=self._loop)
 
