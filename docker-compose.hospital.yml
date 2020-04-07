@@ -78,7 +78,7 @@ services:
     env_file: .env
     build:
       context: .
-      dockerfile: ./build/nameko/Dockerfile
+      dockerfile: ./build/consistent_storage/Dockerfile
       args:
         module: consistent_storage
     networks:
