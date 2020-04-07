@@ -83,7 +83,7 @@ services:
     networks:
       - default
       - rabbitmq
-      - hospital-2pc
+      - hospital-sagas
       - hospital-bigchain
 
   redis:
@@ -96,9 +96,9 @@ volumes:
 
 networks:
   rabbitmq: {}
-  hospital-2pc:
+  hospital-sagas:
     external:
-      name: hrms-hospital-2pc
+      name: hrms-hospital-sagas
   hospital-bigchain:
     external:
       name: hrms-hospital-bigchain
