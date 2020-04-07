@@ -75,6 +75,7 @@ services:
       - rabbitmq
 
   consistent_storage:
+    env_file: .env
     build:
       context: .
       dockerfile: ./build/nameko/Dockerfile
@@ -85,6 +86,9 @@ services:
       - rabbitmq
       - hospital-sagas
       - hospital-bigchain
+    environment:
+      - SAGAS_NUM_PARTITIONS
+      - SAGAS_TOPIC_NAME
 
   redis:
     image: redis
