@@ -20,4 +20,4 @@ class PersistentSagasFileStorage(BasePersistentSagasStorage):
             return None
 
     def _set(self, key, value):
-        jsonfile.set_path(self.filename, key, value)
+        jsonfile.set_path(self.filepath, key, value)

@@ -40,7 +40,7 @@ class SagasStorage:
         # However, we will just generate a (persistent) random group ID and hope for no collisions.
         self.group_id = self.storage._get('group_id')
         if not self.group_id:
-            self.group_id = uuid.uuid1()
+            self.group_id = str(uuid.uuid1())
             self.storage._set('group_id', self.group_id)
 
         # Initialize Kafka producer and consumer
