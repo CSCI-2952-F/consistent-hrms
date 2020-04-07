@@ -40,7 +40,7 @@ class ConsistentStorageProxy:
 
     @rpc
     def put(self, key, value):
-        success = self.put(key, value)
+        success = self.client.put(key, value)
         if not success:
             raise KeyExistsError(key)
 
