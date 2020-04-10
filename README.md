@@ -10,7 +10,11 @@ To start all hospitals, run:
 python hospitals.py start
 ```
 
-The frontend servers will be listening on the local interface, at ports starting from 8000.
+The frontend servers will be listening on the local interface, at ports starting from 8000. 
+
+When running the frontend service install the [moesif CORS extension](https://chrome.google.com/webstore/detail/moesif-orign-cors-changer/digfbfaphojjndkpccljibejjbppifbc/related?hl=en-US). The extension will override the CORS header that the server has in place with a wildcard value so that our frontend service can access the api gateway on a different port. 
+
+(We can alternatively look into adding [nameko-cors](https://github.com/harel/nameko-cors))
 
 To view Docker Compose information for a single hospital, use the following command syntax:
 

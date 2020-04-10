@@ -30,7 +30,7 @@ class PatientService:
         public key and patient ID in the consistent storage.
         Returns an error if the patient is already registered in another hospital.
         """
-
+        print("hello")
         uid = patient_name + patient_id
         hash_uid = hasher.hash(uid)
 

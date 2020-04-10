@@ -3,7 +3,6 @@ import json
 from nameko.rpc import RpcProxy
 from nameko.web.handlers import http
 
-
 class ApiGatewayService:
     name = 'api_gateway'
 

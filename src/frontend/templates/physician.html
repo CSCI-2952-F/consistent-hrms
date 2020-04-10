@@ -63,7 +63,7 @@
     let physician_id = physician_id_div.val();
 
     $.ajax({
-        url: "/physician_reg",
+        url: "http://localhost:{{api_gateway_port}}/physician_reg",
         type: "POST",
         dataType: 'json',
         data: {name: physician_name, id: physician_id},
@@ -85,7 +85,7 @@
     let patient_uid = patient_uid_div.val();
 
     $.ajax({
-        url: "/physician_write",
+        url: "http://localhost:{{api_gateway_port}}/physician_read",
         type: "POST",
         dataType: 'json',
         data: {uid: patient_uid},
@@ -110,7 +110,7 @@
     let data = data_div.val();
 
     $.ajax({
-        url: "/physician_read",
+        url: "http://localhost:{{api_gateway_port}}/physician_write",
         type: "POST",
         dataType: 'json',
         data: {phys_id: physician_id, patient_uid: write_patient_uid, data: data},
