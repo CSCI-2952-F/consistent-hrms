@@ -43,12 +43,13 @@
     let patient_name = patient_name_div.val();
     patient_id_div = $('#patient_id');
     let patient_id = patient_id_div.val();
+    data = {name: patient_name, id: patient_id}
     
     $.ajax({
         url: "http://localhost:{{api_gateway_port}}/patient_reg",
         type: "POST",
         dataType: 'json',
-        data: {name: patient_name, id: patient_id},
+        data: JSON.stringify(data),
         error: function (request, status, error) {
           console.log('Error: ' + error)
         },
@@ -65,12 +66,13 @@
   function read() {
     patient_uid_div = $('#patient_uid');
     let patient_uid = patient_uid_div.val();
+    data = {uid: patient_uid}
 
     $.ajax({
         url: "http://localhost:{{api_gateway_port}}/patient_read",
         type: "POST",
         dataType: 'json',
-        data: {uid: patient_uid},
+        data: JSON.stringify(data),
         error: function (request, status, error) {
           console.log('Error: ' + error)
         },

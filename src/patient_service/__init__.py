@@ -61,6 +61,8 @@ class PatientService:
         Returns encrypted medical records for uid.
         Returns an error if the patient has not registered with a hospital.
         """
+        print("#### in read", flush=True)
+
         med_records = []
 
         # Obtain the hashed UID.

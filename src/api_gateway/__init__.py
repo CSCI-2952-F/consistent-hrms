@@ -2,7 +2,7 @@ import json
 
 from nameko.rpc import RpcProxy
 from nameko.web.handlers import http
-from nameko_cors import cors_http
+from nameko_cors.handlers import cors_http
 
 class ApiGatewayService:
     name = 'api_gateway'
@@ -39,7 +39,7 @@ class ApiGatewayService:
     @cors_http('POST', '/physician_read')
     def physician_read_hospital(self, request):
         data = json.loads(request.get_data(as_text=True))
-        success = self.physician_rpc.read(patient_uid=dcata['uid'])
+        success = self.physician_rpc.read(patient_uid=data['uid'])
         return json.dumps({'success': success})
 
     @cors_http('POST', '/physician_write')

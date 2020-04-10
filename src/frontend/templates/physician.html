@@ -12,7 +12,7 @@
           <div class="form-group">
             <input type="text" class="form-control" id="physician_name" placeholder="Physician Name">
             <input type="text" class="form-control" id="physician_id" placeholder="Physician ID">                
-            <a href="#" class="btn btn-primary" role="button" onclick="register()">Register</a>
+            <a href="#" class="btn btn-primary" role="button" onclick="phys_register()">Register</a>
           </div>
         </form>
         <div class="card-subtitle mb-2 text-muted">Response:</div>
@@ -28,7 +28,7 @@
         <form>
           <div class="form-group">
             <input type="text" class="form-control" id="patient_uid" placeholder="Patient UID">
-            <a href="#" class="btn btn-primary" role="button" onclick="read()">Read</a>
+            <a href="#" class="btn btn-primary" role="button" onclick="phys_read()">Read</a>
           </div>
         </form>
         <div class="card-subtitle mb-2 text-muted">Response:</div>
@@ -43,10 +43,10 @@
         <p class="card-text">Add patient medical record</p>
         <form>
           <div class="form-group">
-            <input type="text" class="form-control" id="physician_id" placeholder="Physician ID">
+            <input type="text" class="form-control" id="write_physician_id" placeholder="Physician ID">
             <input type="text" class="form-control" id="write_patient_uid" placeholder="Patient UID">
-            <input type="text" class="form-control" id="data" placeholder="Add a note...">                        
-            <a href="#" class="btn btn-primary" role="button" onclick="write()">Write</a>
+            <input type="text" class="form-control" id="note" placeholder="Add a note...">                        
+            <a href="#" class="btn btn-primary" role="button" onclick="phys_write()">Write</a>
           </div>
         </form>
         <div class="card-subtitle mb-2 text-muted">Response:</div>
@@ -56,17 +56,18 @@
   </div>
 </div>
 <script>
-  function register() {
+  function phys_register() {
     physician_name_div = $('#physician_name');
     let physician_name = physician_name_div.val();
     physician_id_div = $('#physician_id');
     let physician_id = physician_id_div.val();
+    data = {name: physician_name, id: physician_id}
 
     $.ajax({
         url: "http://localhost:{{api_gateway_port}}/physician_reg",
         type: "POST",
         dataType: 'json',
-        data: {name: physician_name, id: physician_id},
+        data: JSON.stringify(data),
         error: function (request, status, error) {
           console.log('Error: ' + error)
         },
@@ -80,15 +81,16 @@
     physician_id_div.val('');
   }
 
-  function read() {
+  function phys_read() {
     patient_uid_div = $('#patient_uid');
     let patient_uid = patient_uid_div.val();
+    data = {uid: patient_uid}
 
     $.ajax({
         url: "http://localhost:{{api_gateway_port}}/physician_read",
         type: "POST",
         dataType: 'json',
-        data: {uid: patient_uid},
+        data: JSON.stringify(data),
         error: function (request, status, error) {
           console.log('Error: ' + error)
         },
@@ -101,19 +103,21 @@
     patient_uid_div.val('');
   }
 
-  function write() {
-    physician_id_div = $('#physician_id');
+  function phys_write() {
+    physician_id_div = $('#write_physician_id');
     let physician_id = physician_id_div.val();
     write_patient_uid_div = $('#write_patient_uid')
     let write_patient_uid = write_patient_uid_div.val();
-    data_div = $('#data')
-    let data = data_div.val();
+    note_div = $('#note')
+    let note = note_div.val();
+
+    data = {phys_id: physician_id, patient_uid: write_patient_uid, data: note}
 
     $.ajax({
         url: "http://localhost:{{api_gateway_port}}/physician_write",
         type: "POST",
         dataType: 'json',
-        data: {phys_id: physician_id, patient_uid: write_patient_uid, data: data},
+        data: JSON.stringify(data),
         error: function (request, status, error) {
           console.log('Error: ' + error)
         },
@@ -125,7 +129,7 @@
     });
     physician_id_div.val('')
     write_patient_uid_div.val('')
-    data_div.val('')
+    note_div.val('')
   }
 </script>
 {% endblock %}
