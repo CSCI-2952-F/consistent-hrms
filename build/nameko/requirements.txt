@@ -1,3 +1,4 @@
 nameko
-pycrypto
+pycryptodome
 redis
+rsa

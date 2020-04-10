@@ -36,7 +36,7 @@ class PatientService:
 
         # Generate public keys for new patient.
         # Perhaps cache generated keys to prevent DDoS?
-        priv_key, pub_key = crypto.generate_keys()
+        pub_key, priv_key = crypto.generate_keys()
 
         # Check if hashed UID resides in consistent storage, otherwise store public key
         try:
