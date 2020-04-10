@@ -20,7 +20,7 @@ func (s *sagasConsistentStorageServer) Get(_ context.Context, r *GetRequest) (*G
 	}
 
 	resp := &GetResponse{
-		Exists:  val.Value == nil,
+		Exists:  val.Value != nil,
 		Value:   val.Value,
 		IsOwner: val.Metadata.Owner == groupId,
 		Owner:   val.Metadata.Owner,
