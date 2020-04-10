@@ -15,6 +15,9 @@ class ApiGatewayService:
 
     @http('POST', '/patient_reg')
     def patient_register_hospital(self, request):
+        print(request.get_data(),  flush=True)
+        print(request.get_data(as_text=True),  flush=True)
+
         data = json.loads(request.get_data(as_text=True))
         success = self.patient_rpc.register(patient_name=data['name'], patient_id=data['id'])
         return json.dumps({'success': success})
