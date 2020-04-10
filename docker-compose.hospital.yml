@@ -84,12 +84,28 @@ services:
     networks:
       - default
       - rabbitmq
-      - hospital-sagas
       - hospital-bigchain
     environment:
       - CONSISTENT_STORAGE_BACKEND=${CONSISTENT_STORAGE_BACKEND:-sagas}
-      - SAGAS_NUM_PARTITIONS
-      - SAGAS_TOPIC_NAME
+      - SAGAS_GRPC_ADDR=sagas:8080
+
+  sagas:
+    env_file: .env
+    build:
+      context: ./src/sagas
+    networks:
+      - default
+      - hospital-sagas
+    environment:
+      - NUM_PARTITIONS=${SAGAS_NUM_PARTITIONS}
+      - TOPIC_NAME=patient_registrations
+      - KAFKA_BROKERS=kafka:9092
+      - STORAGE_FILE_PATH=/var/lib/sagas/data.json
+      - GRPC_LISTEN_ADDR=:8080
+    expose:
+      - 8080
+    volumes:
+      - sagas-storage:/var/lib/sagas
 
   redis:
     image: redis
@@ -98,6 +114,7 @@ services:
 
 volumes:
   local-storage: {}
+  sagas-storage: {}
 
 networks:
   rabbitmq: {}
