@@ -1,4 +1,9 @@
-class Card:
+from json import JSONEncoder
+
+from lib import crypto
+
+
+class Card(dict):
     """
     Card created by the hospital.
     """
@@ -11,17 +16,17 @@ class Card:
         :param priv_key: Patient private key
         :param hospital_name: Name of the hospital
         """
+
         self.patient_name = patient_name
         self.patient_id = patient_id
         self.uid = uid
         self.priv_key = priv_key
         self.hospital_name = hospital_name
 
-    def __str__(self):
-        card_to_string = ""
-        card_to_string = card_to_string + str(self.patient_name) + ","
-        card_to_string = card_to_string + str(self.patient_id) + ","
-        card_to_string = card_to_string + str(self.uid) + ","
-        card_to_string = card_to_string + str(self.priv_key) + ","
-        card_to_string = card_to_string + str(self.hospital_name)
-        return card_to_string
+        self.update({
+            "patient_name": self.patient_name,
+            "patient_id": self.patient_id,
+            "uid": self.uid,
+            "priv_key": crypto.b64encode(self.priv_key),
+            "hospital_name": self.hospital_name,
+        })
