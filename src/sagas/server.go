@@ -36,6 +36,8 @@ func (s *sagasConsistentStorageServer) Put(_ context.Context, r *PutRequest) (*P
 		return nil, err
 	}
 
+	log.Printf("Produced to Kafka: partition=%d offset=%s\n", partition, offset)
+
 	// Perform blocking read from results channel
 	result := <-getOrCreateResultChan(partition, offset)
 
@@ -89,7 +91,7 @@ func produce(key []byte, val []byte) (partition int32, offset kafka.Offset, err 
 	msg := &kafka.Message{
 		TopicPartition: kafka.TopicPartition{
 			Topic:     &topicName,
-			Partition: kafka.PartitionAny,
+			Partition: computePartition(key, numPartitions),
 		},
 		Key:     key,
 		Value:   val,

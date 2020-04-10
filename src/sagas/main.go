@@ -16,11 +16,12 @@ import (
 )
 
 var (
-	topicName string
-	groupId   string
-	storage   PersistentStorage
-	producer  *kafka.Producer
-	consumer  *kafka.Consumer
+	numPartitions int32
+	topicName     string
+	groupId       string
+	storage       PersistentStorage
+	producer      *kafka.Producer
+	consumer      *kafka.Consumer
 
 	// Mapping of partition to results by offset.
 	resultChans []map[kafka.Offset]chan SagaResult
@@ -37,7 +38,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("NUM_PARTITIONS is not a valid integer")
 	}
-	numPartitions := int(num)
+	numPartitions = int32(num)
 	if numPartitions <= 0 {
 		log.Fatalf("NUM_PARTITIONS must be a positive integer")
 	}
@@ -47,7 +48,8 @@ func main() {
 	groupId = os.Getenv("GROUP_ID")
 
 	// Initialize channels
-	for i := 0; i < numPartitions; i++ {
+	var i int32
+	for i = 0; i < numPartitions; i++ {
 		resultChans = append(resultChans, make(map[kafka.Offset]chan SagaResult))
 		resultMtx = append(resultMtx, &sync.Mutex{})
 	}
