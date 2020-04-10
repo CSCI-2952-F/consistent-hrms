@@ -18,6 +18,9 @@ func (s *sagasConsistentStorageServer) Get(_ context.Context, r *GetRequest) (*G
 	if err != nil {
 		return nil, err
 	}
+	if val == nil {
+		return &GetResponse{}, nil
+	}
 
 	resp := &GetResponse{
 		Exists:  val.Value != nil,
