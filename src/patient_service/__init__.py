@@ -30,8 +30,6 @@ class PatientService:
         public key and patient ID in the consistent storage.
         Returns an error if the patient is already registered in another hospital.
         """
-        print("#### in register", flush=True)
-
         uid = patient_name + patient_id
         hash_uid = hasher.hash(uid)
 
@@ -40,18 +38,24 @@ class PatientService:
         pub_key, priv_key = crypto.generate_keys()
 
         # Check if hashed UID resides in consistent storage, otherwise store public key
-        try:
-            self.consistent_storage.put(hash_uid, crypto.b64encode(pub_key))
-        except Exception as e:
-            # TODO: Raise relevant exception
-            raise e
+        # try:
+        #     self.consistent_storage.put(hash_uid, crypto.b64encode(pub_key))
+        # except Exception as e:
+        #     # TODO: Raise relevant exception
+        #     raise e
 
         # Create patient card
         card = Card(patient_name, patient_id, uid, priv_key, self.hospital_name)
 
         # Store medical record in local storage
         record = MedicalRecord(self.hospital_name, card)
-        self.local_storage.insert_item(uid, pub_key, record)
+
+        print("uid: " + uid + " hash_uid: " + hash_uid + " card: " + str(card) + " record: " + str(record), flush=True)
+
+        try:
+            self.local_storage.insert_item(uid, pub_key, record)
+        except Exception as e:
+            raise e
 
         return card
     

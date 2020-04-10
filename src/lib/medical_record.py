@@ -20,3 +20,13 @@ class MedicalRecord:
         self.date = time.ctime()
         self.notes = None
         self.signature = name
+    
+    def __str__(self):
+        record_to_string = ""
+        record_to_string = record_to_string + str(self.name) + ","
+        record_to_string = record_to_string + str(self.patient_id) + ","
+        record_to_string = record_to_string + str(self.hospital) + ","
+        record_to_string = record_to_string + str(self.date) + ","
+        record_to_string = record_to_string + str(self.notes) + ","
+        record_to_string = record_to_string + str(self.signature)       
+        return record_to_string

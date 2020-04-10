@@ -16,16 +16,12 @@ class ApiGatewayService:
 
     @cors_http('POST', '/patient_reg')
     def patient_register_hospital(self, request):
-        print(request.get_data(as_text=True),  flush=True)
-
         data = json.loads(request.get_data(as_text=True))
         success = self.patient_rpc.register(patient_name=data['name'], patient_id=data['id'])
         return json.dumps({'success': success})
     
     @cors_http('POST', '/patient_read')
-    def patient_read_hospital(self, request):
-        print(request.get_data(as_text=True),  flush=True)
-        
+    def patient_read_hospital(self, request):        
         data = json.loads(request.get_data(as_text=True))
         success = self.patient_rpc.read(patient_uid=data['uid'])
         return json.dumps({'success': success})
