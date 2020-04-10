@@ -6,7 +6,8 @@ from lib.local_storage import LocalStorage
 
 class PhysicianService:
     name = 'physician_service'
-
+    local_storage = LocalStorage()
+    
     @rpc
     def healthy(self):
         """
@@ -21,9 +22,9 @@ class PhysicianService:
         with more than 1 hospital.
         Returns True if registration was successful.
         """
-
+        print("#### in reg", flush=True)
         try:
-            LocalStorage.add_staff(physician_id, physician_name)
+            self.local_storage.add_staff(physician_id, physician_name)
         except Exception as e:
             # TODO: Raise relevant exception
             raise e
@@ -37,6 +38,7 @@ class PhysicianService:
         Returns encrypted medical records for uid.
         Returns an error if the patient has not registered with a hospital.
         """
+        print("#### in read", flush=True)
         med_records = []
 
         # Obtain the hashed UID.
@@ -46,7 +48,7 @@ class PhysicianService:
         try:
             pub_key = self.consistent_storage.get(hash_uid)
             # Obtain the encrypted medical records.
-            med_records = LocalStorage.get_items(hash_uid, pub_key)
+            med_records = self.local_storage.get_items(hash_uid, pub_key)
         except Exception as e:
             # TODO: Raise relevant exception
             raise e
@@ -59,12 +61,13 @@ class PhysicianService:
         Create medical record for patient and put in local storage.
         Return True if successful.
         """
+        print("#### in write", flush=True)
         #TODO: update params to take in patient card, validate card, check that
         # decrypted encrypted uid is the same uid generated from the card 
         # (blockchain attestation), conform data to medical record
 
         # Check that the physician has registered with this hospital.
-        if not LocalStorage.valid_staff(physician_id):
+        if not self.local_storage.valid_staff(physician_id):
             return False        
 
         # Obtain the hashed UID.
@@ -73,7 +76,7 @@ class PhysicianService:
         # Get the public key from consistent storage if it exists.
         try:
             pub_key = self.consistent_storage.get(hash_uid)
-            LocalStorage.insert_item(hash_uid, pub_key, data)
+            self.local_storage.insert_item(hash_uid, pub_key, data)
         except Exception as e:
             # TODO: Raise relevant exception
             raise e
