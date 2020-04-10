@@ -33,9 +33,20 @@ func processOperation(key string, value []byte, meta SagaMetadata) SagaResult {
 	// Prepare new SagaValue for insertion into storage
 	newVal := SagaValue{Value: value, Metadata: meta}
 
-	// Guarantee: Only one owner can write to a given key.
+	// Guarantee: Only one owner can write to an empty key.
 	// Only store if no other value exists for key at this point.
 	if (val == nil || val.Value == nil) && value != nil {
+		if err := storage.Store(key, newVal); err != nil {
+			log.Fatalf("could not store %s into storage: %s", key, err)
+		}
+		return SagaResult{
+			Ok:    true,
+			Value: &newVal,
+		}
+	}
+
+	// Guarantee: Only the owner can write non-empty data to a key that it owns.
+	if val != nil && val.Value != nil && value != nil && val.Metadata.Owner == groupId {
 		if err := storage.Store(key, newVal); err != nil {
 			log.Fatalf("could not store %s into storage: %s", key, err)
 		}

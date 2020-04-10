@@ -19,28 +19,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=b'Z\004main',
-  serialized_pb=b'\n\x0bsagas.proto\"\x19\n\nGetRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\",\n\x0bGetResponse\x12\x0e\n\x06\x65xists\x18\x01 \x01(\x08\x12\r\n\x05value\x18\x02 \x01(\x0c\"(\n\nPutRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x0c\"I\n\x0bPutResponse\x12\n\n\x02ok\x18\x01 \x01(\x08\x12\x1c\n\terrorType\x18\x02 \x01(\x0e\x32\t.PutError\x12\x10\n\x08\x65rrorMsg\x18\x03 \x01(\t\"\x1c\n\rRemoveRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\"T\n\x0eRemoveResponse\x12\x0f\n\x07removed\x18\x01 \x01(\x08\x12\x1f\n\terrorType\x18\x02 \x01(\x0e\x32\x0c.RemoveError\x12\x10\n\x08\x65rrorMsg\x18\x03 \x01(\t*\x1e\n\x08PutError\x12\x12\n\x0ePUT_KEY_EXISTS\x10\x00*9\n\x0bRemoveError\x12\x14\n\x10REMOVE_KEY_ERROR\x10\x00\x12\x14\n\x10REMOVE_NOT_OWNER\x10\x01\x32\x8d\x01\n\x16SagasConsistentStorage\x12\"\n\x03Get\x12\x0b.GetRequest\x1a\x0c.GetResponse\"\x00\x12\"\n\x03Put\x12\x0b.PutRequest\x1a\x0c.PutResponse\"\x00\x12+\n\x06Remove\x12\x0e.RemoveRequest\x1a\x0f.RemoveResponse\"\x00\x42\x06Z\x04mainb\x06proto3'
+  serialized_pb=b'\n\x0bsagas.proto\"\x19\n\nGetRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\"L\n\x0bGetResponse\x12\x0e\n\x06\x65xists\x18\x01 \x01(\x08\x12\r\n\x05value\x18\x02 \x01(\x0c\x12\x0f\n\x07isOwner\x18\x03 \x01(\x08\x12\r\n\x05owner\x18\x04 \x01(\t\"(\n\nPutRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x0c\"(\n\x0bPutResponse\x12\n\n\x02ok\x18\x01 \x01(\x08\x12\r\n\x05owner\x18\x02 \x01(\t\"\x1c\n\rRemoveRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\"B\n\x0eRemoveResponse\x12\x0f\n\x07removed\x18\x01 \x01(\x08\x12\x1f\n\terrorType\x18\x02 \x01(\x0e\x32\x0c.RemoveError*9\n\x0bRemoveError\x12\x14\n\x10REMOVE_KEY_ERROR\x10\x00\x12\x14\n\x10REMOVE_NOT_OWNER\x10\x01\x32\x8d\x01\n\x16SagasConsistentStorage\x12\"\n\x03Get\x12\x0b.GetRequest\x1a\x0c.GetResponse\"\x00\x12\"\n\x03Put\x12\x0b.PutRequest\x1a\x0c.PutResponse\"\x00\x12+\n\x06Remove\x12\x0e.RemoveRequest\x1a\x0f.RemoveResponse\"\x00\x42\x06Z\x04mainb\x06proto3'
 )
 
-_PUTERROR = _descriptor.EnumDescriptor(
-  name='PutError',
-  full_name='PutError',
-  filename=None,
-  file=DESCRIPTOR,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='PUT_KEY_EXISTS', index=0, number=0,
-      serialized_options=None,
-      type=None),
-  ],
-  containing_type=None,
-  serialized_options=None,
-  serialized_start=321,
-  serialized_end=351,
-)
-_sym_db.RegisterEnumDescriptor(_PUTERROR)
-
-PutError = enum_type_wrapper.EnumTypeWrapper(_PUTERROR)
 _REMOVEERROR = _descriptor.EnumDescriptor(
   name='RemoveError',
   full_name='RemoveError',
@@ -58,13 +39,12 @@ _REMOVEERROR = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=353,
-  serialized_end=410,
+  serialized_start=302,
+  serialized_end=359,
 )
 _sym_db.RegisterEnumDescriptor(_REMOVEERROR)
 
 RemoveError = enum_type_wrapper.EnumTypeWrapper(_REMOVEERROR)
-PUT_KEY_EXISTS = 0
 REMOVE_KEY_ERROR = 0
 REMOVE_NOT_OWNER = 1
 
@@ -122,6 +102,20 @@ _GETRESPONSE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='isOwner', full_name='GetResponse.isOwner', index=2,
+      number=3, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='owner', full_name='GetResponse.owner', index=3,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -135,7 +129,7 @@ _GETRESPONSE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=42,
-  serialized_end=86,
+  serialized_end=118,
 )
 
 
@@ -172,8 +166,8 @@ _PUTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=88,
-  serialized_end=128,
+  serialized_start=120,
+  serialized_end=160,
 )
 
 
@@ -192,15 +186,8 @@ _PUTRESPONSE = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='errorType', full_name='PutResponse.errorType', index=1,
-      number=2, type=14, cpp_type=8, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='errorMsg', full_name='PutResponse.errorMsg', index=2,
-      number=3, type=9, cpp_type=9, label=1,
+      name='owner', full_name='PutResponse.owner', index=1,
+      number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -217,8 +204,8 @@ _PUTRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=130,
-  serialized_end=203,
+  serialized_start=162,
+  serialized_end=202,
 )
 
 
@@ -248,8 +235,8 @@ _REMOVEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=205,
-  serialized_end=233,
+  serialized_start=204,
+  serialized_end=232,
 )
 
 
@@ -274,13 +261,6 @@ _REMOVERESPONSE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='errorMsg', full_name='RemoveResponse.errorMsg', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=b"".decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -293,11 +273,10 @@ _REMOVERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=235,
-  serialized_end=319,
+  serialized_start=234,
+  serialized_end=300,
 )
 
-_PUTRESPONSE.fields_by_name['errorType'].enum_type = _PUTERROR
 _REMOVERESPONSE.fields_by_name['errorType'].enum_type = _REMOVEERROR
 DESCRIPTOR.message_types_by_name['GetRequest'] = _GETREQUEST
 DESCRIPTOR.message_types_by_name['GetResponse'] = _GETRESPONSE
@@ -305,7 +284,6 @@ DESCRIPTOR.message_types_by_name['PutRequest'] = _PUTREQUEST
 DESCRIPTOR.message_types_by_name['PutResponse'] = _PUTRESPONSE
 DESCRIPTOR.message_types_by_name['RemoveRequest'] = _REMOVEREQUEST
 DESCRIPTOR.message_types_by_name['RemoveResponse'] = _REMOVERESPONSE
-DESCRIPTOR.enum_types_by_name['PutError'] = _PUTERROR
 DESCRIPTOR.enum_types_by_name['RemoveError'] = _REMOVEERROR
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -360,8 +338,8 @@ _SAGASCONSISTENTSTORAGE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=413,
-  serialized_end=554,
+  serialized_start=362,
+  serialized_end=503,
   methods=[
   _descriptor.MethodDescriptor(
     name='Get',

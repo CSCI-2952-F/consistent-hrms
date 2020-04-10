@@ -20,8 +20,10 @@ func (s *sagasConsistentStorageServer) Get(_ context.Context, r *GetRequest) (*G
 	}
 
 	resp := &GetResponse{
-		Exists: val.Value == nil,
-		Value:  val.Value,
+		Exists:  val.Value == nil,
+		Value:   val.Value,
+		IsOwner: val.Metadata.Owner == groupId,
+		Owner:   val.Metadata.Owner,
 	}
 
 	return resp, nil
@@ -47,9 +49,8 @@ func (s *sagasConsistentStorageServer) Put(_ context.Context, r *PutRequest) (*P
 	// Check if it was an Ok result
 	if !result.Ok {
 		resp := &PutResponse{
-			Ok:        false,
-			ErrorType: PutError_PUT_KEY_EXISTS,
-			ErrorMsg:  fmt.Sprintf("key already exists, owner is %s", result.Value.Metadata.Owner),
+			Ok:    false,
+			Owner: result.Value.Metadata.Owner,
 		}
 		return resp, nil
 	}
@@ -76,10 +77,8 @@ func (s *sagasConsistentStorageServer) Remove(_ context.Context, r *RemoveReques
 		resp := &RemoveResponse{Removed: false}
 		if result.Value.Value == nil {
 			resp.ErrorType = RemoveError_REMOVE_KEY_ERROR
-			resp.ErrorMsg = "key does not exist"
 		} else {
 			resp.ErrorType = RemoveError_REMOVE_NOT_OWNER
-			resp.ErrorMsg = fmt.Sprintf("not owner for key, owner is %s", result.Value.Metadata.Owner)
 		}
 		return resp, nil
 	}
