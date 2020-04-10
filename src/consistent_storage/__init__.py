@@ -2,8 +2,7 @@ import os
 
 from nameko.rpc import rpc
 
-from lib.exceptions import KeyExistsError
-
+from consistent_storage.base import KeyExistsError
 from consistent_storage.sagas_grpc import SagasGrpcClient
 
 BACKEND = os.getenv('CONSISTENT_STORAGE_BACKEND', 'sagas')
@@ -35,7 +34,7 @@ class ConsistentStorageProxy:
         return True
 
     @rpc
-    def get(self, key: str) -> bytes:
+    def get(self, key: str):
         return self.client.get(key)
 
     @rpc

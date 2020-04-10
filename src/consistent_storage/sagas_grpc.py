@@ -1,3 +1,4 @@
+import base64
 import os
 
 import grpc
@@ -16,12 +17,19 @@ class SagasGrpcClient(BaseSagasClient):
         channel = grpc.insecure_channel(GRPC_ADDR)
         self.client = SagasConsistentStorageStub(channel)
 
-    def get(self, key: str) -> bytes:
+    def get(self, key: str) -> dict:
         req = GetRequest(key=key)
         res = self.client.Get(req)
         if not res.exists:
-            return None
-        return res.value
+            return {
+                'value': None,
+            }
+
+        return {
+            'value': base64.b64encode(res.value).decode('utf-8'),
+            'is_owner': res.isOwner,
+            'owner': res.owner,
+        }
 
     def put(self, key: str, value: bytes) -> bool:
         req = PutRequest(key=key, value=value)
