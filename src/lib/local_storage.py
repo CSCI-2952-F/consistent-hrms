@@ -36,6 +36,7 @@ class LocalStorage():
         """
         Update hospital staff roster.
         """
+        
         self.redis.lpush(physician_id, value)
     
     def valid_staff(self, physician_id):
