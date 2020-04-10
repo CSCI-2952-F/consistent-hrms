@@ -50,7 +50,7 @@
         dataType: 'json',
         data: {name: patient_name, id: patient_id},
         error: function (request, status, error) {
-            alert('Error: ' + error);
+          console.log('Error: ' + error)
         },
         success: function (response) {
           let reg_div = $('#registration-output');
@@ -72,7 +72,7 @@
         dataType: 'json',
         data: {uid: patient_uid},
         error: function (request, status, error) {
-            alert('Error: ' + error);
+          console.log('Error: ' + error)
         },
         success: function (response) {
           let read_div = $('#read-output');
