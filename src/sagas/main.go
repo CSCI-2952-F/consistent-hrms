@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"sync"
 	"syscall"
+	"time"
 
 	"github.com/google/uuid"
 	"google.golang.org/grpc"
@@ -86,7 +87,8 @@ func main() {
 	consumer, err = kafka.NewConsumer(&kafka.ConfigMap{
 		"bootstrap.servers":  brokers,
 		"group.id":           groupId,
-		"enable.auto.commit": false,
+		"enable.auto.commit": "false",    // must commit after each consumer read
+		"auto.offset.reset":  "earliest", // necessary so that new consumers will start from the beginning of the log
 	})
 	if err != nil {
 		log.Fatalf("could not create consumer: %v", err)
@@ -165,9 +167,13 @@ func closeKafka() {
 
 func pollConsumer(c *kafka.Consumer) {
 	for {
-		msg, err := c.ReadMessage(-1)
+		// Keep polling for messages every second to also act as a heartbeat
+		// to prevent being kicked from consumer group
+		msg, err := c.ReadMessage(1 * time.Second)
 		if err != nil {
-			fmt.Printf("Consumer error: %v (%v)\n", err, msg)
+			continue
+		}
+		if msg == nil {
 			continue
 		}
 
@@ -201,7 +207,6 @@ func pollConsumer(c *kafka.Consumer) {
 		resultCh := getOrCreateResultChan(partition, offset)
 
 		// Finally send result to channel.
-		// This is a blocking send, but the producer goroutine should already be reading it.
 		resultCh <- result
 	}
 }
@@ -212,8 +217,8 @@ func getOrCreateResultChan(partition int32, offset kafka.Offset) chan SagaResult
 
 	resultCh, ok := resultChans[partition][offset]
 	if !ok {
-		// Channel doesn't yet exist, create it
-		resultChans[partition][offset] = make(chan SagaResult)
+		// Make channel buffered to prevent blocking sends
+		resultChans[partition][offset] = make(chan SagaResult, 1)
 		resultCh = resultChans[partition][offset]
 	}
 
