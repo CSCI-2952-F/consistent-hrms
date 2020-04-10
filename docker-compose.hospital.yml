@@ -79,8 +79,6 @@ services:
     build:
       context: .
       dockerfile: ./build/consistent_storage/Dockerfile
-      args:
-        module: consistent_storage
     networks:
       - default
       - rabbitmq

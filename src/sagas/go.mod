@@ -1,4 +1,4 @@
-module main
+module sagas
 
 go 1.14
 
