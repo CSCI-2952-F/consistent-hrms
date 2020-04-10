@@ -62,13 +62,9 @@ func NewFilePersistentStorage(filePath string) (*FilePersistentStorage, error) {
 		storage.data = make(map[string][]byte)
 		data, err := json.Marshal(storage.data)
 		if err != nil {
-			panic(err)
-		}
-		n, err := file.WriteAt(data, 0)
-		if err != nil {
 			return nil, err
 		}
-		if err := file.Truncate(int64(n)); err != nil {
+		if err := ioutil.WriteFile(filePath, data, os.ModePerm); err != nil {
 			return nil, err
 		}
 	}

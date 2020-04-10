@@ -86,6 +86,8 @@ services:
     environment:
       - CONSISTENT_STORAGE_BACKEND=${CONSISTENT_STORAGE_BACKEND:-sagas}
       - SAGAS_GRPC_ADDR=sagas:8080
+    depends_on:
+      - sagas
 
   sagas:
     env_file: .env

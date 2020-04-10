@@ -138,6 +138,7 @@ func main() {
 	go pollConsumer(consumer)
 
 	// Start gRPC server
+	log.Printf("Starting gRPC server on %s.\n", grpcListenAddr)
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatal(err)
 	}
