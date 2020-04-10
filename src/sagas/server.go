@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
 )
@@ -10,6 +11,8 @@ import (
 type sagasConsistentStorageServer struct{}
 
 func (s *sagasConsistentStorageServer) Get(_ context.Context, r *GetRequest) (*GetResponse, error) {
+	log.Printf("Received Get request: %v\n", r)
+
 	// Retrieve from storage
 	val, err := storage.Retrieve(r.Key)
 	if err != nil {
@@ -25,6 +28,8 @@ func (s *sagasConsistentStorageServer) Get(_ context.Context, r *GetRequest) (*G
 }
 
 func (s *sagasConsistentStorageServer) Put(_ context.Context, r *PutRequest) (*PutResponse, error) {
+	log.Printf("Received Put request: %v\n", r)
+
 	// Produce to Kafka
 	partition, offset, err := produce([]byte(r.Key), r.Value)
 	if err != nil {
@@ -51,6 +56,8 @@ func (s *sagasConsistentStorageServer) Put(_ context.Context, r *PutRequest) (*P
 }
 
 func (s *sagasConsistentStorageServer) Remove(_ context.Context, r *RemoveRequest) (*RemoveResponse, error) {
+	log.Printf("Received Remove request: %v\n", r)
+
 	// Produce to Kafka
 	partition, offset, err := produce([]byte(r.Key), nil)
 	if err != nil {
@@ -80,6 +87,10 @@ func (s *sagasConsistentStorageServer) Remove(_ context.Context, r *RemoveReques
 
 func produce(key []byte, val []byte) (partition int32, offset kafka.Offset, err error) {
 	msg := &kafka.Message{
+		TopicPartition: kafka.TopicPartition{
+			Topic:     &topicName,
+			Partition: kafka.PartitionAny,
+		},
 		Key:     key,
 		Value:   val,
 		Headers: []kafka.Header{{Key: "owner", Value: []byte(groupId)}},
@@ -88,7 +99,7 @@ func produce(key []byte, val []byte) (partition int32, offset kafka.Offset, err 
 	// Publish message to Kafka synchronously
 	produced := make(chan kafka.Event)
 	if e := producer.Produce(msg, produced); e != nil {
-		err = e
+		err = fmt.Errorf("could not Produce message: %s", e)
 		return
 	}
 
@@ -97,7 +108,7 @@ func produce(key []byte, val []byte) (partition int32, offset kafka.Offset, err 
 	switch ev := event.(type) {
 	case *kafka.Message:
 		if ev.TopicPartition.Error != nil {
-			err = ev.TopicPartition.Error
+			err = fmt.Errorf("delivery error: %s", ev.TopicPartition.Error)
 			return
 		}
 

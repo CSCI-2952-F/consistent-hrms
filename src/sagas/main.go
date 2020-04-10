@@ -16,10 +16,11 @@ import (
 )
 
 var (
-	groupId  string
-	storage  PersistentStorage
-	producer *kafka.Producer
-	consumer *kafka.Consumer
+	topicName string
+	groupId   string
+	storage   PersistentStorage
+	producer  *kafka.Producer
+	consumer  *kafka.Consumer
 
 	// Mapping of partition to results by offset.
 	resultChans []map[kafka.Offset]chan SagaResult
@@ -28,7 +29,7 @@ var (
 
 func main() {
 	// Parse environment variables
-	topicName := os.Getenv("TOPIC_NAME")
+	topicName = os.Getenv("TOPIC_NAME")
 	if topicName == "" {
 		log.Fatalf("TOPIC_NAME not set")
 	}
