@@ -43,6 +43,7 @@ services:
         module: patient_service
     environment:
       - HOSPITAL_NAME
+      - REDIS_HOST=redis
     networks:
       - default
       - rabbitmq
@@ -59,6 +60,7 @@ services:
         module: physician_service
     environment:
       - HOSPITAL_NAME
+      - REDIS_HOST=redis
     networks:
       - default
       - rabbitmq
