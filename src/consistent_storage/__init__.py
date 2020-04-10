@@ -2,7 +2,7 @@ import os
 
 from nameko.rpc import rpc
 
-from consistent_storage.base import KeyExistsError
+from consistent_storage.base import BaseClient, KeyExistsError
 from consistent_storage.sagas_grpc import SagasGrpcClient
 
 BACKEND = os.getenv('CONSISTENT_STORAGE_BACKEND', 'sagas')
@@ -20,6 +20,7 @@ class ConsistentStorageProxy:
     name = 'consistent_storage'
 
     def __init__(self):
+        self.client = BaseClient()
         self.sagas = SagasGrpcClient()
 
         if BACKEND == 'sagas':

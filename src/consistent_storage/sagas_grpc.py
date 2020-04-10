@@ -3,7 +3,7 @@ import os
 
 import grpc
 
-from consistent_storage.base import BaseSagasClient
+from consistent_storage.base import BaseClient
 from consistent_storage.sagas_pb2 import *
 from consistent_storage.sagas_pb2_grpc import SagasConsistentStorageStub
 
@@ -12,7 +12,7 @@ if not GRPC_ADDR:
     raise Exception('SAGAS_GRPC_ADDR not set')
 
 
-class SagasGrpcClient(BaseSagasClient):
+class SagasGrpcClient(BaseClient):
     def __init__(self):
         channel = grpc.insecure_channel(GRPC_ADDR)
         self.client = SagasConsistentStorageStub(channel)

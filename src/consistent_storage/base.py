@@ -1,7 +1,7 @@
 from typing import Tuple
 
 
-class BaseSagasClient:
+class BaseClient:
     def get(self, key: str) -> dict:
         raise NotImplementedError()
 
