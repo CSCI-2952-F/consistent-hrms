@@ -2,7 +2,7 @@ import json
 
 from nameko.rpc import RpcProxy
 from nameko.web.handlers import http
-from nameko_cors.handlers import cors_http
+from lib.nameko_cors import cors_http
 
 class ApiGatewayService:
     name = 'api_gateway'
