@@ -81,7 +81,7 @@ func main() {
 	defer closeKafka()
 
 	// Create consumer
-	consumer, err := kafka.NewConsumer(&kafka.ConfigMap{
+	consumer, err = kafka.NewConsumer(&kafka.ConfigMap{
 		"bootstrap.servers":  brokers,
 		"group.id":           groupId,
 		"enable.auto.commit": false,
@@ -91,7 +91,7 @@ func main() {
 	}
 
 	// Create producer
-	producer, err := kafka.NewProducer(&kafka.ConfigMap{
+	producer, err = kafka.NewProducer(&kafka.ConfigMap{
 		"bootstrap.servers": brokers,
 		"acks":              "all",
 	})
