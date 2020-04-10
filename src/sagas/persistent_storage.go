@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -58,7 +59,8 @@ func NewFilePersistentStorage(filePath string) (*FilePersistentStorage, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err := json.Unmarshal(data, storage.data); err != nil {
+	if err := json.Unmarshal(data, &storage.data); err != nil {
+		fmt.Printf("could not load %s, recreating JSON file: %v\n", filePath, err)
 		storage.data = make(map[string][]byte)
 		data, err := json.Marshal(storage.data)
 		if err != nil {
@@ -123,13 +125,12 @@ func (f *FilePersistentStorage) Retrieve(key string) (val *SagaValue, err error)
 	}
 
 	// Unmarshal data as SagaValue
-	var value SagaValue
 	if e := json.Unmarshal(data, &val); e != nil {
 		err = e
 		return
 	}
 
-	return &value, nil
+	return
 }
 
 func (f *FilePersistentStorage) Store(key string, val SagaValue) error {
