@@ -35,17 +35,17 @@ class ConsistentStorageProxy:
         return True
 
     @rpc
-    def get(self, key):
+    def get(self, key: str) -> bytes:
         return self.client.get(key)
 
     @rpc
-    def put(self, key, value):
-        success = self.client.put(key, value)
+    def put(self, key: str, value: str):
+        success = self.client.put(key, value.encode('utf-8'))
         if not success:
             raise KeyExistsError(key)
 
     @rpc
-    def remove(self, key):
+    def remove(self, key: str):
         success = self.client.remove(key)
         if not success:
             raise KeyError(key)
