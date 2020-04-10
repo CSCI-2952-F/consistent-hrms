@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+option go_package = "main";
+
+service SagasConsistentStorage {
+    rpc Get (GetRequest) returns (GetResponse) {}
+    rpc Put (PutRequest) returns (PutResponse) {}
+    rpc Remove (RemoveRequest) returns (RemoveResponse) {}
+}
+
+message GetRequest {
+    string key = 1;
+}
+
+message GetResponse {
+    bool exists = 1;
+    bytes value = 2;
+}
+
+message PutRequest {
+    string key = 1;
+    bytes value = 2;
+}
+
+enum PutError {
+    PUT_KEY_EXISTS = 0;
+}
+
+message PutResponse {
+    bool ok = 1;
+    PutError errorType = 2;
+    string errorMsg = 3;
+}
+
+message RemoveRequest {
+    string key = 1;
+}
+
+enum RemoveError {
+    REMOVE_KEY_ERROR = 0;
+    REMOVE_NOT_OWNER = 1;
+}
+
+message RemoveResponse {
+    bool removed = 1;
+    RemoveError errorType = 2;
+    string errorMsg = 3;
+}
