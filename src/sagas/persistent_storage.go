@@ -10,7 +10,7 @@ import (
 type PersistentStorage interface {
 	Get(key string) (value []byte)
 	Put(key string, value []byte) error
-	Retrieve(key string) (val SagaValue, err error)
+	Retrieve(key string) (val *SagaValue, err error)
 	Store(key string, val SagaValue) error
 	Remove(key string, meta SagaMetadata) error
 }
@@ -113,17 +113,23 @@ func (f *FilePersistentStorage) Put(key string, value []byte) error {
 	return nil
 }
 
-func (f *FilePersistentStorage) Retrieve(key string) (val SagaValue, err error) {
+func (f *FilePersistentStorage) Retrieve(key string) (val *SagaValue, err error) {
 	// Get raw bytes
 	data := f.Get(key)
 
+	// Empty data
+	if data == nil {
+		return nil, nil
+	}
+
 	// Unmarshal data as SagaValue
+	var value SagaValue
 	if e := json.Unmarshal(data, &val); e != nil {
 		err = e
 		return
 	}
 
-	return
+	return &value, nil
 }
 
 func (f *FilePersistentStorage) Store(key string, val SagaValue) error {
