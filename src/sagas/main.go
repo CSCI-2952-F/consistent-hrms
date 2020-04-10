@@ -43,6 +43,7 @@ func main() {
 	brokers := os.Getenv("KAFKA_BROKERS")
 	storageFilePath := os.Getenv("STORAGE_FILE_PATH")
 	grpcListenAddr := os.Getenv("GRPC_LISTEN_ADDR")
+	groupId = os.Getenv("GROUP_ID")
 
 	// Initialize channels
 	for i := 0; i < numPartitions; i++ {
@@ -59,21 +60,22 @@ func main() {
 
 	// Consumer group has to be unique within the topic.
 	// We also use this to identify the producer of a message.
-	// The most foolproof way is to use a centralized naming/assignment registry.
-	// However, we will just generate a random group ID, hope for no collisions, and store this persistently.
-	gid := storage.Get("group_id")
-	if gid == nil {
-		id := uuid.New()
-		data, err := id.MarshalBinary()
-		if err != nil {
-			log.Fatal(err)
+	// If not specified, generate and store it persistently.
+	if groupId == "" {
+		gid := storage.Get("group_id")
+		if gid == nil {
+			id := uuid.New()
+			data, err := id.MarshalBinary()
+			if err != nil {
+				log.Fatal(err)
+			}
+			if err := storage.Put("group_id", data); err != nil {
+				log.Fatal(err)
+			}
+			gid = data
 		}
-		if err := storage.Put("group_id", data); err != nil {
-			log.Fatal(err)
-		}
-		gid = data
+		groupId = string(gid)
 	}
-	groupId = string(gid)
 
 	defer closeKafka()
 

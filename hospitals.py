@@ -50,6 +50,7 @@ def execute(args):
             # Prepare environment
             env = {
                 'HOSPITAL_NAME': name,
+                'HOSPITAL_NAME_SLUG': slug,
                 'FRONTEND_PORT': str(frontend_port),
                 'API_GATEWAY_PORT': str(api_gateway_port),
             }
