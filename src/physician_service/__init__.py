@@ -2,11 +2,15 @@ import json
 
 from nameko.rpc import rpc
 
+from lib import crypto
+from lib.card import Card
+from lib.hospital import get_hospital_name
 from lib.local_storage import LocalStorage
 
 class PhysicianService:
     name = 'physician_service'
     local_storage = LocalStorage()
+    hospital_name = get_hospital_name()
     
     @rpc
     def healthy(self):
@@ -20,29 +24,32 @@ class PhysicianService:
         """
         Registers the physician to this hospital. A physician can register
         with more than 1 hospital.
-        Returns True if registration was successful.
         """
-        print("#### in reg", flush=True)
+        uid = physician_name + physician_id
+
+        # Generate keys for physician.
+        pub_key, priv_key = crypto.generate_keys()
+
         try:
-            self.local_storage.add_staff(physician_id, physician_name)
+            self.local_storage.add_staff(uid, physician_name)
         except Exception as e:
             # TODO: Raise relevant exception
             raise e
 
-        return True
+        card = Card(physician_name, uid, priv_key, self.hospital_name)
+        return str(card)
         
     
     @rpc
-    def read(self, patient_uid):
+    def read(self, patient_id):
         """
         Returns encrypted medical records for uid.
         Returns an error if the patient has not registered with a hospital.
         """
-        print("#### in read", flush=True)
         med_records = []
 
         # Obtain the hashed UID.
-        hash_uid = hasher.hash(patient_uid)
+        hash_uid = hasher.hash(patient_id)
 
         # Get the public key from consistent storage if it exists.
         try:
@@ -56,12 +63,11 @@ class PhysicianService:
         return med_records
 
     @rpc
-    def write(self, physician_id, patient_uid, data):
+    def write(self, physician_id, patient_id, data):
         """
         Create medical record for patient and put in local storage.
         Return True if successful.
         """
-        print("#### in write", flush=True)
         #TODO: update params to take in patient card, validate card, check that
         # decrypted encrypted uid is the same uid generated from the card 
         # (blockchain attestation), conform data to medical record
@@ -71,7 +77,7 @@ class PhysicianService:
             return False        
 
         # Obtain the hashed UID.
-        hash_uid = hasher.hash(patient_uid)
+        hash_uid = hasher.hash(patient_id)
 
         # Get the public key from consistent storage if it exists.
         try:

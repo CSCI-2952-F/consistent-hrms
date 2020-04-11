@@ -50,6 +50,7 @@ class PatientService:
 
         # First check if hashed UID resides in consistent storage, and get the owner of the key.
         res = self.consistent_storage.get(hash_uid)
+
         if res['value'] is not None:
             if res['is_owner']:
                 raise PatientRegistrationExists(patient_id)
@@ -65,7 +66,7 @@ class PatientService:
             raise e
 
         # Create patient card
-        card = Card(patient_name, patient_id, uid, priv_key, self.hospital_name)
+        card = Card(patient_name, uid, priv_key, self.hospital_name)
 
         # Store medical record in local storage
         record = MedicalRecord(self.hospital_name, card)
@@ -94,7 +95,7 @@ class PatientService:
         try:
             pub_key = self.consistent_storage.get(hash_uid)
             # Obtain the encrypted medical records.
-            med_records = LocalStorage.get_items(uid, pub_key)
+            med_records = LocalStorage.get_items(patient_uid, pub_key)
         except Exception as e:
             # TODO: Raise relevant exception
             raise e

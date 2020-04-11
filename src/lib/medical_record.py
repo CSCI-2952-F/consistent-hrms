@@ -12,8 +12,8 @@ class MedicalRecord:
         :param name: Name of entity that is creating the medical record.
         """
         
-        self.name = card.patient_name
-        self.patient_id = card.patient_id
+        self.name = card.name
+        self.uid = card.uid
         self.hospital = card.hospital_name
 
         # Default set.
@@ -24,7 +24,7 @@ class MedicalRecord:
     def __str__(self):
         record_to_string = ""
         record_to_string = record_to_string + str(self.name) + ","
-        record_to_string = record_to_string + str(self.patient_id) + ","
+        record_to_string = record_to_string + str(self.uid) + ","
         record_to_string = record_to_string + str(self.hospital) + ","
         record_to_string = record_to_string + str(self.date) + ","
         record_to_string = record_to_string + str(self.notes) + ","

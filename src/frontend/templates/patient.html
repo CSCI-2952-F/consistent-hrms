@@ -21,6 +21,17 @@
     </div>
   </div>
   <div class="row">
+    <div id="patient_card" class="card w-50 mb-2 ml-2 mr-2" style = "display: none">
+      <div class="card-body">
+        <h4 class="card-title">Patient Card</h4>
+        <div class="card-subtitle mb-2 text-muted">Patient Name: <span class="card-text" id="patient_card_name"></span> </div>
+        <div class="card-subtitle mb-2 text-muted">Patient UID: <span class="card-text" id="patient_card_uid"></span> </div>        
+        <div class="card-subtitle mb-2 text-muted">Private Key: <span class="card-text" id="patient_card_private_key"></span> </div>
+        <div class="card-subtitle mb-2 text-muted">Hospital Name: <span class="card-text"> {{ hospital_name }} </span></div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
     <div class="card w-50 mb-2 ml-2 mr-2">
       <div class="card-body">
         <h4 class="card-title">Patient Read</h4>
@@ -51,12 +62,19 @@
         dataType: 'json',
         data: JSON.stringify(data),
         error: function (request, status, error) {
-          console.log('Error: ' + error)
+          let reg_div = document.getElementById('registration-output');
+          reg_div.innerHTML = "Registration Unsuccessful.";       
         },
         success: function (response) {
           console.log(response);
-          let reg_div = $('#registration-output');
-          reg_div.innerHTML = response;
+          let reg_div = document.getElementById('registration-output');
+          reg_div.innerHTML = "Registration Successful.";          
+          // Display patient card.
+          document.getElementById("patient_card").style.display = "block";
+          // Populate patient card.
+          let card_patient_name = document.getElementById('patient_card_name');
+          card_patient_name.innerHTML = patient_name;
+          let card_patient_uid = document.getElementById('patient_card_uid');
         }
     });
     patient_name_div.val('');
