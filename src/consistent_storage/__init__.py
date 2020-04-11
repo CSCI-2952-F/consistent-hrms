@@ -1,4 +1,11 @@
+import os
+
 from nameko.rpc import rpc
+
+from consistent_storage.base import BaseClient, KeyExistsError
+from consistent_storage.sagas_grpc import SagasGrpcClient
+
+BACKEND = os.getenv('CONSISTENT_STORAGE_BACKEND', 'sagas')
 
 
 class ConsistentStorageProxy:
@@ -12,18 +19,33 @@ class ConsistentStorageProxy:
 
     name = 'consistent_storage'
 
+    def __init__(self):
+        self.client = BaseClient()
+        self.sagas = SagasGrpcClient()
+
+        if BACKEND == 'sagas':
+            self.client = self.sagas
+        elif BACKEND == 'bigchain':
+            raise NotImplementedError()
+        else:
+            raise Exception(f'Invalid consistent storage backend: "{BACKEND}"')
+
     @rpc
     def healthy(self):
         return True
 
     @rpc
-    def get(self, key):
-        raise NotImplementedError()
+    def get(self, key: str):
+        return self.client.get(key)
 
     @rpc
-    def put(self, key, value):
-        raise NotImplementedError()
+    def put(self, key: str, value: str):
+        success = self.client.put(key, value.encode('utf-8'))
+        if not success:
+            raise KeyExistsError(key)
 
     @rpc
-    def remove(self, key):
-        raise NotImplementedError()
+    def remove(self, key: str):
+        success = self.client.remove(key)
+        if not success:
+            raise KeyError(key)

@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - '2181'
+
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - '9092'
+    environment:
+      # Create topic on startup with 1 partition and 1 replica
+      KAFKA_CREATE_TOPICS: 'patient-registrations:${SAGAS_NUM_PARTITIONS:-1}:1'
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://:9092
+    networks:
+      - default
+      - hospital-sagas
+
+networks:
+  hospital-sagas:
+    external:
+      name: hrms-hospital-sagas

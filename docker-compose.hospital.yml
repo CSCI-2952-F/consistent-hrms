@@ -76,16 +76,38 @@ services:
       - rabbitmq
 
   consistent_storage:
+    env_file: .env
     build:
       context: .
-      dockerfile: ./build/nameko/Dockerfile
-      args:
-        module: consistent_storage
+      dockerfile: ./build/consistent_storage/Dockerfile
     networks:
       - default
       - rabbitmq
-      - hospital-2pc
       - hospital-bigchain
+    environment:
+      - CONSISTENT_STORAGE_BACKEND=${CONSISTENT_STORAGE_BACKEND:-sagas}
+      - SAGAS_GRPC_ADDR=sagas:8080
+    depends_on:
+      - sagas
+
+  sagas:
+    env_file: .env
+    build:
+      context: ./src/sagas
+    networks:
+      - default
+      - hospital-sagas
+    environment:
+      - NUM_PARTITIONS=${SAGAS_NUM_PARTITIONS}
+      - TOPIC_NAME=patient_registrations
+      - KAFKA_BROKERS=kafka:9092
+      - STORAGE_FILE_PATH=/var/lib/sagas/data.json
+      - GRPC_LISTEN_ADDR=:8080
+      - GROUP_ID=${HOSPITAL_NAME_SLUG}
+    expose:
+      - 8080
+    volumes:
+      - sagas-storage:/var/lib/sagas
 
   redis:
     image: redis
@@ -94,12 +116,13 @@ services:
 
 volumes:
   local-storage: {}
+  sagas-storage: {}
 
 networks:
   rabbitmq: {}
-  hospital-2pc:
+  hospital-sagas:
     external:
-      name: hrms-hospital-2pc
+      name: hrms-hospital-sagas
   hospital-bigchain:
     external:
       name: hrms-hospital-bigchain
