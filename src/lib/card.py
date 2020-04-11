@@ -19,9 +19,9 @@ class Card:
 
     def __str__(self):
         card_to_string = ""
-        card_to_string = card_to_string + str(self.patient_name) + ","
-        card_to_string = card_to_string + str(self.patient_id) + ","
-        card_to_string = card_to_string + str(self.uid) + ","
-        card_to_string = card_to_string + str(self.priv_key) + ","
-        card_to_string = card_to_string + str(self.hospital_name)
+        card_to_string = card_to_string + self.patient_name
+        card_to_string = card_to_string + self.patient_id
+        card_to_string = card_to_string + self.uid
+        card_to_string = card_to_string + self.priv_key
+        card_to_string = card_to_string + self.hospital_name
         return card_to_string

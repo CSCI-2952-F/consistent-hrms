@@ -50,14 +50,13 @@ class PatientService:
         # Store medical record in local storage
         record = MedicalRecord(self.hospital_name, card)
 
-        print("uid: " + uid + " hash_uid: " + hash_uid + " card: " + str(card) + " record: " + str(record), flush=True)
-
         try:
             self.local_storage.insert_item(uid, pub_key, record)
         except Exception as e:
             raise e
 
-        return card
+        # Return card object as a string.
+        return str(card)
     
     @rpc
     def read(self, patient_uid):
@@ -65,8 +64,6 @@ class PatientService:
         Returns encrypted medical records for uid.
         Returns an error if the patient has not registered with a hospital.
         """
-        print("#### in read", flush=True)
-
         med_records = []
 
         # Obtain the hashed UID.

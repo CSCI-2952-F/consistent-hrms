@@ -54,9 +54,9 @@
           console.log('Error: ' + error)
         },
         success: function (response) {
+          console.log(response);
           let reg_div = $('#registration-output');
           reg_div.innerHTML = response;
-          alert(response)
         }
     });
     patient_name_div.val('');
@@ -79,7 +79,7 @@
         success: function (response) {
           let read_div = $('#read-output');
           read_div.innerHTML = response;
-          alert(response)
+          console.log(response);
         }
     });
     patient_uid_div.val('');
