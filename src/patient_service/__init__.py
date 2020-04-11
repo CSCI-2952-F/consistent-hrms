@@ -51,19 +51,16 @@ class PatientService:
 
         # First check if hashed UID resides in consistent storage, and get the owner of the key.
         res = self.consistent_storage.get(hash_uid)
-        if res['value'] is not None:
+        if res['exists']:
             if res['is_owner']:
                 raise PatientRegistrationExists(patient_id)
             else:
                 raise PatientRegistrationViolation(patient_id, res['owner'])
 
         # Otherwise, perform a linearizable put request to consistent storage.
-        try:
-            self.consistent_storage.put(hash_uid, crypto.b64encode(pub_key))
-        except RemoteError as e:
-            if e.exc_type == 'KeyExistsError':
-                raise PatientRegistrationViolation(patient_id)
-            raise e
+        res = self.consistent_storage.put(hash_uid, crypto.b64encode(pub_key))
+        if not res['ok']:
+            raise PatientRegistrationViolation(patient_id, res['owner'])
 
         # Create patient card
         card = Card(patient_name, patient_id, uid, priv_key, self.hospital_name)

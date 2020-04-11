@@ -2,8 +2,8 @@ import os
 
 from nameko.rpc import rpc
 
-from consistent_storage.base import BaseClient, KeyExistsError
-from consistent_storage.sagas_grpc import SagasGrpcClient
+from consistent_storage.base import BaseStorageBackend
+from consistent_storage.sagas_grpc import SagasBackend
 
 BACKEND = os.getenv('CONSISTENT_STORAGE_BACKEND', 'sagas')
 
@@ -20,13 +20,18 @@ class ConsistentStorageProxy:
     name = 'consistent_storage'
 
     def __init__(self):
-        self.client = BaseClient()
-        self.sagas = SagasGrpcClient()
+        self.backend = BaseStorageBackend()
 
         if BACKEND == 'sagas':
-            self.client = self.sagas
+            grpc_addr = os.getenv('SAGAS_GRPC_ADDR')
+            if not grpc_addr:
+                raise Exception('SAGAS_GRPC_ADDR not set')
+
+            self.backend = SagasBackend(grpc_addr)
+
         elif BACKEND == 'bigchain':
             raise NotImplementedError()
+
         else:
             raise Exception(f'Invalid consistent storage backend: "{BACKEND}"')
 
@@ -35,17 +40,63 @@ class ConsistentStorageProxy:
         return True
 
     @rpc
-    def get(self, key: str):
-        return self.client.get(key)
+    def get(self, key: str) -> dict:
+        """
+        Fetches a key from consistent storage.
+
+        Arguments:
+            key {str} -- Key to fetch.
+
+        Returns:
+            dict --  Returns a dictionary as follows:
+
+            {
+                'exists': [bool],
+                'value': [str or NoneType],
+                'is_owner': [bool],
+                'owner': [str],
+            }
+
+            If the key does not exist, the `is_owner` and `owner`
+            metadata keys may not be present in the returned dictionary.
+        """
+        return self.backend.get(key)
 
     @rpc
-    def put(self, key: str, value: str):
-        success = self.client.put(key, value.encode('utf-8'))
-        if not success:
-            raise KeyExistsError(key)
+    def put(self, key: str, value: str) -> dict:
+        """
+        Stores a key in the consistent storage in an atomic, linearizable fashion.
+        Fails if the key is already present and stored by another owner.
+
+        Arguments:
+            key {str} -- Key to store.
+            value {str} -- Value to store.
+
+        Returns:
+            dict --  Returns a dictionary as follows:
+
+            {
+                'ok': [bool],
+                'owner': [str],
+            }
+        """
+        return self.backend.put(key, value)
 
     @rpc
-    def remove(self, key: str):
-        success = self.client.remove(key)
-        if not success:
-            raise KeyError(key)
+    def remove(self, key: str) -> dict:
+        """
+        Removes a key in the consistent storage in an atomic, linearizable fashion.
+        Fails if the key is not in storage, or is owned by another owner.
+
+        Arguments:
+            key {str} -- Key to remove.
+
+        Returns:
+            dict --  Returns a dictionary as follows:
+
+            {
+                'removed': [bool],
+                'error': [str],
+            }
+        """
+        return self.backend.remove(key)
