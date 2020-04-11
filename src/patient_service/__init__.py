@@ -38,11 +38,11 @@ class PatientService:
         pub_key, priv_key = crypto.generate_keys()
 
         # Check if hashed UID resides in consistent storage, otherwise store public key
-        # try:
-        #     self.consistent_storage.put(hash_uid, crypto.b64encode(pub_key))
-        # except Exception as e:
-        #     # TODO: Raise relevant exception
-        #     raise e
+        try:
+            self.consistent_storage.put(hash_uid, crypto.b64encode(pub_key))
+        except Exception as e:
+            # TODO: Raise relevant exception
+            raise e
 
         # Create patient card
         card = Card(patient_name, patient_id, uid, priv_key, self.hospital_name)
@@ -52,7 +52,8 @@ class PatientService:
 
         try:
             self.local_storage.insert_item(uid, pub_key, record)
-        except Exception as e:
+        except Exception as e
+            # TODO: Raise relevant exception
             raise e
 
         # Return card object as a string.
