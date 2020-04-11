@@ -72,7 +72,7 @@ class PatientService:
 
         try:
             self.local_storage.insert_item(uid, pub_key, record)
-        except Exception as e
+        except Exception as e:
             # TODO: Raise relevant exception
             raise e
 
