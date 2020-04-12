@@ -147,7 +147,7 @@
       read_output_div.innerHTML = "Must have a patient card for this hospital."
     } else {
       card_patient_uid_div = $('#patient_card_uid');
-      let patient_uid = card_patient_uid_div.val();
+      let patient_uid = card_patient_uid_div.text();
       data = {uid: patient_uid}
       $.ajax({
           url: "http://localhost:{{api_gateway_port}}/patient_read",
@@ -201,7 +201,7 @@
     const privateKey = document.getElementById('patient_card_private_key').value;
     const decrypt = new JSEncrypt();
     decrypt.setPrivateKey(privateKey);
-    const plainText = decrypt.decrypt(cipherText) || 'DECRYPTION FAILED';
+    const plainText = decrypt.decrypt(data) || 'DECRYPTION FAILED';
     return plainText;
   }
 
