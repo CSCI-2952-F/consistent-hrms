@@ -1,5 +1,5 @@
 import json
-
+import base64
 from nameko.exceptions import RemoteError
 from nameko.rpc import RpcProxy, rpc
 
@@ -52,7 +52,6 @@ class PatientService:
                 raise PatientRegistrationViolation(patient_id, res['owner'])
 
         # Otherwise, perform a linearizable put request to consistent storage.
-        print(pub_key, flush=True)
         res = self.consistent_storage.put(hash_uid, pub_key)
         if not res['ok']:
             raise PatientRegistrationViolation(patient_id, res['owner'])
@@ -60,7 +59,7 @@ class PatientService:
         # Store medical record in local storage
         try:
             record = MedicalRecord(self.hospital_name, uid)
-            self.local_storage.insert_item(uid, pub_key, record)
+            self.local_storage.insert_item(hash_uid, pub_key, record)
         except Exception as e:
             # TODO: Raise relevant exception
             raise e
@@ -79,12 +78,9 @@ class PatientService:
         # Obtain the hashed UID.
         hash_uid = hasher.hash(patient_uid)
 
-        # Get the public key from consistent storage if it exists.
         try:
-            pub_key = self.consistent_storage.get(hash_uid)['value']
-            print(pub_key, flush=True)
             # Obtain the encrypted medical records.
-            med_records = self.local_storage.get_items(patient_uid, pub_key)
+            med_records = self.local_storage.get_items(hash_uid)
         except Exception as e:
             # TODO: Raise relevant exception
             raise e

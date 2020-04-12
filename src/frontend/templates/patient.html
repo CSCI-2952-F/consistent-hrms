@@ -158,8 +158,10 @@
             read_output_div.innerHTML = "Read Unsuccessful."
           },
           success: function (response) {          
-            console.log(response.data);
-            read_output_div.innerHTML = decrypt(response.data);
+            for (let i = 0; i < response.data.length; i ++) {
+              // TODO: change this to append divs.
+              read_output_div.innerHTML = decrypt(response.data[i]);
+            }
           }
       }); 
     }
@@ -198,7 +200,7 @@
   }
 
   function decrypt(data) {
-    const privateKey = document.getElementById('patient_card_private_key').value;
+    const privateKey = document.getElementById('patient_card_private_key').innerHTML;
     const decrypt = new JSEncrypt();
     decrypt.setPrivateKey(privateKey);
     const plainText = decrypt.decrypt(data) || 'DECRYPTION FAILED';
