@@ -45,22 +45,18 @@ class PatientService:
 
         # First check if hashed UID resides in consistent storage, and get the owner of the key.
         res = self.consistent_storage.get(hash_uid)
-
-        if res['value'] is not None:
+        if res['exists']:
             if res['is_owner']:
                 raise PatientRegistrationExists(patient_id)
             else:
                 raise PatientRegistrationViolation(patient_id, res['owner'])
 
         # Otherwise, perform a linearizable put request to consistent storage.
-        try:
-            print(pub_key, flush=True)
-            self.consistent_storage.put(hash_uid, pub_key)
-        except RemoteError as e:
-            if e.exc_type == 'KeyExistsError':
-                raise PatientRegistrationViolation(patient_id)
-            raise e
-        
+        print(pub_key, flush=True)
+        res = self.consistent_storage.put(hash_uid, pub_key)
+        if not res['ok']:
+            raise PatientRegistrationViolation(patient_id, res['owner'])
+
         # Store medical record in local storage
         try:
             record = MedicalRecord(self.hospital_name, uid)
@@ -85,7 +81,7 @@ class PatientService:
 
         # Get the public key from consistent storage if it exists.
         try:
-            pub_key = self.consistent_storage.get(hash_uid)
+            pub_key = self.consistent_storage.get(hash_uid)['value']
             print(pub_key, flush=True)
             # Obtain the encrypted medical records.
             med_records = self.local_storage.get_items(patient_uid, pub_key)
