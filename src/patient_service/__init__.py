@@ -60,11 +60,10 @@ class PatientService:
             if e.exc_type == 'KeyExistsError':
                 raise PatientRegistrationViolation(patient_id)
             raise e
-
+        
         # Store medical record in local storage
-        record = MedicalRecord(self.hospital_name, uid)
-
         try:
+            record = MedicalRecord(self.hospital_name, uid)
             self.local_storage.insert_item(uid, pub_key, record)
         except Exception as e:
             # TODO: Raise relevant exception

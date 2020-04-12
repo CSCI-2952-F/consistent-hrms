@@ -48,13 +48,27 @@
   </div>
 </div>
 <script>
+
+  /*
+  * Register takes a patient name and id and also generates a 
+  * private/public key pair. The private key is kept on the 
+  * client side and the public key is sent in the request to
+  * the server. 
+  * 
+  * If registration is successful, the patient's UID along with their
+  * public key would have been stored in the hospital's consistent storage
+  * service.
+  *
+  * A patient card is generated client side which 
+  * stores the private key.
+  */
   function register() {
     patient_name_div = $('#patient_name');
     let patient_name = patient_name_div.val();
     patient_id_div = $('#patient_id');
     let patient_id = patient_id_div.val();
     
-    // Let's generate the key pair first
+    // Generate the priv/pub key pair.
     crypto.subtle.generateKey(
       {
         name: "RSA-OAEP",
@@ -64,7 +78,8 @@
       },
       true,
       ["encrypt", "decrypt"]
-    ).then(function(keyPair) {      
+    ).then(function(keyPair) {   
+
       // Populate patient card.
       let card_patient_name = document.getElementById('patient_card_name');
       card_patient_name.innerHTML = patient_name;
@@ -75,7 +90,7 @@
           "pkcs8",
           keyPair.privateKey
       ).then(function(exportedPrivateKey) {
-          // converting exported private key to PEM format
+          // Converting exported private key to PEM format
           var pem = toPrivPem(exportedPrivateKey);
           card_private_key_div.innerHTML = pem;
       }).catch(function(err) {
@@ -87,8 +102,10 @@
           "spki",
           keyPair.publicKey
       ).then(function(exportedPublicKey) {
-        // converting exported public key to PEM format
+        // Converting exported public key to PEM format
         var pem = toPubPem(exportedPublicKey);
+
+        // Sending the patient registration request.
         data = {name: patient_name, id: patient_id, pub_key: pem}          
         $.ajax({
           url: "http://localhost:{{api_gateway_port}}/patient_reg",
@@ -117,6 +134,38 @@
     patient_id_div.val('');
   }
 
+ /*
+  * Read will check if the patient has a card. If the patient
+  * has a card, the uid is sent in the request. The patient
+  * can then decrypt their encrypted medical records client 
+  * side.
+  */
+  function read() {
+    let read_output_div = document.getElementById('read-output');    
+
+    if ($("#patient_card").css('display') == 'none') {
+      read_output_div.innerHTML = "Must have a patient card for this hospital."
+    } else {
+      card_patient_uid_div = $('#patient_card_uid');
+      let patient_uid = card_patient_uid_div.val();
+      data = {uid: patient_uid}
+      $.ajax({
+          url: "http://localhost:{{api_gateway_port}}/patient_read",
+          type: "POST",
+          dataType: 'json',
+          data: JSON.stringify(data),
+          error: function (request, status, error) {
+            read_output_div.innerHTML = "Read Unsuccessful."
+          },
+          success: function (response) {          
+            console.log(response.data);
+            read_output_div.innerHTML = decrypt(response.data);
+          }
+      }); 
+    }
+  }
+
+  /* CRYPTO HELPER FUNCTIONS */
   function arrayBufferToBase64(arrayBuffer) {
     var byteArray = new Uint8Array(arrayBuffer);
     var byteString = '';
@@ -146,31 +195,6 @@
     var b64 = addNewLines(arrayBufferToBase64(privateKey));
     var pem = "-----BEGIN PRIVATE KEY-----\n" + b64 + "-----END PRIVATE KEY-----";
     return pem;
-  }
-
-  function read() {
-    let read_output_div = document.getElementById('read-output');    
-
-    if ($("#patient_card").css('display') == 'none') {
-      read_output_div.innerHTML = "Must have a patient card for this hospital."
-    } else {
-      card_patient_uid_div = $('#patient_card_uid');
-      let patient_uid = card_patient_uid_div.val();
-      data = {uid: patient_uid}
-      $.ajax({
-          url: "http://localhost:{{api_gateway_port}}/patient_read",
-          type: "POST",
-          dataType: 'json',
-          data: JSON.stringify(data),
-          error: function (request, status, error) {
-            read_output_div.innerHTML = "Read Unsuccessful."
-          },
-          success: function (response) {          
-            console.log(response.data);
-            read_output_div.innerHTML = decrypt(response.data);
-          }
-      }); 
-    }
   }
 
   function decrypt(data) {
