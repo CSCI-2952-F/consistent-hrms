@@ -4,7 +4,6 @@ from nameko.exceptions import RemoteError
 from nameko.rpc import RpcProxy, rpc
 
 from lib import crypto, hasher
-from lib.card import Card
 from lib.hospital import get_hospital_name
 from lib.local_storage import LocalStorage
 from lib.medical_record import MedicalRecord
@@ -34,7 +33,7 @@ class PatientService:
         return True
 
     @rpc
-    def register(self, patient_name, patient_id):
+    def register(self, patient_name, patient_id, pub_key):
         """
         Registers the patient to this hospital and stores the patient's
         public key and patient ID in the consistent storage.
@@ -43,10 +42,6 @@ class PatientService:
         """
         uid = patient_name + patient_id
         hash_uid = hasher.hash(uid)
-
-        # Generate public keys for new patient.
-        # Perhaps cache generated keys to prevent DDoS?
-        pub_key, priv_key = crypto.generate_keys()
 
         # First check if hashed UID resides in consistent storage, and get the owner of the key.
         res = self.consistent_storage.get(hash_uid)
@@ -65,11 +60,8 @@ class PatientService:
                 raise PatientRegistrationViolation(patient_id)
             raise e
 
-        # Create patient card
-        card = Card(patient_name, uid, priv_key, self.hospital_name)
-
         # Store medical record in local storage
-        record = MedicalRecord(self.hospital_name, card)
+        record = MedicalRecord(self.hospital_name, uid)
 
         try:
             self.local_storage.insert_item(uid, pub_key, record)
@@ -77,8 +69,8 @@ class PatientService:
             # TODO: Raise relevant exception
             raise e
 
-        # Return card object as a string.
-        return str(card)
+        # Return patient unique identifier
+        return uid
     
     @rpc
     def read(self, patient_uid):

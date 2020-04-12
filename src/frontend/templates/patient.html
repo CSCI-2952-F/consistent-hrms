@@ -90,8 +90,6 @@
       ).then(function(exportedPublicKey) {
         // converting exported public key to PEM format
         var pem = toPubPem(exportedPublicKey);
-        console.log(pem);
-
         data = {name: patient_name, id: patient_id, pub_key: pem}          
         $.ajax({
           url: "http://localhost:{{api_gateway_port}}/patient_reg",
@@ -108,7 +106,8 @@
             reg_div.innerHTML = "Registration Successful.";          
             // Display patient card.
             document.getElementById("patient_card").style.display = "block";
-            let card_patient_uid = document.getElementById('patient_card_uid');
+            let card_patient_uid_div = document.getElementById('patient_card_uid');
+            card_patient_uid_div.innerHTML = response.uid;
           }
         });
       }).catch(function(err) {

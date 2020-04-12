@@ -3,7 +3,6 @@ import json
 from nameko.rpc import rpc
 
 from lib import crypto
-from lib.card import Card
 from lib.hospital import get_hospital_name
 from lib.local_storage import LocalStorage
 
@@ -36,8 +35,7 @@ class PhysicianService:
             # TODO: Raise relevant exception
             raise e
 
-        card = Card(physician_name, uid, priv_key, self.hospital_name)
-        return str(card)
+        return uid
         
     
     @rpc

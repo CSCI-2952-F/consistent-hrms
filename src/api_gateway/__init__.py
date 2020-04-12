@@ -1,9 +1,9 @@
 import json
-
 from nameko.exceptions import RemoteError
 from nameko.rpc import RpcProxy
 from nameko.web.handlers import http
 from lib.nameko_cors import cors_http
+
 
 class ApiGatewayService:
     name = 'api_gateway'
@@ -18,11 +18,9 @@ class ApiGatewayService:
     @cors_http('POST', '/patient_reg')
     def patient_register_hospital(self, request):
         data = json.loads(request.get_data(as_text=True))
-        try:
-            print(data['pub_key'], flush=True)
-            
-            card = self.patient_rpc.register(patient_name=data['name'], patient_id=data['id'])
-            return json.dumps({'success': True, 'card': card})
+        try:         
+            uid = self.patient_rpc.register(patient_name=data['name'], patient_id=data['id'], pub_key=data['pub_key'] )
+            return json.dumps({'success': True, 'uid': uid})
         except RemoteError as e:
             return 500, json.dumps({'success': False, 'error': str(e)})
     
