@@ -15,7 +15,7 @@ class MedicalRecord:
         self.date = time.ctime()
         self.notes = None
         self.signature = name
-        self.uid = card.uid        
+        self.uid = uid        
     
     def __str__(self):
         record_to_string = ""

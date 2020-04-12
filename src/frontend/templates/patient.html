@@ -38,7 +38,6 @@
         <p class="card-text">Obtain patient medical records.</p>
         <form>
           <div class="form-group">
-            <input type="text" class="form-control" id="patient_uid" placeholder="Patient UID">
             <a href="#" class="btn btn-primary" role="button" onclick="read()">Read</a>
           </div>
         </form>
@@ -101,7 +100,6 @@
             reg_div.innerHTML = "Registration Unsuccessful.";       
         },
           success: function (response) {
-            console.log(response);
             let reg_div = document.getElementById('registration-output');
             reg_div.innerHTML = "Registration Successful.";          
             // Display patient card.
@@ -151,25 +149,37 @@
   }
 
   function read() {
-    patient_uid_div = $('#patient_uid');
-    let patient_uid = patient_uid_div.val();
-    data = {uid: patient_uid}
+    let read_output_div = document.getElementById('read-output');    
 
-    $.ajax({
-        url: "http://localhost:{{api_gateway_port}}/patient_read",
-        type: "POST",
-        dataType: 'json',
-        data: JSON.stringify(data),
-        error: function (request, status, error) {
-          console.log('Error: ' + error)
-        },
-        success: function (response) {
-          let read_div = $('#read-output');
-          read_div.innerHTML = response;
-          console.log(response);
-        }
-    });
-    patient_uid_div.val('');
+    if ($("#patient_card").css('display') == 'none') {
+      read_output_div.innerHTML = "Must have a patient card for this hospital."
+    } else {
+      card_patient_uid_div = $('#patient_card_uid');
+      let patient_uid = card_patient_uid_div.val();
+      data = {uid: patient_uid}
+      $.ajax({
+          url: "http://localhost:{{api_gateway_port}}/patient_read",
+          type: "POST",
+          dataType: 'json',
+          data: JSON.stringify(data),
+          error: function (request, status, error) {
+            read_output_div.innerHTML = "Read Unsuccessful."
+          },
+          success: function (response) {          
+            console.log(response.data);
+            read_output_div.innerHTML = decrypt(response.data);
+          }
+      }); 
+    }
   }
+
+  function decrypt(data) {
+    const privateKey = document.getElementById('patient_card_private_key').value;
+    const decrypt = new JSEncrypt();
+    decrypt.setPrivateKey(privateKey);
+    const plainText = decrypt.decrypt(cipherText) || 'DECRYPTION FAILED';
+    return plainText;
+  }
+
 </script>
 {% endblock %}

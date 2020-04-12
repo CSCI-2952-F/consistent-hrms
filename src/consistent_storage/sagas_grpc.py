@@ -24,7 +24,7 @@ class SagasGrpcClient(BaseClient):
             return {
                 'value': None,
             }
-
+        
         return {
             'value': base64.b64encode(res.value).decode('utf-8'),
             'is_owner': res.isOwner,
