@@ -21,13 +21,13 @@
     </div>
   </div>
   <div class="row">
-    <div id="patient_card" class="card w-50 mb-2 ml-2 mr-2" style = "display: none">
+    <div id="patient_card" class="card w-50 mb-2 ml-2 mr-2" style = "display: none; height: 300px; overflow-y: scroll;">
       <div class="card-body">
         <h4 class="card-title">Patient Card</h4>
         <div class="card-subtitle mb-2 text-muted">Patient Name: <span class="card-text" id="patient_card_name"></span> </div>
-        <div class="card-subtitle mb-2 text-muted">Patient UID: <span class="card-text" id="patient_card_uid"></span> </div>        
+        <div class="card-subtitle mb-2 text-muted">Patient UID: <span class="card-text" id="patient_card_uid"></span> </div>
+        <div class="card-subtitle mb-2 text-muted">Hospital Name: <span class="card-text"> {{ hospital_name }} </span></div>        
         <div class="card-subtitle mb-2 text-muted">Private Key: <span class="card-text" id="patient_card_private_key"></span> </div>
-        <div class="card-subtitle mb-2 text-muted">Hospital Name: <span class="card-text"> {{ hospital_name }} </span></div>
       </div>
     </div>
   </div>
@@ -54,31 +54,101 @@
     let patient_name = patient_name_div.val();
     patient_id_div = $('#patient_id');
     let patient_id = patient_id_div.val();
-    data = {name: patient_name, id: patient_id}
     
-    $.ajax({
-        url: "http://localhost:{{api_gateway_port}}/patient_reg",
-        type: "POST",
-        dataType: 'json',
-        data: JSON.stringify(data),
-        error: function (request, status, error) {
-          let reg_div = document.getElementById('registration-output');
-          reg_div.innerHTML = "Registration Unsuccessful.";       
+    // Let's generate the key pair first
+    crypto.subtle.generateKey(
+      {
+        name: "RSA-OAEP",
+        modulusLength: 2048, // can be 1024, 2048 or 4096
+        publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+        hash: {name: "SHA-256"} // or SHA-512
+      },
+      true,
+      ["encrypt", "decrypt"]
+    ).then(function(keyPair) {      
+      // Populate patient card.
+      let card_patient_name = document.getElementById('patient_card_name');
+      card_patient_name.innerHTML = patient_name;
+      let card_private_key_div = document.getElementById('patient_card_private_key');
+
+      // Private Key Extraction.
+      crypto.subtle.exportKey(
+          "pkcs8",
+          keyPair.privateKey
+      ).then(function(exportedPrivateKey) {
+          // converting exported private key to PEM format
+          var pem = toPrivPem(exportedPrivateKey);
+          card_private_key_div.innerHTML = pem;
+      }).catch(function(err) {
+          console.log(err);
+      });
+
+      // Public Key Extraction.
+      crypto.subtle.exportKey(
+          "spki",
+          keyPair.publicKey
+      ).then(function(exportedPublicKey) {
+        // converting exported public key to PEM format
+        var pem = toPubPem(exportedPublicKey);
+        console.log(pem);
+
+        data = {name: patient_name, id: patient_id, pub_key: pem}          
+        $.ajax({
+          url: "http://localhost:{{api_gateway_port}}/patient_reg",
+          type: "POST",
+          dataType: 'json',
+          data: JSON.stringify(data),
+          error: function (request, status, error) {
+            let reg_div = document.getElementById('registration-output');
+            reg_div.innerHTML = "Registration Unsuccessful.";       
         },
-        success: function (response) {
-          console.log(response);
-          let reg_div = document.getElementById('registration-output');
-          reg_div.innerHTML = "Registration Successful.";          
-          // Display patient card.
-          document.getElementById("patient_card").style.display = "block";
-          // Populate patient card.
-          let card_patient_name = document.getElementById('patient_card_name');
-          card_patient_name.innerHTML = patient_name;
-          let card_patient_uid = document.getElementById('patient_card_uid');
-        }
+          success: function (response) {
+            console.log(response);
+            let reg_div = document.getElementById('registration-output');
+            reg_div.innerHTML = "Registration Successful.";          
+            // Display patient card.
+            document.getElementById("patient_card").style.display = "block";
+            let card_patient_uid = document.getElementById('patient_card_uid');
+          }
+        });
+      }).catch(function(err) {
+        console.log(err);
+      });
     });
+
     patient_name_div.val('');
     patient_id_div.val('');
+  }
+
+  function arrayBufferToBase64(arrayBuffer) {
+    var byteArray = new Uint8Array(arrayBuffer);
+    var byteString = '';
+    for(var i=0; i < byteArray.byteLength; i++) {
+        byteString += String.fromCharCode(byteArray[i]);
+    }
+    var b64 = window.btoa(byteString);
+    return b64;
+  }
+
+  function addNewLines(str) {
+    var finalString = '';
+    while(str.length > 0) {
+      finalString += str.substring(0, 64) + '\n';
+      str = str.substring(64);
+    }
+    return finalString;
+  }
+
+  function toPubPem(publicKey) {
+    var b64 = addNewLines(arrayBufferToBase64(publicKey));
+    var pem = "-----BEGIN PUBLIC KEY-----\n" + b64 + "-----END PUBLIC KEY-----";
+    return pem;
+  }
+
+  function toPrivPem(privateKey) {
+    var b64 = addNewLines(arrayBufferToBase64(privateKey));
+    var pem = "-----BEGIN PRIVATE KEY-----\n" + b64 + "-----END PRIVATE KEY-----";
+    return pem;
   }
 
   function read() {

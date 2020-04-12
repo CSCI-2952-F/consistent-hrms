@@ -19,6 +19,8 @@ class ApiGatewayService:
     def patient_register_hospital(self, request):
         data = json.loads(request.get_data(as_text=True))
         try:
+            print(data['pub_key'], flush=True)
+            
             card = self.patient_rpc.register(patient_name=data['name'], patient_id=data['id'])
             return json.dumps({'success': True, 'card': card})
         except RemoteError as e:
