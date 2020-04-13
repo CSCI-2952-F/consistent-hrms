@@ -4,8 +4,8 @@ import os
 import grpc
 
 from consistent_storage.base import BaseStorageBackend
-from consistent_storage.sagas_pb2 import *
-from consistent_storage.sagas_pb2_grpc import SagasConsistentStorageStub
+from consistent_storage.sagas.pb.sagas_pb2 import *
+from consistent_storage.sagas.pb.sagas_pb2_grpc import SagasConsistentStorageStub
 
 
 class SagasBackend(BaseStorageBackend):

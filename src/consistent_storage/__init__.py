@@ -3,7 +3,7 @@ import os
 from nameko.rpc import rpc
 
 from consistent_storage.base import BaseStorageBackend
-from consistent_storage.sagas_grpc import SagasBackend
+from consistent_storage.sagas import SagasBackend
 
 BACKEND = os.getenv('CONSISTENT_STORAGE_BACKEND', 'sagas')
 
