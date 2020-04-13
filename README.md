@@ -2,6 +2,10 @@
 
 ## Instructions
 
+### Starting up
+
+First, run `init.sh`, which will bootstrap any necessary dependencies. This only needs to be done once, or whenever the script itself is changed.
+
 A useful Python script has been included to start various hospital namespaces, orchestrated using Docker Compose. The number of namespaces started depends on the list of hospital names in `data/hospitals.txt`.
 
 To start all hospitals, run:
@@ -11,6 +15,51 @@ python hospitals.py start
 ```
 
 The frontend servers will be listening on the local interface, at ports starting from 8000.
+
+### Development
+
+When making source code changes, it is necessary to rebuild the services. You can use `python hospitals.py start` to rebuild and reload just the changed services.
+
+The `hospitals.py` script also provides useful aliases for working with multiple Docker Compose projects. For example, to view the running containers across all hospitals, you can use:
+
+```sh
+$ python hospitals.py ps
+[*] Executing: /usr/local/bin/docker-compose -f docker-compose.hospital.yml -p rhode-island-hospital ps
+                   Name                                 Command                  State                        Ports
+------------------------------------------------------------------------------------------------------------------------------------
+rhode-island-hospital_api_gateway_1          bash -c nameko run ${MODUL ...   Up (healthy)   127.0.0.1:8100->80/tcp
+rhode-island-hospital_consistent_storage_1   nameko run consistent_stor ...   Up
+rhode-island-hospital_frontend_1             python main.py                   Up             127.0.0.1:8000->80/tcp
+rhode-island-hospital_patient_service_1      bash -c nameko run ${MODUL ...   Up
+rhode-island-hospital_physician_service_1    bash -c nameko run ${MODUL ...   Up
+rhode-island-hospital_rabbitmq_1             docker-entrypoint.sh rabbi ...   Up             25672/tcp, 4369/tcp, 5671/tcp, 5672/tcp
+rhode-island-hospital_redis_1                docker-entrypoint.sh redis ...   Up             6379/tcp
+rhode-island-hospital_sagas_1                sagas                            Up             8080/tcp
+[*] Executing: /usr/local/bin/docker-compose -f docker-compose.hospital.yml -p miriam-hospital ps
+                Name                              Command                  State                        Ports
+------------------------------------------------------------------------------------------------------------------------------
+miriam-hospital_api_gateway_1          bash -c nameko run ${MODUL ...   Up (healthy)   127.0.0.1:8101->80/tcp
+miriam-hospital_consistent_storage_1   nameko run consistent_stor ...   Up
+miriam-hospital_frontend_1             python main.py                   Up             127.0.0.1:8001->80/tcp
+miriam-hospital_patient_service_1      bash -c nameko run ${MODUL ...   Up
+miriam-hospital_physician_service_1    bash -c nameko run ${MODUL ...   Up
+miriam-hospital_rabbitmq_1             docker-entrypoint.sh rabbi ...   Up             25672/tcp, 4369/tcp, 5671/tcp, 5672/tcp
+miriam-hospital_redis_1                docker-entrypoint.sh redis ...   Up             6379/tcp
+miriam-hospital_sagas_1                sagas                            Up             8080/tcp
+[*] Executing: /usr/local/bin/docker-compose -f docker-compose.hospital.yml -p newport-hospital ps
+                Name                               Command                  State                        Ports
+-------------------------------------------------------------------------------------------------------------------------------
+newport-hospital_api_gateway_1          bash -c nameko run ${MODUL ...   Up (healthy)   127.0.0.1:8102->80/tcp
+newport-hospital_consistent_storage_1   nameko run consistent_stor ...   Up
+newport-hospital_frontend_1             python main.py                   Up             127.0.0.1:8002->80/tcp
+newport-hospital_patient_service_1      bash -c nameko run ${MODUL ...   Up
+newport-hospital_physician_service_1    bash -c nameko run ${MODUL ...   Up
+newport-hospital_rabbitmq_1             docker-entrypoint.sh rabbi ...   Up             25672/tcp, 4369/tcp, 5671/tcp, 5672/tcp
+newport-hospital_redis_1                docker-entrypoint.sh redis ...   Up             6379/tcp
+newport-hospital_sagas_1                sagas                            Up             8080/tcp
+```
+
+The list of proxied commands to Docker Compose can be found in `hospitals.py`.
 
 To view Docker Compose information for a single hospital, use the following command syntax:
 
@@ -24,11 +73,15 @@ For example, to view all containers for Rhode Island Hospital, do the following:
 docker-compose -f docker-compose.hospital.yml -p rhode-island-hospital ps
 ```
 
+### Tearing down
+
 To terminate all containers, use the helper script again:
 
 ```sh
 python hospitals.py stop
 ```
+
+If you want to permanently
 
 ## Configuration
 
