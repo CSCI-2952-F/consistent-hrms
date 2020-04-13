@@ -4,10 +4,7 @@
     <title>{{ hospital_name }}</title>
 
     <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
     <!-- bootstrap -->
     <link
@@ -16,19 +13,12 @@
       integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
       crossorigin="anonymous"
     />
-    <link
-      href="{{ url_for('static', filename='css/main.css') }}"
-      rel="stylesheet"
-    />
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/2.3.1/jsencrypt.min.js"></script>
   </head>
   <body>
-    <div
-      class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm"
-    >
-      <a class="h4 my-0 mr-md-auto font-weight-normal text-dark" href="/"
-        >{{ hospital_name }}</a
-      >
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+      <a class="h4 my-0 mr-md-auto font-weight-normal text-dark" href="/">{{ hospital_name }}</a>
       <nav class="my-2 my-md-0 mr-md-3">
         <a class="p-2 text-dark" href="/patient">Patient</a>
         <a class="p-2 text-dark" href="/physician">Physician</a>
