@@ -4,9 +4,10 @@ from functools import partial
 from nameko.web.handlers import HttpRequestHandler
 from nameko.extensions import register_entrypoint
 
+
 class CorsHttpRequestHandler(HttpRequestHandler):
     """
-    A Cors Http handler. 
+    A Cors Http handler.
     Registers an OPTIONS route per endpoint definition.
     """
     def __init__(self, method, url, expected_exceptions=(), **kwargs):
@@ -23,8 +24,7 @@ class CorsHttpRequestHandler(HttpRequestHandler):
 
     def response_from_result(self, *args, **kwargs):
         response = super(CorsHttpRequestHandler, self).response_from_result(*args, **kwargs)
-        response.headers.add("Access-Control-Allow-Headers",
-                             self.request.headers.get("Access-Control-Request-Headers"))
+        response.headers.add("Access-Control-Allow-Headers", self.request.headers.get("Access-Control-Request-Headers"))
         response.headers.add("Access-Control-Allow-Credentials", str(self.allow_credentials).lower())
         response.headers.add("Access-Control-Allow-Methods", ",".join(self.allowed_methods))
         response.headers.add("Access-Control-Allow-Origin", ",".join(self.allowed_origin))
@@ -33,7 +33,7 @@ class CorsHttpRequestHandler(HttpRequestHandler):
     @classmethod
     def decorator(cls, *args, **kwargs):
         """
-        We're overriding the decorator classmethod to allow it to register an options 
+        We're overriding the decorator classmethod to allow it to register an options
         route for each standard REST call. This saves us from manually defining OPTIONS
         routes for each CORs enabled endpoint
         """

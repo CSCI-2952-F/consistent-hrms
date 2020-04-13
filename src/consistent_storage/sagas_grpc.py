@@ -28,7 +28,7 @@ class SagasBackend(BaseStorageBackend):
                 'exists': False,
                 'value': None,
             }
-        
+
         return {
             'exists': True,
             'value': res.value.decode('utf-8'),

@@ -57,16 +57,12 @@ class PatientService:
             raise PatientRegistrationViolation(patient_id, res['owner'])
 
         # Store medical record in local storage
-        try:
-            record = MedicalRecord(self.hospital_name, uid)
-            self.local_storage.insert_item(hash_uid, pub_key, record)
-        except Exception as e:
-            # TODO: Raise relevant exception
-            raise e
+        record = MedicalRecord(self.hospital_name, uid)
+        self.local_storage.insert_item(hash_uid, pub_key, record)
 
         # Return patient unique identifier
         return uid
-    
+
     @rpc
     def read(self, patient_uid):
         """
@@ -78,11 +74,7 @@ class PatientService:
         # Obtain the hashed UID.
         hash_uid = hasher.hash(patient_uid)
 
-        try:
-            # Obtain the encrypted medical records.
-            med_records = self.local_storage.get_items(hash_uid)
-        except Exception as e:
-            # TODO: Raise relevant exception
-            raise e
-        
+        # Obtain the encrypted medical records.
+        med_records = self.local_storage.get_items(hash_uid)
+
         return med_records

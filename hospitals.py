@@ -5,7 +5,6 @@ Helper script that starts Docker Compose namespaces as separate hospitals.
 import os
 import re
 import sys
-# from functools import lru_cache
 from subprocess import Popen, PIPE
 
 BASE_FRONTEND_PORT = 8000
@@ -15,7 +14,6 @@ DOCKER_COMPOSE_FILE = 'docker-compose.hospital.yml'
 HOSPITAL_NAMES_FILE = 'data/hospitals.txt'
 
 
-# @lru_cache()
 def get_docker_compose_executable():
     paths = [
         '/usr/local/bin/docker-compose',
