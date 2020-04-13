@@ -41,3 +41,21 @@ The following environment variables are used:
   - When changing this, Kafka will probably complain. It's best to delete the topic whenever you need to change the number of partitions in order to run experiments.
 
 You can also choose to spin up more hospitals by adding or removing lines in `data/hospitals.txt`.
+
+## Style Guide
+
+### General
+
+Use [EditorConfig](https://editorconfig.org/) to configure your IDE to respect the configuration file located in `.editorconfig`.
+
+### Prettier
+
+This project uses [Prettier](https://prettier.io/) to format JS, HTML, CSS and Markdown files automatically. The configuration is located in `.prettierrc`.
+
+### Python
+
+This project uses [Pylint](https://www.pylint.org/) and [YAPF](https://github.com/google/yapf) for linting and code formatting respectively. Configure your IDE to use the configuration files `.pylintrc` and `style.cfg` respectively.
+
+### Go
+
+This project uses [`go fmt`](https://golang.org/pkg/fmt/) for formatting Go code, without any custom configuration.
