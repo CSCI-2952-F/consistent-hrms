@@ -6,6 +6,7 @@ service SagasConsistentStorage {
   rpc Get(GetRequest) returns (GetResponse) {}
   rpc Put(PutRequest) returns (PutResponse) {}
   rpc Remove(RemoveRequest) returns (RemoveResponse) {}
+  rpc Transfer(TransferRequest) returns (TransferResponse) {}
 }
 
 message GetRequest { string key = 1; }
@@ -37,4 +38,19 @@ enum RemoveError {
 message RemoveResponse {
   bool removed = 1;
   RemoveError errorType = 2;
+}
+
+message TransferRequest {
+  string key = 1;
+  string newOwner = 2;
+}
+
+enum TransferError {
+  TRANSFER_KEY_ERROR = 0;
+  TRANSFER_NOT_OWNER = 1;
+}
+
+message TransferResponse {
+  bool transferred = 1;
+  TransferError errorType = 2;
 }

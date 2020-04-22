@@ -89,6 +89,10 @@ func (s *sagasConsistentStorageServer) Remove(_ context.Context, r *RemoveReques
 	return &RemoveResponse{Removed: true}, nil
 }
 
+func (s *sagasConsistentStorageServer) Transfer(context.Context, *TransferRequest) (*TransferResponse, error) {
+	panic("implement me")
+}
+
 func produce(key []byte, val []byte) (partition int32, offset kafka.Offset, err error) {
 	msg := &kafka.Message{
 		TopicPartition: kafka.TopicPartition{
