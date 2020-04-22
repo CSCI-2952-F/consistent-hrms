@@ -1,4 +1,4 @@
-# Benchmarking Tools
+# Tests
 
 ## Instructions
 
@@ -10,9 +10,9 @@ pip install -r requirements.txt
 
 Make sure all the necessary containers are already set up and running.
 
-## Consistent Storage Load Test
+## Registration Load Test
 
-A Python script `consistent_storage_load_test.py` allows you to run a load test on consistent storage by hammering the patient registration endpoint with concurrent registrations for the same patient across multiple hospitals.
+A Python script `registration_load_test.py` allows you to run a load test on consistent storage by hammering the patient registration endpoint with concurrent registrations for the same patient across multiple hospitals.
 
 In a setting where linearizability is necessitated, running concurrent requests in a large pool of hospitals might be slow. As such, we can use this script to test the runtime when using different backends, as well as the correctness by running lots of conflicting requests at the same time.
 
