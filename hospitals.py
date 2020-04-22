@@ -7,6 +7,7 @@ from __future__ import print_function
 import os
 import re
 import sys
+import webbrowser
 from subprocess import Popen
 
 BASE_FRONTEND_PORT = 8000
@@ -42,6 +43,18 @@ def get_docker_compose_executable():
     raise Exception('Could not locate docker-compose. Tried paths: %s' % paths)
 
 
+def get_hospitals():
+    hospitals = []
+
+    with open(HOSPITAL_NAMES_FILE, 'r') as f:
+        for line in f:
+            name = line.strip()
+            slug = re.sub('[^a-z]+', '-', name.lower())
+            hospitals.append((name, slug))
+
+    return hospitals
+
+
 def dco(project_name, command_args, env=None):
     if not env:
         env = {}
@@ -74,25 +87,31 @@ def dco(project_name, command_args, env=None):
 
 
 def execute(args):
-    with open(HOSPITAL_NAMES_FILE, 'r') as f:
-        for i, line in enumerate(f):
-            name = line.strip()
-            slug = re.sub('[^a-z]+', '-', name.lower())
+    for i, (name, slug) in enumerate(get_hospitals()):
+        # Prepare ports
+        frontend_port = BASE_FRONTEND_PORT + i
+        api_gateway_port = BASE_API_GATEWAY_PORT + i
 
-            # Prepare ports
-            frontend_port = BASE_FRONTEND_PORT + i
-            api_gateway_port = BASE_API_GATEWAY_PORT + i
+        # Prepare environment
+        env = {
+            'HOSPITAL_NAME': name,
+            'HOSPITAL_NAME_SLUG': slug,
+            'FRONTEND_PORT': str(frontend_port),
+            'API_GATEWAY_PORT': str(api_gateway_port),
+        }
 
-            # Prepare environment
-            env = {
-                'HOSPITAL_NAME': name,
-                'HOSPITAL_NAME_SLUG': slug,
-                'FRONTEND_PORT': str(frontend_port),
-                'API_GATEWAY_PORT': str(api_gateway_port),
-            }
+        # Build and start containers in detached mode
+        dco(slug, args, env=env)
 
-            # Build and start containers in detached mode
-            dco(slug, args, env=env)
+
+def open_frontend():
+    for i, _ in enumerate(get_hospitals()):
+        # Get URL of frontend
+        frontend_port = BASE_FRONTEND_PORT + i
+        url = 'http://127.0.0.1:%s' % (str(frontend_port))
+
+        # Open in webbrowser
+        webbrowser.open(url)
 
 
 def print_help():
@@ -108,6 +127,7 @@ def print_help():
     print_cmd_help('stop', 'Stop services')
     for cmd, desc in PROXIED_COMMANDS.items():
         print_cmd_help(cmd, desc)
+    print_cmd_help('web', 'Opens the frontend URL in a browser')
     print_cmd_help('help', 'Display this help message')
 
 
@@ -127,6 +147,9 @@ def main():
 
     elif command in PROXIED_COMMANDS:
         execute(sys.argv[1:])
+
+    elif command == 'web':
+        open_frontend()
 
     elif command == 'help':
         print_help()
