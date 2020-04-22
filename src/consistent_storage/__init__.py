@@ -100,3 +100,23 @@ class ConsistentStorageProxy:
             }
         """
         return self.backend.remove(key)
+
+    @rpc
+    def transfer(self, key: str, dest: str) -> dict:
+        """
+        Transfer a key in the consistent storage to a new owner in an atomic, linearizable fashion.
+        Fails if the key is not in storage, or is owned by another owner.
+
+        Arguments:
+            key {str} -- Key to remove.
+            dest {str} -- Destination hospital name.
+
+        Returns:
+            dict --  Returns a dictionary as follows:
+
+            {
+                'transferred': [bool],
+                'error': [str],
+            }
+        """
+        return self.backend.transfer(key, dest)

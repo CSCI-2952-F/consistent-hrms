@@ -60,3 +60,24 @@ class BaseStorageBackend:
             key {str} -- Key to remove.
         """
         raise NotImplementedError()
+
+    def transfer(self, key: str, dest: str) -> dict:
+        """
+        Transfers a key to a new destination owner.
+        Fails if the key is not in storage, or is owned by another owner.
+
+        Ideally, the destination hospital name should be retrieved and validated against
+        a central registry of hospitals (e.g. ZooKeeper).
+
+        Returns a dictionary as follows:
+
+        {
+            'transferred': [bool],
+            'error': [str],
+        }
+
+        Arguments:
+            key {str} -- Key to transfer.
+            dest {str} -- Destination hospital name.
+        """
+        raise NotImplementedError()
