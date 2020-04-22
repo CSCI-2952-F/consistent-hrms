@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=b'Z\004main',
-  serialized_pb=b'\n\x0bsagas.proto\"\x19\n\nGetRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\"L\n\x0bGetResponse\x12\x0e\n\x06\x65xists\x18\x01 \x01(\x08\x12\r\n\x05value\x18\x02 \x01(\x0c\x12\x0f\n\x07isOwner\x18\x03 \x01(\x08\x12\r\n\x05owner\x18\x04 \x01(\t\"(\n\nPutRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x0c\"(\n\x0bPutResponse\x12\n\n\x02ok\x18\x01 \x01(\x08\x12\r\n\x05owner\x18\x02 \x01(\t\"\x1c\n\rRemoveRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\"B\n\x0eRemoveResponse\x12\x0f\n\x07removed\x18\x01 \x01(\x08\x12\x1f\n\terrorType\x18\x02 \x01(\x0e\x32\x0c.RemoveError*9\n\x0bRemoveError\x12\x14\n\x10REMOVE_KEY_ERROR\x10\x00\x12\x14\n\x10REMOVE_NOT_OWNER\x10\x01\x32\x8d\x01\n\x16SagasConsistentStorage\x12\"\n\x03Get\x12\x0b.GetRequest\x1a\x0c.GetResponse\"\x00\x12\"\n\x03Put\x12\x0b.PutRequest\x1a\x0c.PutResponse\"\x00\x12+\n\x06Remove\x12\x0e.RemoveRequest\x1a\x0f.RemoveResponse\"\x00\x42\x06Z\x04mainb\x06proto3'
+  serialized_pb=b'\n\x0bsagas.proto\"\x19\n\nGetRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\"L\n\x0bGetResponse\x12\x0e\n\x06\x65xists\x18\x01 \x01(\x08\x12\r\n\x05value\x18\x02 \x01(\x0c\x12\x0f\n\x07isOwner\x18\x03 \x01(\x08\x12\r\n\x05owner\x18\x04 \x01(\t\"(\n\nPutRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x0c\"(\n\x0bPutResponse\x12\n\n\x02ok\x18\x01 \x01(\x08\x12\r\n\x05owner\x18\x02 \x01(\t\"\x1c\n\rRemoveRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\"B\n\x0eRemoveResponse\x12\x0f\n\x07removed\x18\x01 \x01(\x08\x12\x1f\n\terrorType\x18\x02 \x01(\x0e\x32\x0c.RemoveError\"0\n\x0fTransferRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x10\n\x08newOwner\x18\x02 \x01(\t\"J\n\x10TransferResponse\x12\x13\n\x0btransferred\x18\x01 \x01(\x08\x12!\n\terrorType\x18\x02 \x01(\x0e\x32\x0e.TransferError*9\n\x0bRemoveError\x12\x14\n\x10REMOVE_KEY_ERROR\x10\x00\x12\x14\n\x10REMOVE_NOT_OWNER\x10\x01*?\n\rTransferError\x12\x16\n\x12TRANSFER_KEY_ERROR\x10\x00\x12\x16\n\x12TRANSFER_NOT_OWNER\x10\x01\x32\xc0\x01\n\x16SagasConsistentStorage\x12\"\n\x03Get\x12\x0b.GetRequest\x1a\x0c.GetResponse\"\x00\x12\"\n\x03Put\x12\x0b.PutRequest\x1a\x0c.PutResponse\"\x00\x12+\n\x06Remove\x12\x0e.RemoveRequest\x1a\x0f.RemoveResponse\"\x00\x12\x31\n\x08Transfer\x12\x10.TransferRequest\x1a\x11.TransferResponse\"\x00\x42\x06Z\x04mainb\x06proto3'
 )
 
 _REMOVEERROR = _descriptor.EnumDescriptor(
@@ -39,14 +39,39 @@ _REMOVEERROR = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=302,
-  serialized_end=359,
+  serialized_start=428,
+  serialized_end=485,
 )
 _sym_db.RegisterEnumDescriptor(_REMOVEERROR)
 
 RemoveError = enum_type_wrapper.EnumTypeWrapper(_REMOVEERROR)
+_TRANSFERERROR = _descriptor.EnumDescriptor(
+  name='TransferError',
+  full_name='TransferError',
+  filename=None,
+  file=DESCRIPTOR,
+  values=[
+    _descriptor.EnumValueDescriptor(
+      name='TRANSFER_KEY_ERROR', index=0, number=0,
+      serialized_options=None,
+      type=None),
+    _descriptor.EnumValueDescriptor(
+      name='TRANSFER_NOT_OWNER', index=1, number=1,
+      serialized_options=None,
+      type=None),
+  ],
+  containing_type=None,
+  serialized_options=None,
+  serialized_start=487,
+  serialized_end=550,
+)
+_sym_db.RegisterEnumDescriptor(_TRANSFERERROR)
+
+TransferError = enum_type_wrapper.EnumTypeWrapper(_TRANSFERERROR)
 REMOVE_KEY_ERROR = 0
 REMOVE_NOT_OWNER = 1
+TRANSFER_KEY_ERROR = 0
+TRANSFER_NOT_OWNER = 1
 
 
 
@@ -277,14 +302,94 @@ _REMOVERESPONSE = _descriptor.Descriptor(
   serialized_end=300,
 )
 
+
+_TRANSFERREQUEST = _descriptor.Descriptor(
+  name='TransferRequest',
+  full_name='TransferRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='TransferRequest.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='newOwner', full_name='TransferRequest.newOwner', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=302,
+  serialized_end=350,
+)
+
+
+_TRANSFERRESPONSE = _descriptor.Descriptor(
+  name='TransferResponse',
+  full_name='TransferResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='transferred', full_name='TransferResponse.transferred', index=0,
+      number=1, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='errorType', full_name='TransferResponse.errorType', index=1,
+      number=2, type=14, cpp_type=8, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=352,
+  serialized_end=426,
+)
+
 _REMOVERESPONSE.fields_by_name['errorType'].enum_type = _REMOVEERROR
+_TRANSFERRESPONSE.fields_by_name['errorType'].enum_type = _TRANSFERERROR
 DESCRIPTOR.message_types_by_name['GetRequest'] = _GETREQUEST
 DESCRIPTOR.message_types_by_name['GetResponse'] = _GETRESPONSE
 DESCRIPTOR.message_types_by_name['PutRequest'] = _PUTREQUEST
 DESCRIPTOR.message_types_by_name['PutResponse'] = _PUTRESPONSE
 DESCRIPTOR.message_types_by_name['RemoveRequest'] = _REMOVEREQUEST
 DESCRIPTOR.message_types_by_name['RemoveResponse'] = _REMOVERESPONSE
+DESCRIPTOR.message_types_by_name['TransferRequest'] = _TRANSFERREQUEST
+DESCRIPTOR.message_types_by_name['TransferResponse'] = _TRANSFERRESPONSE
 DESCRIPTOR.enum_types_by_name['RemoveError'] = _REMOVEERROR
+DESCRIPTOR.enum_types_by_name['TransferError'] = _TRANSFERERROR
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 GetRequest = _reflection.GeneratedProtocolMessageType('GetRequest', (_message.Message,), {
@@ -329,6 +434,20 @@ RemoveResponse = _reflection.GeneratedProtocolMessageType('RemoveResponse', (_me
   })
 _sym_db.RegisterMessage(RemoveResponse)
 
+TransferRequest = _reflection.GeneratedProtocolMessageType('TransferRequest', (_message.Message,), {
+  'DESCRIPTOR' : _TRANSFERREQUEST,
+  '__module__' : 'sagas_pb2'
+  # @@protoc_insertion_point(class_scope:TransferRequest)
+  })
+_sym_db.RegisterMessage(TransferRequest)
+
+TransferResponse = _reflection.GeneratedProtocolMessageType('TransferResponse', (_message.Message,), {
+  'DESCRIPTOR' : _TRANSFERRESPONSE,
+  '__module__' : 'sagas_pb2'
+  # @@protoc_insertion_point(class_scope:TransferResponse)
+  })
+_sym_db.RegisterMessage(TransferResponse)
+
 
 DESCRIPTOR._options = None
 
@@ -338,8 +457,8 @@ _SAGASCONSISTENTSTORAGE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=362,
-  serialized_end=503,
+  serialized_start=553,
+  serialized_end=745,
   methods=[
   _descriptor.MethodDescriptor(
     name='Get',
@@ -366,6 +485,15 @@ _SAGASCONSISTENTSTORAGE = _descriptor.ServiceDescriptor(
     containing_service=None,
     input_type=_REMOVEREQUEST,
     output_type=_REMOVERESPONSE,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='Transfer',
+    full_name='SagasConsistentStorage.Transfer',
+    index=3,
+    containing_service=None,
+    input_type=_TRANSFERREQUEST,
+    output_type=_TRANSFERRESPONSE,
     serialized_options=None,
   ),
 ])

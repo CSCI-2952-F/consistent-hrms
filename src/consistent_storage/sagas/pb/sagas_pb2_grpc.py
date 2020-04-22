@@ -28,6 +28,11 @@ class SagasConsistentStorageStub(object):
                 request_serializer=sagas__pb2.RemoveRequest.SerializeToString,
                 response_deserializer=sagas__pb2.RemoveResponse.FromString,
                 )
+        self.Transfer = channel.unary_unary(
+                '/SagasConsistentStorage/Transfer',
+                request_serializer=sagas__pb2.TransferRequest.SerializeToString,
+                response_deserializer=sagas__pb2.TransferResponse.FromString,
+                )
 
 
 class SagasConsistentStorageServicer(object):
@@ -51,6 +56,12 @@ class SagasConsistentStorageServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def Transfer(self, request, context):
+        """Missing associated documentation comment in .proto file"""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_SagasConsistentStorageServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -68,6 +79,11 @@ def add_SagasConsistentStorageServicer_to_server(servicer, server):
                     servicer.Remove,
                     request_deserializer=sagas__pb2.RemoveRequest.FromString,
                     response_serializer=sagas__pb2.RemoveResponse.SerializeToString,
+            ),
+            'Transfer': grpc.unary_unary_rpc_method_handler(
+                    servicer.Transfer,
+                    request_deserializer=sagas__pb2.TransferRequest.FromString,
+                    response_serializer=sagas__pb2.TransferResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -124,5 +140,21 @@ class SagasConsistentStorage(object):
         return grpc.experimental.unary_unary(request, target, '/SagasConsistentStorage/Remove',
             sagas__pb2.RemoveRequest.SerializeToString,
             sagas__pb2.RemoveResponse.FromString,
+            options, channel_credentials,
+            call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def Transfer(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/SagasConsistentStorage/Transfer',
+            sagas__pb2.TransferRequest.SerializeToString,
+            sagas__pb2.TransferResponse.FromString,
             options, channel_credentials,
             call_credentials, compression, wait_for_ready, timeout, metadata)

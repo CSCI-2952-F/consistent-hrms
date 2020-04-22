@@ -62,3 +62,21 @@ class SagasBackend(BaseStorageBackend):
             'removed': False,
             'error': error,
         }
+
+    def transfer(self, key: str, dest: str) -> dict:
+        req = TransferRequest(key=key, newOwner=dest)
+        res = self.client.Transfer(req)
+        if res.transferred:
+            return {
+                'transferred': True,
+            }
+
+        if res.errorType == TRANSFER_KEY_ERROR:
+            error = 'Key does not exist'
+        elif res.errorType == TRANSFER_NOT_OWNER:
+            error = 'Not owner of key'
+
+        return {
+            'transferred': False,
+            'error': error,
+        }
