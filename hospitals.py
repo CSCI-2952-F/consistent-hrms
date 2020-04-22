@@ -19,6 +19,7 @@ HOSPITAL_NAMES_FILE = 'data/hospitals.txt'
 PROXIED_COMMANDS = {
     'logs': 'Display logs for containers in each hospital',
     'ps': 'List containers',
+    'exec': 'Execute a command in a running container',
     'down': 'Stop and remove containers, networks, images, and volumes (if flags are specified)',
 }
 
@@ -66,7 +67,7 @@ def dco(project_name, command_args, env=None):
     args += command_args
     command = ' '.join(args)
 
-    print(TERMCOLOR['info'], 'Executing:', command)
+    print(TERMCOLOR['info'], 'Executing:', command, file=sys.stderr)
 
     env = os.environ.update(env)
     proc = Popen(args, stdout=sys.stdout, stderr=sys.stderr, env=env, bufsize=1, universal_newlines=True)
@@ -74,7 +75,7 @@ def dco(project_name, command_args, env=None):
     try:
         proc.communicate()
     except KeyboardInterrupt:
-        print(TERMCOLOR['error'], 'Aborting command.')
+        print(TERMCOLOR['error'], 'Aborting command.', file=sys.stderr)
         return
 
     if proc.returncode != 0:
