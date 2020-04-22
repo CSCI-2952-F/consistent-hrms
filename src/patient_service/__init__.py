@@ -153,6 +153,8 @@ class PatientService:
         if not res['transferred']:
             raise PatientConsistencyViolation('Transfer', res['error'])
 
+        return True
+
     def _verify_auth_token(self, pub_key, auth_token) -> bool:
         """
         Verifies an auth token, which is a RS256 JWT signed with a private key only owned by a patient.
