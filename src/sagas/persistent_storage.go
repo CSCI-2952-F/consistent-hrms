@@ -13,7 +13,7 @@ type PersistentStorage interface {
 	Put(key string, value []byte) error
 	Retrieve(key string) (val *SagaValue, err error)
 	Store(key string, val SagaValue) error
-	Remove(key string, meta SagaMetadata) error
+	Remove(key string, meta SagaMetadata) (val *SagaValue, err error)
 }
 
 // FilePersistentStorage is a key-value storage on the filesystem for storing already consistent data.
@@ -142,11 +142,14 @@ func (f *FilePersistentStorage) Store(key string, val SagaValue) error {
 	return f.Put(key, data)
 }
 
-func (f *FilePersistentStorage) Remove(key string, meta SagaMetadata) error {
+func (f *FilePersistentStorage) Remove(key string, meta SagaMetadata) (*SagaValue, error) {
 	// Store nil value with metadata
-	pv := SagaValue{
+	value := SagaValue{
 		Value:    nil,
 		Metadata: meta,
 	}
-	return f.Store(key, pv)
+	if err := f.Store(key, value); err != nil {
+		return nil, err
+	}
+	return &value, nil
 }

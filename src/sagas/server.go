@@ -36,12 +36,10 @@ func (s *sagasConsistentStorageServer) Put(_ context.Context, r *PutRequest) (*P
 	log.Printf("Received Put request: %v\n", r)
 
 	// Produce to Kafka
-	partition, offset, err := produce([]byte(r.Key), r.Value)
+	partition, offset, err := produce(PutOperation, []byte(r.Key), r.Value, "")
 	if err != nil {
 		return nil, err
 	}
-
-	log.Printf("Produced to Kafka: partition=%d offset=%s\n", partition, offset)
 
 	// Perform blocking read from results channel
 	result := <-getOrCreateResultChan(partition, offset)
@@ -65,7 +63,7 @@ func (s *sagasConsistentStorageServer) Remove(_ context.Context, r *RemoveReques
 	log.Printf("Received Remove request: %v\n", r)
 
 	// Produce to Kafka
-	partition, offset, err := produce([]byte(r.Key), nil)
+	partition, offset, err := produce(RemoveOperation, []byte(r.Key), nil, "")
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +75,7 @@ func (s *sagasConsistentStorageServer) Remove(_ context.Context, r *RemoveReques
 	deleteResultChan(partition, offset)
 
 	if !result.Ok {
-		resp := &RemoveResponse{Removed: false}
+		resp := &RemoveResponse{}
 		if result.Value.Value == nil {
 			resp.ErrorType = RemoveError_REMOVE_KEY_ERROR
 		} else {
@@ -89,11 +87,47 @@ func (s *sagasConsistentStorageServer) Remove(_ context.Context, r *RemoveReques
 	return &RemoveResponse{Removed: true}, nil
 }
 
-func (s *sagasConsistentStorageServer) Transfer(context.Context, *TransferRequest) (*TransferResponse, error) {
-	panic("implement me")
+func (s *sagasConsistentStorageServer) Transfer(_ context.Context, r *TransferRequest) (*TransferResponse, error) {
+	log.Printf("Received Transfer request: %v\n", r)
+
+	// Produce to Kafka
+	partition, offset, err := produce(TransferOperation, []byte(r.Key), nil, r.NewOwner)
+	if err != nil {
+		return nil, err
+	}
+
+	// Perform blocking read from results channel
+	result := <-getOrCreateResultChan(partition, offset)
+
+	// Clean up channel
+	deleteResultChan(partition, offset)
+
+	if !result.Ok {
+		resp := &TransferResponse{}
+		if result.Value.Value == nil {
+			resp.ErrorType = TransferError_TRANSFER_KEY_ERROR
+		} else {
+			resp.ErrorType = TransferError_TRANSFER_NOT_OWNER
+		}
+		return resp, nil
+	}
+
+	return &TransferResponse{Transferred: true}, nil
 }
 
-func produce(key []byte, val []byte) (partition int32, offset kafka.Offset, err error) {
+func produce(operation SagaOperationType, key []byte, val []byte, newOwner string) (partition int32, offset kafka.Offset, err error) {
+	headers := []kafka.Header{
+		{Key: "owner", Value: []byte(groupId)},
+		{Key: "operation", Value: []byte{byte(operation)}},
+	}
+
+	if operation == TransferOperation {
+		headers = append(headers, kafka.Header{
+			Key:   "newOwner",
+			Value: []byte(newOwner),
+		})
+	}
+
 	msg := &kafka.Message{
 		TopicPartition: kafka.TopicPartition{
 			Topic:     &topicName,
@@ -101,7 +135,7 @@ func produce(key []byte, val []byte) (partition int32, offset kafka.Offset, err 
 		},
 		Key:     key,
 		Value:   val,
-		Headers: []kafka.Header{{Key: "owner", Value: []byte(groupId)}},
+		Headers: headers,
 	}
 
 	// Publish message to Kafka synchronously

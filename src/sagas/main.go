@@ -185,16 +185,38 @@ func pollConsumer(c *kafka.Consumer) {
 			headers[header.Key] = header.Value
 		}
 
-		fmt.Printf("Consumed message: topicPartition=%s key=%s value=%s headers=%s\n", msg.TopicPartition,
-			string(msg.Key), string(msg.Value), headers)
+		opTypeBytes, ok := headers["operation"]
+		if !ok || len(opTypeBytes) != 1 {
+			fmt.Printf("Message did not have valid operationType. topicPartition=%s op=%v\n", msg.TopicPartition,
+				opTypeBytes)
+			continue
+		}
+
+		// Parse operation type
+		opType := SagaOperationType(opTypeBytes[0])
+
+		fmt.Printf("Consumed message: topicPartition=%s op=%s key=%s value=%s headers=%s\n", msg.TopicPartition,
+			opType, string(msg.Key), string(msg.Value), headers)
 
 		meta := SagaMetadata{
-			Offset: int64(msg.TopicPartition.Offset),
-			Owner:  string(headers["owner"]),
+			Partition: msg.TopicPartition.Partition,
+			Offset:    int64(msg.TopicPartition.Offset),
+			Owner:     string(headers["owner"]),
+		}
+
+		op := SagaOperation{
+			operationType: opType,
+			metadata:      meta,
+			key:           string(msg.Key),
+			value:         msg.Value,
+		}
+
+		if hdr, ok := headers["newOwner"]; ok {
+			op.newOwner = string(hdr)
 		}
 
 		// Get and store the result of processing this operation
-		result := processOperation(string(msg.Key), msg.Value, meta)
+		result := op.process()
 
 		fmt.Printf("Result of operation: ok=%v\n", result.Ok)
 
