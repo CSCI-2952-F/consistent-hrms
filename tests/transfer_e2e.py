@@ -1,6 +1,5 @@
 """
-End-to-end test for registering a patient on hospital A, unregistering on hospital A,
-followed by registering the patient on hospital B.
+End-to-end test for transferring a patient registration between hospitals.
 
 Requires at least 2 hospitals to be running. Assumes their API gateways are accessible at
 ports 8100 and 8101 respectively.
@@ -8,11 +7,12 @@ ports 8100 and 8101 respectively.
 
 from __future__ import print_function
 
-import time
 import os
 import random
+import re
 import string
 import sys
+import time
 
 import jwt
 import requests
@@ -28,7 +28,8 @@ with open(os.path.join(BASE_PATH, 'priv.key')) as f:
 
 def main():
     with open('data/hospitals.txt') as f:
-        hospitals = [line.strip() for line in f.readlines() if line.strip()][:2]
+        hospitals = [line.strip() for line in f.readlines() if line.strip()]
+        slugs = [re.sub('[^a-z]+', '-', name.lower()) for name in hospitals]
         num_hospitals = len(hospitals)
 
     if num_hospitals < 2:
@@ -68,39 +69,62 @@ def main():
     print(f'    Result obtained: {data}')
     patient_uid = data['uid']
 
-    # Attempt to unregister at hospital B, there should be an error
-    print(f'[*] Attempting to unregister name={patient_name} id={patient_id} at {hospitals[1]}...')
-    res = requests.post('http://localhost:8101/patient_unreg', json={
-        'uid': patient_uid,
-        'auth_token': valid_token,
-    })
+    # Attempt to transfer from hospital B, there should be an error
+    print(f'[*] Attempting to transfer uid={patient_uid} from {hospitals[1]} to {hospitals[0]}...')
+    res = requests.post(
+        'http://localhost:8101/patient_transfer', json={
+            'uid': patient_uid,
+            'auth_token': valid_token,
+            'dest_hospital': slugs[0],
+        }
+    )
     if res.status_code != 500:
         print(f'[!] Expected exception, got status {res.status_code}')
         return False
     print(f'    Exception obtained: {res.json()}')
 
-    # Attempt to unregister at hospital A with an invalid token
-    print(f'[*] Attempting to unregister name={patient_name} id={patient_id} at {hospitals[0]} with invalid token...')
-    res = requests.post('http://localhost:8100/patient_unreg', json={
-        'uid': patient_uid,
-        'auth_token': invalid_token,
-    })
+    # Attempt to transfer from hospital A with an invalid token
+    print(f'[*] Attempting to transfer uid={patient_uid} from {hospitals[0]} to {hospitals[1]} with invalid token...')
+    res = requests.post(
+        'http://localhost:8100/patient_transfer', json={
+            'uid': patient_uid,
+            'auth_token': invalid_token,
+            'dest_hospital': slugs[1],
+        }
+    )
     if res.status_code != 500:
         print(f'[!] Expected exception, got status {res.status_code}')
         return False
     print(f'    Exception obtained: {res.json()}')
 
-    # Now unregister at hospital A for real
-    print(f'[*] Unregistering name={patient_name} id={patient_id} at {hospitals[0]} for real this time...')
-    res = requests.post('http://localhost:8100/patient_unreg', json={
-        'uid': patient_uid,
-        'auth_token': valid_token,
-    })
+    # Now transfer from hospital A to hospital B for real
+    print(f'[*] Transferring uid={patient_uid} from {hospitals[0]} to {hospitals[1]} for real this time...')
+    res = requests.post(
+        'http://localhost:8100/patient_transfer', json={
+            'uid': patient_uid,
+            'auth_token': valid_token,
+            'dest_hospital': slugs[1],
+        }
+    )
     res.raise_for_status()
     print(f'    Result obtained: {res.json()}')
 
-    # Try unregistering again?
-    print(f'[*] Unregistering name={patient_name} id={patient_id} at {hospitals[0]} again!')
+    # Try transferring again?
+    print(f'[*] Transferring uid={patient_uid} from {hospitals[0]} to {hospitals[1]} again!')
+    res = requests.post(
+        'http://localhost:8100/patient_transfer', json={
+            'uid': patient_uid,
+            'auth_token': valid_token,
+            'dest_hospital': slugs[1],
+        }
+    )
+    if res.status_code != 500:
+        print(f'[!] Expected exception, got status {res.status_code}')
+        return False
+    print(f'    Exception obtained: {res.json()}')
+
+    # Attempt to unregister at hospital A
+    print(f'[*] Attempting to unregister uid={patient_uid} at {hospitals[0]}...')
     res = requests.post('http://localhost:8100/patient_unreg', json={
         'uid': patient_uid,
         'auth_token': valid_token,
@@ -110,12 +134,23 @@ def main():
         return False
     print(f'    Exception obtained: {res.json()}')
 
-    # Now register at hospital B instead
-    print(f'[*] Registering name={patient_name} id={patient_id} at {hospitals[1]}...')
-    res = requests.post('http://localhost:8101/patient_reg', json={
-        'id': patient_id,
-        'name': patient_name,
-        'pub_key': PUBLIC_KEY,
+    # Transfer from hospital B back to hospital A
+    print(f'[*] Transferring uid={patient_uid} from {hospitals[1]} to {hospitals[0]}...')
+    res = requests.post(
+        'http://localhost:8101/patient_transfer', json={
+            'uid': patient_uid,
+            'auth_token': valid_token,
+            'dest_hospital': slugs[0],
+        }
+    )
+    res.raise_for_status()
+    print(f'    Result obtained: {res.json()}')
+
+    # Now we can unregister at hospital A
+    print(f'[*] Unregistering uid={patient_uid} at {hospitals[0]}...')
+    res = requests.post('http://localhost:8100/patient_unreg', json={
+        'uid': patient_uid,
+        'auth_token': valid_token,
     })
     res.raise_for_status()
     print(f'    Result obtained: {res.json()}')
