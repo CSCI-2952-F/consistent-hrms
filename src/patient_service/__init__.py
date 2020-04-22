@@ -33,6 +33,11 @@ class PatientNotRegistered(Exception):
         super().__init__(f'Patient "{patient_id}" is not registered at "{get_hospital_name()}"')
 
 
+class PatientConsistencyViolation(Exception):
+    def __init__(self, operation, error):
+        super().__init__(f'{operation} was not successful: {error}')
+
+
 class PatientService:
     name = 'patient_service'
     consistent_storage: BaseStorageBackend = RpcProxy('consistent_storage')
@@ -118,7 +123,7 @@ class PatientService:
         # If not, all good! Remove patient from consistent storage.
         res = self.consistent_storage.remove(hash_uid)
         if not res['removed']:
-            raise Exception(res['error'])
+            raise PatientConsistencyViolation('Remove', res['error'])
 
         return True
 
@@ -146,7 +151,7 @@ class PatientService:
         # If not, all good! Transfer patient
         res = self.consistent_storage.transfer(hash_uid, dest_hospital)
         if not res['transferred']:
-            raise Exception(res['error'])
+            raise PatientConsistencyViolation('Transfer', res['error'])
 
     def _verify_auth_token(self, pub_key, auth_token) -> bool:
         """
