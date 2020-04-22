@@ -44,6 +44,15 @@ class ApiGatewayService:
         except RemoteError as e:
             return 500, json.dumps({'success': False, 'error': str(e)})
 
+    @cors_http('POST', '/patient_transfer')
+    def patient_transfer_hospital(self, request):
+        data = json.loads(request.get_data(as_text=True))
+        try:
+            data = self.patient_rpc.transfer(patient_uid=data['uid'], auth_token=data['auth_token'], dest_hospital=data['dest_hospital'])
+            return json.dumps({'success': True})
+        except RemoteError as e:
+            return 500, json.dumps({'success': False, 'error': str(e)})
+
     @cors_http('POST', '/physician_reg')
     def physician_register_hospital(self, request):
         data = json.loads(request.get_data(as_text=True))

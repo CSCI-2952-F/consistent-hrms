@@ -122,6 +122,32 @@ class PatientService:
 
         return True
 
+    @rpc
+    def transfer(self, patient_uid, auth_token, dest_hospital):
+        """
+        Transfers a patient registration from the current hospital to a new one.
+        Raises Unauthorized if token is not valid.
+        Raises PatientNotRegistered if patient is not registered at this hospital.
+        """
+
+        # Obtain the hashed UID.
+        hash_uid = hasher.hash(patient_uid)
+
+        # To perform authorization check, retrieve patient public key from consistent storage.
+        res = self.consistent_storage.get(hash_uid)
+        if not res['exists'] or not res['value']:
+            raise PatientNotRegistered(patient_uid)
+
+        # Verify the token against the patient's public key
+        pub_key = res['value']
+        if not self._verify_auth_token(pub_key, auth_token):
+            raise Unauthorized()
+
+        # If not, all good! Transfer patient
+        res = self.consistent_storage.transfer(hash_uid, dest_hospital)
+        if not res['transferred']:
+            raise Exception(res['error'])
+
     def _verify_auth_token(self, pub_key, auth_token) -> bool:
         """
         Verifies an auth token, which is a RS256 JWT signed with a private key only owned by a patient.
