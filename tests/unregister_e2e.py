@@ -17,13 +17,8 @@ import time
 import jwt
 import requests
 
-BASE_PATH = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-
-with open(os.path.join(BASE_PATH, 'pub.key')) as f:
-    PUBLIC_KEY = f.read()
-
-with open(os.path.join(BASE_PATH, 'priv.key')) as f:
-    PRIVATE_KEY = f.read()
+from keys import PRIVATE_KEY, PUBLIC_KEY
+from common import fail, succeed
 
 
 def main():
@@ -52,73 +47,56 @@ def main():
         'exp': int(time.time()) - 60,
     }, PRIVATE_KEY, algorithm='RS256').decode('utf-8')
 
-    # print(f'[*] Created JWT: {valid_token}')
-    # print(f'[*] Created JWT: {invalid_token}')
-
     # Register patient at hospital A
     print(f'[*] Registering name={patient_name} id={patient_id} at {hospitals[0]}...')
-    res = requests.post('http://localhost:8100/patient_reg', json={
+    res = succeed('http://localhost:8100/patient_reg', {
         'id': patient_id,
         'name': patient_name,
         'pub_key': PUBLIC_KEY,
     })
-    res.raise_for_status()
-
-    data = res.json()
-    print(f'    Result obtained: {data}')
-    patient_uid = data['uid']
+    print(f'    Result obtained: {res}')
+    patient_uid = res['uid']
 
     # Attempt to unregister at hospital B, there should be an error
-    print(f'[*] Attempting to unregister name={patient_name} id={patient_id} at {hospitals[1]}...')
-    res = requests.post('http://localhost:8101/patient_unreg', json={
+    print(f'[*] Attempting to unregister uid={patient_uid} at {hospitals[1]}...')
+    res = fail('http://localhost:8101/patient_unreg', {
         'uid': patient_uid,
         'auth_token': valid_token,
     })
-    if res.status_code != 500:
-        print(f'[!] Expected exception, got status {res.status_code}')
-        return False
-    print(f'    Exception obtained: {res.json()}')
+    print(f'    Exception obtained: {res}')
 
     # Attempt to unregister at hospital A with an invalid token
-    print(f'[*] Attempting to unregister name={patient_name} id={patient_id} at {hospitals[0]} with invalid token...')
-    res = requests.post('http://localhost:8100/patient_unreg', json={
+    print(f'[*] Attempting to unregister uid={patient_uid} at {hospitals[0]} with invalid token...')
+    res = fail('http://localhost:8100/patient_unreg', {
         'uid': patient_uid,
         'auth_token': invalid_token,
     })
-    if res.status_code != 500:
-        print(f'[!] Expected exception, got status {res.status_code}')
-        return False
-    print(f'    Exception obtained: {res.json()}')
+    print(f'    Exception obtained: {res}')
 
     # Now unregister at hospital A for real
-    print(f'[*] Unregistering name={patient_name} id={patient_id} at {hospitals[0]} for real this time...')
-    res = requests.post('http://localhost:8100/patient_unreg', json={
+    print(f'[*] Unregistering uid={patient_uid} at {hospitals[0]} for real this time...')
+    res = succeed('http://localhost:8100/patient_unreg', {
         'uid': patient_uid,
         'auth_token': valid_token,
     })
-    res.raise_for_status()
-    print(f'    Result obtained: {res.json()}')
+    print(f'    Result obtained: {res}')
 
     # Try unregistering again?
-    print(f'[*] Unregistering name={patient_name} id={patient_id} at {hospitals[0]} again!')
-    res = requests.post('http://localhost:8100/patient_unreg', json={
+    print(f'[*] Unregistering uid={patient_uid} at {hospitals[0]} again!')
+    res = fail('http://localhost:8100/patient_unreg', {
         'uid': patient_uid,
         'auth_token': valid_token,
     })
-    if res.status_code != 500:
-        print(f'[!] Expected exception, got status {res.status_code}')
-        return False
-    print(f'    Exception obtained: {res.json()}')
+    print(f'    Exception obtained: {res}')
 
     # Now register at hospital B instead
-    print(f'[*] Registering name={patient_name} id={patient_id} at {hospitals[1]}...')
-    res = requests.post('http://localhost:8101/patient_reg', json={
+    print(f'[*] Registering uid={patient_uid} at {hospitals[1]}...')
+    res = succeed('http://localhost:8101/patient_reg', {
         'id': patient_id,
         'name': patient_name,
         'pub_key': PUBLIC_KEY,
     })
-    res.raise_for_status()
-    print(f'    Result obtained: {res.json()}')
+    print(f'    Result obtained: {res}')
 
     print()
 
