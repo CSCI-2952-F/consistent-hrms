@@ -3,24 +3,13 @@ import time
 
 import grequests
 
-PUBLIC_KEY = """-----BEGIN RSA PUBLIC KEY-----
-MIICCgKCAgEAz7/886Se2+xMwaLoPP91oeVagtkDoQzS23J7iM/XcHqQGUrmvn38
-0JQeumCvZO5bW+u+TVKbgkG4dKRxEGTNEHLuuTbo+QIUg9O8LMj5s4UtDhEpt7Ij
-MLucqtO4BtdiDQ0T9cgjHzu3Weuc8CMgIhbSLa9pcrBEbfTsG+G5sZp5HVuWsmIL
-+zbmhIoAO7wjQDo4ZxNVNOXRiFzJU4KCO+fD5HNCdua/Qh4Bg8+jeoRTZyAuYGdw
-hCWenGyJJ7We1n9RdCYEKLJMfuulLR6Uxz4OSMrDgGLv4jGTqFdXFDLRe6GgI7ek
-7NGjl6n15WH+Pa3wK/gbTx6e+D5W/dFhRe98wp3tSGWTNo1SEqs/3ugG3i1PgL1b
-qBVNMZe6Xn0zwPP2dwEc23SD4p/s4DM2z18hX9xSg9hMsVMwyzk6NTcyJgvoMvUG
-O0SOZf3CRUVPGPq9eO8F96VJqj1T0jAZ4cf1qqKHx+wphjEjsBzeaMQUsXJ5GF/g
-UCmfi1s89Tdm46ECJGilTDQghkuhf2UU7iANRp47/TlGFRZf9ju4U3+kb2tFVF88
-vxOBGyh9fI05Puas+nRvBrbyshCURHRVaHt7y6eLFnT0nEThROe7C61Q8+5hcXCM
-aBokbnY4AM5z7UhzqIKnS9EVoV9XhLpa0Mrs3+py48d7bylxbhSsOm8CAwEAAQ==
------END RSA PUBLIC KEY-----"""
+with open('tests/pub.key') as f:
+    PUBLIC_KEY = f.read()
 
 
 def main():
     if len(sys.argv) != 3:
-        print('Usage: python consistent_storage_load_test.py [start_id] [end_id]')
+        print('Usage: python registration_load_test.py [start_id] [end_id]')
         sys.exit(1)
 
     start_id = int(sys.argv[1])
