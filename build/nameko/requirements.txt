@@ -1,4 +1,5 @@
 nameko
 pycryptodome
+PyJWT[crypto]
 redis
 rsa
