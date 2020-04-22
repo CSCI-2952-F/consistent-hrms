@@ -112,7 +112,7 @@ func (op SagaOperation) process() SagaResult {
 			// Update owner
 			newMeta := op.metadata
 			newMeta.Owner = op.newOwner
-			newVal := SagaValue{Value: val.Value, Metadata: op.metadata}
+			newVal := SagaValue{Value: val.Value, Metadata: newMeta}
 
 			// Store in storage
 			if err := storage.Store(op.key, newVal); err != nil {
