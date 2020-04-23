@@ -21,6 +21,8 @@ services:
       dockerfile: ./build/nameko/Dockerfile
       args:
         module: api_gateway
+    environment:
+      - DISCOVERY_GRPC_ADDR=discovery_service:8080
     ports:
       - '127.0.0.1:${API_GATEWAY_PORT:-8100}:80'
     healthcheck:
@@ -35,6 +37,22 @@ services:
       - rabbitmq
       - patient_service
       - physician_service
+      - discovery_service
+
+  discovery_service:
+    build:
+      context: ./src/discovery
+    networks:
+      - default
+      - hospital-discovery
+    environment:
+      - HOSPITAL_ID=${HOSPITAL_NAME_SLUG}
+      - HOSPITAL_NAME
+      - ETCD_ADDR=etcd:2379
+      - ETCD_KEY_PREFIX=hrms/hospitals/
+      - GRPC_LISTEN_ADDR=:8080
+    expose:
+      - 8080
 
   patient_service:
     build:
@@ -120,6 +138,9 @@ volumes:
 
 networks:
   rabbitmq: {}
+  hospital-discovery:
+    external:
+      name: hrms-hospital-discovery
   hospital-sagas:
     external:
       name: hrms-hospital-sagas

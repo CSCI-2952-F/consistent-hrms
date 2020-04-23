@@ -1,8 +1,10 @@
 # https://github.com/harel/nameko-cors/blob/master/__init__.py
 
+import types
 from functools import partial
-from nameko.web.handlers import HttpRequestHandler
+
 from nameko.extensions import register_entrypoint
+from nameko.web.handlers import HttpRequestHandler
 
 
 class CorsHttpRequestHandler(HttpRequestHandler):

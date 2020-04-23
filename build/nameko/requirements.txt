@@ -1,4 +1,6 @@
+grpcio
 nameko
+protobuf
 pycryptodome
 PyJWT[crypto]
 redis

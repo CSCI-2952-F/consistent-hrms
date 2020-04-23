@@ -1,9 +1,11 @@
 import json
+import os
 
 from nameko.exceptions import RemoteError, safe_for_serialization
 from nameko.rpc import RpcProxy
 from werkzeug.wrappers import Response
 
+from api_gateway.discovery_svc import DiscoveryService
 from lib.nameko_cors import CorsHttpRequestHandler
 
 
@@ -20,15 +22,20 @@ class HttpEntrypoint(CorsHttpRequestHandler):
 
 http = HttpEntrypoint.decorator
 
+DISCOVERY_GRPC_ADDR = os.getenv('DISCOVERY_GRPC_ADDR')
+if not DISCOVERY_GRPC_ADDR:
+    raise Exception('DISCOVERY_GRPC_ADDR not set')
+
 
 class ApiGatewayService:
     name = 'api_gateway'
 
     patient_rpc = RpcProxy('patient_service')
     physician_rpc = RpcProxy('physician_service')
+    discovery_svc = DiscoveryService(DISCOVERY_GRPC_ADDR)
 
     @http('GET', '/healthy')
-    def healthy(self, request):
+    def healthy(self, _):
         return json.dumps({'healthy': True})
 
     @http('POST', '/patient_reg')
@@ -72,3 +79,8 @@ class ApiGatewayService:
         data = json.loads(request.get_data(as_text=True))
         success = self.physician_rpc.write(physician_id=data['phys_id'], patient_uid=data['patient_uid'], data=data['data'])
         return json.dumps({'success': success})
+
+    @http('GET', '/list_hospitals')
+    def list_hospitals(self, _):
+        hospitals = self.discovery_svc.list_hospitals()
+        return json.dumps(hospitals)

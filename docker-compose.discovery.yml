@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  etcd:
+    image: bitnami/etcd
+    networks:
+      - hospital-discovery
+    environment:
+      ALLOW_NONE_AUTHENTICATION: 'yes'
+    volumes:
+      - etcd-data:/etcd-data
+
+volumes:
+  etcd-data: {}
+
+networks:
+  hospital-discovery:
+    external:
+      name: hrms-hospital-discovery

@@ -8,8 +8,11 @@ mkdnet() {
 }
 
 ensure_up() {
-  docker-compose -f "$1" up -d --build
-  stopped=$(docker-compose -f "$1" ps --services --filter status=stopped)
+  project_name=cs2952f-`echo "$1" | sed 's/docker-compose.\(.*\).yml/\1/'`
+  echo Starting "$project_name"...
+
+  docker-compose -p "$project_name" -f "$1" up -d --build
+  stopped=$(docker-compose -p "$project_name" -f "$1" ps --services --filter status=stopped)
   if [[ "$stopped" ]]
   then
     echo "ERROR: One or more services could not be started: $(echo $stopped | tr '\n' ',' | sed 's/,$/\n/')"
@@ -18,9 +21,11 @@ ensure_up() {
   fi
 }
 
-# Create Docker network for 2PC and BigchainDB clients
+# Create Docker networks for inter-hospital communication
 mkdnet hrms-hospital-sagas
 mkdnet hrms-hospital-bigchain
+mkdnet hrms-hospital-discovery
 
-# Start sagas
+# Start common infra with Docker Compose
+ensure_up docker-compose.discovery.yml
 ensure_up docker-compose.sagas.yml
