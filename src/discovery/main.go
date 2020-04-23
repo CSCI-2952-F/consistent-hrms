@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"log"
 	"net"
 	"os"
@@ -11,21 +9,26 @@ import (
 	"syscall"
 	"time"
 
-	etcd3 "go.etcd.io/etcd/clientv3"
 	"google.golang.org/grpc"
 )
 
 var (
+	serviceDiscovery ServiceDiscovery
+	keyPrefix        string
+
 	hospitalId     string
 	hospitalName   string
 	registeredTime time.Time
-	etcdKeyPrefix  string
-
-	leaseID     etcd3.LeaseID
-	leaseExpiry = 2 * time.Minute
 )
 
-type EtcdValue struct {
+type ServiceDiscovery interface {
+	Register(ctx context.Context, value RegisterValue) error
+	Renew(ctx context.Context, duration time.Duration)
+	Revoke(ctx context.Context) error
+	ListValues(ctx context.Context) ([]RegisterValue, error)
+}
+
+type RegisterValue struct {
 	Id             string `json:"id"`
 	Name           string `json:"name"`
 	RegisteredTime int64  `json:"registered_time"`
@@ -45,8 +48,10 @@ func main() {
 	}
 	grpcListenAddr := os.Getenv("GRPC_LISTEN_ADDR")
 	etcdAddr := os.Getenv("ETCD_ADDR")
-	etcdKeyPrefix = os.Getenv("ETCD_KEY_PREFIX")
-	expiryEnv := os.Getenv("ETCD_LEASE_EXPIRY")
+	keyPrefix = os.Getenv("KEY_PREFIX")
+
+	leaseExpiry := 2 * time.Minute
+	expiryEnv := os.Getenv("LEASE_EXPIRY")
 	if expiryEnv != "" {
 		expiry, err := time.ParseDuration(expiryEnv)
 		if err != nil {
@@ -55,18 +60,24 @@ func main() {
 		leaseExpiry = expiry
 	}
 
-	// Create etcd client
-	etcd, err := etcd3.New(etcd3.Config{
-		Endpoints:   []string{etcdAddr},
-		DialTimeout: 10 * time.Second,
-	})
+	// Create etcd service discovery
+	etcd, err := NewEtcdServiceDiscovery(etcdAddr, keyPrefix, leaseExpiry)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	serviceDiscovery = etcd
+
+	// Prepare register value
+	registeredTime = time.Now()
+	value := RegisterValue{
+		Id:             hospitalId,
+		Name:           hospitalName,
+		RegisteredTime: registeredTime.Unix(),
+	}
+
 	// Register ourselves on etcd
-	leaseID, err = register(ctx, etcd)
-	if err != nil {
+	if err := serviceDiscovery.Register(ctx, value); err != nil {
 		log.Fatal(err)
 	}
 
@@ -91,7 +102,7 @@ func main() {
 		cancelFunc()
 
 		// Revoke lease
-		if err := revoke(context.Background(), leaseID, etcd); err != nil {
+		if err := serviceDiscovery.Revoke(context.Background()); err != nil {
 			log.Println(err)
 		}
 
@@ -99,7 +110,7 @@ func main() {
 	}()
 
 	// Continuously renew the lease in the background
-	go renew(ctx, leaseID, 5*time.Second, etcd)
+	go serviceDiscovery.Renew(ctx, 5*time.Second)
 
 	// Start gRPC server
 	log.Printf("Starting gRPC server on %s.\n", grpcListenAddr)
@@ -109,63 +120,4 @@ func main() {
 
 	<-done
 	log.Println("Shutdown completed.")
-}
-
-func register(ctx context.Context, etcd *etcd3.Client) (leaseID etcd3.LeaseID, err error) {
-	// Grant a new etcd lease
-	grant, err := etcd.Grant(ctx, int64(leaseExpiry.Seconds()))
-	if err != nil {
-		err = fmt.Errorf("could not grant lease: %s\n", err)
-		return
-	}
-
-	leaseID = grant.ID
-
-	// Key is prefix + hospital ID
-	key := etcdKeyPrefix + hospitalId
-
-	// Registered time is now
-	registeredTime = time.Now()
-
-	// Store various information in etcd
-	etcdValue := EtcdValue{
-		Id:             hospitalId,
-		Name:           hospitalName,
-		RegisteredTime: registeredTime.Unix(),
-	}
-
-	bytes, err := json.Marshal(etcdValue)
-	if err != nil {
-		panic(err)
-	}
-
-	// Register ourselves on etcd
-	if _, e := etcd.Put(ctx, key, string(bytes), etcd3.WithLease(leaseID)); e != nil {
-		err = fmt.Errorf("could not PUT in etcd: %s\n", e)
-		return
-	}
-
-	return leaseID, nil
-}
-
-func renew(ctx context.Context, leaseID etcd3.LeaseID, duration time.Duration, etcd *etcd3.Client) {
-	// Refresh lease in a ticker loop
-	ticker := time.NewTicker(duration)
-	for {
-		select {
-		case <-ctx.Done():
-			return
-		case <-ticker.C:
-		}
-
-		if _, err := etcd.KeepAliveOnce(ctx, leaseID); err != nil {
-			log.Printf("could not refresh lease: %s\n", err)
-			continue
-		}
-	}
-}
-
-func revoke(ctx context.Context, leaseID etcd3.LeaseID, etcd *etcd3.Client) error {
-	_, err := etcd.Revoke(ctx, leaseID)
-	return err
 }

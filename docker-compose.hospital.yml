@@ -49,7 +49,7 @@ services:
       - HOSPITAL_ID=${HOSPITAL_NAME_SLUG}
       - HOSPITAL_NAME
       - ETCD_ADDR=etcd:2379
-      - ETCD_KEY_PREFIX=hrms/hospitals/
+      - KEY_PREFIX=hrms/hospitals/
       - GRPC_LISTEN_ADDR=:8080
     expose:
       - 8080
