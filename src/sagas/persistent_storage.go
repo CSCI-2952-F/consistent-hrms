@@ -14,18 +14,25 @@ type PersistentStorage interface {
 	Retrieve(key string) (val *SagaValue, err error)
 	Store(key string, val SagaValue) error
 	Remove(key string, meta SagaMetadata) (val *SagaValue, err error)
+	HGet(hash string, key string) (value []byte)
+	HPut(hash string, key string, value []byte) error
+	HDel(hash string, key string) error
 }
 
 // FilePersistentStorage is a key-value storage on the filesystem for storing already consistent data.
 type FilePersistentStorage struct {
-	filePath string
-	data     map[string][]byte
+	filePath    string
+	data        map[string][]byte
+	hash        map[string]map[string][]byte
+	hashRootKey string
 }
 
 func NewFilePersistentStorage(filePath string) (*FilePersistentStorage, error) {
 	storage := &FilePersistentStorage{
-		filePath: filePath,
-		data:     make(map[string][]byte),
+		filePath:    filePath,
+		data:        make(map[string][]byte),
+		hash:        make(map[string]map[string][]byte),
+		hashRootKey: "__hash__",
 	}
 
 	// Ensure that path exists
@@ -152,4 +159,111 @@ func (f *FilePersistentStorage) Remove(key string, meta SagaMetadata) (*SagaValu
 		return nil, err
 	}
 	return &value, nil
+}
+
+func (f *FilePersistentStorage) HGet(hash string, key string) (value []byte) {
+	h, ok := f.hash[hash]
+	if !ok {
+		return nil
+	}
+
+	val, ok := h[key]
+	if !ok {
+		return nil
+	}
+
+	return val
+}
+
+func (f *FilePersistentStorage) HPut(hash string, key string, value []byte) error {
+	var oldHashOk bool
+	var oldKeyOk bool
+	var oldVal []byte
+	var h map[string][]byte
+
+	h, oldHashOk = f.hash[hash]
+	if !oldHashOk {
+		f.hash[hash] = make(map[string][]byte)
+		h = f.hash[hash]
+	}
+
+	oldVal, oldKeyOk = h[key]
+
+	// Update hash value
+	h[key] = value
+
+	// Prepare rollback function in case of error
+	rollback := func() {
+		if !oldHashOk {
+			delete(f.hash, hash)
+		} else if !oldKeyOk {
+			delete(h, key)
+		} else {
+			h[key] = oldVal
+		}
+	}
+
+	// Commit hash
+	if err := f.commitHash(); err != nil {
+		rollback()
+		return err
+	}
+
+	return nil
+}
+
+func (f *FilePersistentStorage) HDel(hash string, key string) error {
+	var oldVal []byte
+
+	// If hash doesn't exist, return.
+	h, ok := f.hash[hash]
+	if !ok {
+		return nil
+	}
+
+	// If key doesn't exist, return.
+	oldVal, ok = h[key]
+	if !ok {
+		return nil
+	}
+
+	// Otherwise, delete from hash.
+	delete(h, key)
+
+	// If hash is now empty, delete hash.
+	if len(h) == 0 {
+		delete(f.hash, hash)
+	}
+
+	// Prepare rollback function in case of error.
+	rollback := func() {
+		h, ok := f.hash[hash]
+		if !ok {
+			f.hash[hash] = make(map[string][]byte)
+		}
+		h[key] = oldVal
+	}
+
+	// Commit hash
+	if err := f.commitHash(); err != nil {
+		rollback()
+		return err
+	}
+
+	return nil
+}
+
+func (f *FilePersistentStorage) commitHash() error {
+	// Marshal hash into bytes
+	hashData, err := json.Marshal(f.hash)
+	if err != nil {
+		return err
+	}
+
+	// Store the hash bytes into the root key using the lower-level Put abstraction
+	if err := f.Put(f.hashRootKey, hashData); err != nil {
+		return err
+	}
+
+	return nil
 }
