@@ -3,17 +3,36 @@ syntax = "proto3";
 option go_package = "main";
 
 service HospitalDiscovery {
+  rpc GetInfo(InfoRequest) returns (InfoResponse) {}
   rpc ListHospitals(ListRequest) returns (ListResponse) {}
+}
+
+message Hospital {
+  string id = 1;            // Unique ID for hospital
+  string name = 2;          // Name representation of hospital
+  int64 registeredTime = 3; // UNIX timestamp when the hospital was registered
+}
+
+message Lease {
+  // ID is the lease ID from the keep alive request.
+  int64 ID = 1;
+  // TTL is the remaining TTL in seconds for the lease; the lease will expire in
+  // under TTL+1 seconds.
+  int64 TTL = 2;
+  // GrantedTTL is the initial granted time in seconds upon lease
+  // creation/renewal.
+  int64 grantedTTL = 3;
+  // Keys is the list of keys attached to this lease.
+  repeated bytes keys = 4;
+}
+
+message InfoRequest {}
+
+message InfoResponse {
+  Hospital hospital = 1; // Hospital info of ourselves
+  Lease lease = 2;       // Info of lease
 }
 
 message ListRequest {}
 
-message ListResponse {
-  message Hospital {
-    string id = 1;            // Unique ID for hospital
-    string name = 2;          // Name representation of hospital
-    int64 registeredTime = 3; // UNIX timestamp when the hospital was registered
-  }
-
-  repeated Hospital hospitals = 1;
-}
+message ListResponse { repeated Hospital hospitals = 1; }

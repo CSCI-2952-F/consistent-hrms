@@ -11,18 +11,18 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
 )
 
 var (
-	numPartitions int32
-	topicName     string
-	groupId       string
-	storage       PersistentStorage
-	producer      *kafka.Producer
-	consumer      *kafka.Consumer
+	numPartitions   int32
+	topicName       string
+	groupId         string
+	storage         PersistentStorage
+	producer        *kafka.Producer
+	consumer        *kafka.Consumer
+	discoveryClient *DiscoverySvcClient
 
 	// Mapping of partition to results by offset.
 	resultChans []map[kafka.Offset]chan SagaResult
@@ -46,7 +46,7 @@ func main() {
 	brokers := os.Getenv("KAFKA_BROKERS")
 	storageFilePath := os.Getenv("STORAGE_FILE_PATH")
 	grpcListenAddr := os.Getenv("GRPC_LISTEN_ADDR")
-	groupId = os.Getenv("GROUP_ID")
+	discoveryGrpcAddr := os.Getenv("DISCOVERY_GRPC_ADDR")
 
 	// Initialize channels
 	var i int32
@@ -62,24 +62,25 @@ func main() {
 	}
 	storage = s
 
-	// Consumer group has to be unique within the topic.
-	// We also use this to identify the producer of a message.
-	// If not specified, generate and store it persistently.
-	if groupId == "" {
-		gid := storage.Get("group_id")
-		if gid == nil {
-			id := uuid.New()
-			data, err := id.MarshalBinary()
-			if err != nil {
-				log.Fatal(err)
-			}
-			if err := storage.Put("group_id", data); err != nil {
-				log.Fatal(err)
-			}
-			gid = data
-		}
-		groupId = string(gid)
+	// Create discovery service client
+	discoveryClient, err = NewDiscoverySvcClient(discoveryGrpcAddr)
+	if err != nil {
+		log.Fatal(err)
 	}
+
+	// Use the discovery service to get our unique ID as our consumer group ID.
+	info, err := discoveryClient.GetInfo()
+	if err != nil {
+		log.Fatalf("could not lookup discovery svc: %s", err)
+	}
+
+	if info.Hospital.Id == "" {
+		log.Fatal("discovery svc returned empty hospital id")
+	}
+
+	// Use the retrieved hospital information as our unique group ID
+	groupId = info.Hospital.Id
+	log.Printf("Acquired unique group ID: %s\n", groupId)
 
 	defer closeKafka()
 

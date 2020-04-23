@@ -16,10 +16,13 @@ import (
 )
 
 var (
-	hospitalId    string
-	hospitalName  string
-	etcdKeyPrefix string
-	leaseExpiry   = 2 * time.Minute
+	hospitalId     string
+	hospitalName   string
+	registeredTime time.Time
+	etcdKeyPrefix  string
+
+	leaseID     etcd3.LeaseID
+	leaseExpiry = 2 * time.Minute
 )
 
 type EtcdValue struct {
@@ -62,7 +65,7 @@ func main() {
 	}
 
 	// Register ourselves on etcd
-	leaseID, err := register(ctx, etcd)
+	leaseID, err = register(ctx, etcd)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -121,11 +124,14 @@ func register(ctx context.Context, etcd *etcd3.Client) (leaseID etcd3.LeaseID, e
 	// Key is prefix + hospital ID
 	key := etcdKeyPrefix + hospitalId
 
+	// Registered time is now
+	registeredTime = time.Now()
+
 	// Store various information in etcd
 	etcdValue := EtcdValue{
 		Id:             hospitalId,
 		Name:           hospitalName,
-		RegisteredTime: time.Now().Unix(),
+		RegisteredTime: registeredTime.Unix(),
 	}
 
 	bytes, err := json.Marshal(etcdValue)

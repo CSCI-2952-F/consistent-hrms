@@ -16,6 +16,34 @@ func NewServer(etcd *etcd3.Client) *Server {
 	return &Server{etcd: etcd}
 }
 
+func (s *Server) GetInfo(ctx context.Context, _ *InfoRequest) (*InfoResponse, error) {
+	// Get TTL information on lease
+	ttlResp, err := s.etcd.TimeToLive(ctx, leaseID)
+	if err != nil {
+		return nil, err
+	}
+
+	hospital := Hospital{
+		Id:             hospitalId,
+		Name:           hospitalName,
+		RegisteredTime: registeredTime.Unix(),
+	}
+
+	lease := Lease{
+		ID:         int64(leaseID),
+		TTL:        ttlResp.TTL,
+		GrantedTTL: ttlResp.GrantedTTL,
+		Keys:       ttlResp.Keys,
+	}
+
+	res := InfoResponse{
+		Hospital: &hospital,
+		Lease:    &lease,
+	}
+
+	return &res, nil
+}
+
 func (s *Server) ListHospitals(ctx context.Context, _ *ListRequest) (*ListResponse, error) {
 	// Get all keys with prefix
 	etcdResp, err := s.etcd.Get(ctx, etcdKeyPrefix, etcd3.WithPrefix())
@@ -37,7 +65,7 @@ func (s *Server) ListHospitals(ctx context.Context, _ *ListRequest) (*ListRespon
 		}
 
 		// Create gRPC response
-		hospital := ListResponse_Hospital{
+		hospital := Hospital{
 			Id:             etcdValue.Id,
 			Name:           etcdValue.Name,
 			RegisteredTime: etcdValue.RegisteredTime,

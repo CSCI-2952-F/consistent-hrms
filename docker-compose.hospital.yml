@@ -121,11 +121,13 @@ services:
       - KAFKA_BROKERS=kafka:9092
       - STORAGE_FILE_PATH=/var/lib/sagas/data.json
       - GRPC_LISTEN_ADDR=:8080
-      - GROUP_ID=${HOSPITAL_NAME_SLUG}
+      - DISCOVERY_GRPC_ADDR=discovery_service:8080
     expose:
       - 8080
     volumes:
       - sagas-storage:/var/lib/sagas
+    depends_on:
+      - discovery_service
 
   redis:
     image: redis

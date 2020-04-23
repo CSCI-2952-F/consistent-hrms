@@ -13,6 +13,11 @@ class HospitalDiscoveryStub(object):
         Args:
             channel: A grpc.Channel.
         """
+        self.GetInfo = channel.unary_unary(
+                '/HospitalDiscovery/GetInfo',
+                request_serializer=discovery__pb2.InfoRequest.SerializeToString,
+                response_deserializer=discovery__pb2.InfoResponse.FromString,
+                )
         self.ListHospitals = channel.unary_unary(
                 '/HospitalDiscovery/ListHospitals',
                 request_serializer=discovery__pb2.ListRequest.SerializeToString,
@@ -23,6 +28,12 @@ class HospitalDiscoveryStub(object):
 class HospitalDiscoveryServicer(object):
     """Missing associated documentation comment in .proto file"""
 
+    def GetInfo(self, request, context):
+        """Missing associated documentation comment in .proto file"""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def ListHospitals(self, request, context):
         """Missing associated documentation comment in .proto file"""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -32,6 +43,11 @@ class HospitalDiscoveryServicer(object):
 
 def add_HospitalDiscoveryServicer_to_server(servicer, server):
     rpc_method_handlers = {
+            'GetInfo': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetInfo,
+                    request_deserializer=discovery__pb2.InfoRequest.FromString,
+                    response_serializer=discovery__pb2.InfoResponse.SerializeToString,
+            ),
             'ListHospitals': grpc.unary_unary_rpc_method_handler(
                     servicer.ListHospitals,
                     request_deserializer=discovery__pb2.ListRequest.FromString,
@@ -46,6 +62,22 @@ def add_HospitalDiscoveryServicer_to_server(servicer, server):
  # This class is part of an EXPERIMENTAL API.
 class HospitalDiscovery(object):
     """Missing associated documentation comment in .proto file"""
+
+    @staticmethod
+    def GetInfo(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/HospitalDiscovery/GetInfo',
+            discovery__pb2.InfoRequest.SerializeToString,
+            discovery__pb2.InfoResponse.FromString,
+            options, channel_credentials,
+            call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
     def ListHospitals(request,
