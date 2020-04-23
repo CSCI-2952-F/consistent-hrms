@@ -47,7 +47,6 @@ func main() {
 		log.Fatalf("HOSPITAL_NAME not set")
 	}
 	grpcListenAddr := os.Getenv("GRPC_LISTEN_ADDR")
-	etcdAddr := os.Getenv("ETCD_ADDR")
 	keyPrefix = os.Getenv("KEY_PREFIX")
 
 	leaseExpiry := 2 * time.Minute
@@ -60,13 +59,13 @@ func main() {
 		leaseExpiry = expiry
 	}
 
-	// Create etcd service discovery
-	etcd, err := NewEtcdServiceDiscovery(etcdAddr, keyPrefix, leaseExpiry)
+	// Create service discovery backed by ZooKeeper
+	zkAddr := os.Getenv("ZK_ADDR")
+	sd, err := NewZkServiceDiscovery(zkAddr, keyPrefix, leaseExpiry)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	serviceDiscovery = etcd
+	serviceDiscovery = sd
 
 	// Prepare register value
 	registeredTime = time.Now()
@@ -76,7 +75,7 @@ func main() {
 		RegisteredTime: registeredTime.Unix(),
 	}
 
-	// Register ourselves on etcd
+	// Register ourselves on service discovery
 	if err := serviceDiscovery.Register(ctx, value); err != nil {
 		log.Fatal(err)
 	}
@@ -87,7 +86,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	grpcServer := grpc.NewServer()
-	RegisterHospitalDiscoveryServer(grpcServer, NewServer(etcd))
+	RegisterHospitalDiscoveryServer(grpcServer, NewServer(sd))
 
 	// Register signal handlers
 	done := make(chan bool)
@@ -98,6 +97,11 @@ func main() {
 		<-quit
 		log.Println("Shutting down.")
 
+		// Stop gRPC server
+		grpcServer.GracefulStop()
+
+		log.Println("gRPC server shut down gracefully.")
+
 		// Cancel root context
 		cancelFunc()
 
@@ -105,6 +109,7 @@ func main() {
 		if err := serviceDiscovery.Revoke(context.Background()); err != nil {
 			log.Println(err)
 		}
+		log.Println("Revoked lease.")
 
 		close(done)
 	}()

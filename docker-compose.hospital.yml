@@ -48,8 +48,8 @@ services:
     environment:
       - HOSPITAL_ID=${HOSPITAL_NAME_SLUG}
       - HOSPITAL_NAME
-      - ETCD_ADDR=etcd:2379
-      - KEY_PREFIX=hrms/hospitals/
+      - ZK_ADDR=zookeeper:2181
+      - KEY_PREFIX=/hrms/hospitals/
       - GRPC_LISTEN_ADDR=:8080
     expose:
       - 8080
