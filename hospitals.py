@@ -17,6 +17,8 @@ DOCKER_COMPOSE_FILE = 'docker-compose.hospital.yml'
 HOSPITAL_NAMES_FILE = 'data/hospitals.txt'
 
 PROXIED_COMMANDS = {
+    'stop': 'Stop services',
+    'restart': 'Restart services',
     'logs': 'Display logs for containers in each hospital',
     'ps': 'List containers',
     'exec': 'Execute a command in a running container',
@@ -142,9 +144,6 @@ def main():
 
     if command == 'start':
         execute(['up', '-d', '--build'])
-
-    elif command == 'stop':
-        execute(['stop'])
 
     elif command in PROXIED_COMMANDS:
         execute(sys.argv[1:])
