@@ -78,6 +78,11 @@ func NewFilePersistentStorage(filePath string) (*FilePersistentStorage, error) {
 		}
 	}
 
+	// Unmarshal hashmap
+	if err := json.Unmarshal(storage.data[storage.hashRootKey], &storage.hash); err != nil {
+		fmt.Printf("could not load hash: %v\n", err)
+	}
+
 	return storage, nil
 }
 
