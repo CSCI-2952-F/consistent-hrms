@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
@@ -20,8 +21,8 @@ var (
 	topicName       string
 	groupId         string
 	storage         PersistentStorage
-	producer        *kafka.Producer
-	consumer        *kafka.Consumer
+	producer        *Producer
+	consumer        *Consumer
 	discoveryClient *DiscoverySvcClient
 
 	// Mapping of partition to results by offset.
@@ -33,6 +34,8 @@ var (
 )
 
 func main() {
+	ctx, cancelFunc := context.WithCancel(context.Background())
+
 	// Parse environment variables
 	topicName = os.Getenv("TOPIC_NAME")
 	if topicName == "" {
@@ -94,7 +97,7 @@ func main() {
 	defer closeKafka()
 
 	// Create consumer
-	consumer, err = kafka.NewConsumer(&kafka.ConfigMap{
+	kafkaConsumer, err := kafka.NewConsumer(&kafka.ConfigMap{
 		"bootstrap.servers":  brokers,
 		"group.id":           groupId,
 		"enable.auto.commit": "false",    // must commit after each consumer read
@@ -103,15 +106,17 @@ func main() {
 	if err != nil {
 		log.Fatalf("could not create consumer: %v", err)
 	}
+	consumer = &Consumer{kafkaConsumer}
 
 	// Create producer
-	producer, err = kafka.NewProducer(&kafka.ConfigMap{
+	kafkaProducer, err := kafka.NewProducer(&kafka.ConfigMap{
 		"bootstrap.servers": brokers,
 		"acks":              "all",
 	})
 	if err != nil {
 		log.Fatalf("could not create producer: %v", err)
 	}
+	producer = &Producer{kafkaProducer}
 
 	// Subscribe consumer to topic
 	if err := consumer.Subscribe(topicName, nil); err != nil {
@@ -140,6 +145,9 @@ func main() {
 
 		log.Println("gRPC server shut down gracefully.")
 
+		// Stop consumer
+		cancelFunc()
+
 		// Flush producer with a maximum timeout of 15 seconds
 		producer.Flush(15 * 1000)
 
@@ -150,7 +158,7 @@ func main() {
 	}()
 
 	// Start polling in background
-	go pollConsumer(consumer)
+	go pollConsumer(ctx, consumer)
 
 	// Produce broadcast message for public key; this blocks until we also receive it
 	publicKey := privateKey.GetUnsigner()
@@ -187,20 +195,16 @@ func closeKafka() {
 	}
 }
 
-func pollConsumer(c *kafka.Consumer) {
-	// TODO: Fix SEGV from closing consumer in goroutine.
-	//       Need to pass context and cancel polling on close.
-	//       Convert ReadMessage to channel-based method.
+func pollConsumer(ctx context.Context, c *Consumer) {
+	// Keep polling for messages every second to also act as a heartbeat
+	// to prevent being kicked from consumer group
+	msgChan := c.ReadC(ctx, 1*time.Second)
 
 	for {
-		// Keep polling for messages every second to also act as a heartbeat
-		// to prevent being kicked from consumer group
-		msg, err := c.ReadMessage(1 * time.Second)
-		if err != nil {
-			continue
-		}
-		if msg == nil {
-			continue
+		msg, ok := <-msgChan
+		if !ok {
+			log.Printf("Consumer stopped polling.")
+			return
 		}
 
 		partition := msg.TopicPartition.Partition
