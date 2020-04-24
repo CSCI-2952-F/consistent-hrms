@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 )
 
@@ -8,10 +9,10 @@ type SagaOperationType int
 
 //go:generate stringer -type=SagaOperationType
 const (
-	MetaOperation SagaOperationType = iota
-	PutOperation
+	PutOperation SagaOperationType = iota
 	RemoveOperation
 	TransferOperation
+	SetPublicKeyOperation
 )
 
 type SagaValue struct {
@@ -19,18 +20,35 @@ type SagaValue struct {
 	Metadata SagaMetadata `json:"meta"`
 }
 
+func (val *SagaValue) String() string {
+	return fmt.Sprintf("value=[%d bytes] metadata=[%s]", len(val.Value), val.Metadata)
+}
+
 func (val *SagaValue) isEmpty() bool {
 	return val == nil || val.Value == nil
 }
 
 func (val SagaValue) checkOwnership(op SagaOperation) bool {
-	// TODO: Do some sort of verification of the SagaOperation message
-	//       when it arrives, to prove that the message was indeed sent
-	//       by the owner of a key, instead of depending on the Kafka
-	//       header value which can be spoofed.
-	//       Idea: Send messages to broadcast owner's public key, such that
-	//       each message must be signed with their corresponding private key.
-	return val.Metadata.Owner == op.metadata.Owner
+	// First level of check: Existing value's owner must match
+	if val.Metadata.Owner != op.metadata.Owner {
+		log.Printf("ownership check failed for %s: owner does not match", op)
+		return false
+	}
+
+	// Load public key for supposed owner
+	key, err := loadPublicKey(op.metadata.Owner)
+	if err != nil {
+		log.Printf("ownership check failed for %s: public key not found: %s", op, err)
+		return false
+	}
+
+	// Verify signature of supposed owner
+	if err := key.Unsign(op.value, op.signature); err != nil {
+		log.Printf("ownership check failed for %s: signature not valid: %s", op, err)
+		return false
+	}
+
+	return true
 }
 
 type SagaMetadata struct {
@@ -39,12 +57,26 @@ type SagaMetadata struct {
 	Owner     string `json:"owner"`
 }
 
+func (s SagaMetadata) String() string {
+	return fmt.Sprintf("partition=%d offset=%d owner=%s", s.Partition, s.Offset, s.Owner)
+}
+
 type SagaOperation struct {
 	operationType SagaOperationType
 	key           string
 	value         []byte
 	newOwner      string
 	metadata      SagaMetadata
+	signature     []byte
+}
+
+func (op SagaOperation) String() string {
+	str := fmt.Sprintf("op=%s key=%s value=[%d bytes] metadata=[%s]", op.operationType, op.key, len(op.value), op.metadata)
+	if op.newOwner != "" {
+		str += " newOwner=" + op.newOwner
+	}
+
+	return str
 }
 
 type SagaResult struct {
@@ -59,6 +91,15 @@ type SagaResult struct {
 // Returns a result of the processing.
 // Note that the state of the persistent storage for every client at a given timestep should be identical.
 func (op SagaOperation) process() SagaResult {
+	// Owner is announcing a new public key.
+	// Remember and store the public key for future verification (linearizable).
+	if op.operationType == SetPublicKeyOperation {
+		if err := storage.HPut("public_keys", op.metadata.Owner, op.value); err != nil {
+			log.Fatalf("could not hput public key for %s into storage: %s", op.metadata.Owner, err)
+		}
+		return SagaResult{Ok: true}
+	}
+
 	// Retrieve existing data in storage
 	val, err := storage.Retrieve(op.key)
 	if err != nil {

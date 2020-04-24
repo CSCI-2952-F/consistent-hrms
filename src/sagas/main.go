@@ -27,6 +27,9 @@ var (
 	// Mapping of partition to results by offset.
 	resultChans []map[kafka.Offset]chan SagaResult
 	resultMtx   []*sync.Mutex
+
+	// Cryptographic keys for signing Kafka messages
+	privateKey Signer
 )
 
 func main() {
@@ -81,6 +84,12 @@ func main() {
 	// Use the retrieved hospital information as our unique group ID
 	groupId = info.Hospital.Id
 	log.Printf("Acquired unique group ID: %s\n", groupId)
+
+	// Initialize private key for signing Kafka messages
+	privateKey, err = loadPrivateKey()
+	if err != nil {
+		log.Fatalf("could not load private key: %s", err)
+	}
 
 	defer closeKafka()
 
@@ -143,6 +152,18 @@ func main() {
 	// Start polling in background
 	go pollConsumer(consumer)
 
+	// Produce broadcast message for public key; this blocks until we also receive it
+	publicKey := privateKey.GetUnsigner()
+	publicKeyBytes, err := publicKey.MarshalBinary()
+	if err != nil {
+		log.Fatal(err)
+	}
+	if _, _, err := produce(SetPublicKeyOperation, nil, publicKeyBytes, ""); err != nil {
+		log.Fatalf("could not produce initial message SetPublicKeyOperation")
+	}
+
+	log.Printf("Announced public key.")
+
 	// Start gRPC server
 	log.Printf("Starting gRPC server on %s.\n", grpcListenAddr)
 	if err := grpcServer.Serve(lis); err != nil {
@@ -167,6 +188,10 @@ func closeKafka() {
 }
 
 func pollConsumer(c *kafka.Consumer) {
+	// TODO: Fix SEGV from closing consumer in goroutine.
+	//       Need to pass context and cancel polling on close.
+	//       Convert ReadMessage to channel-based method.
+
 	for {
 		// Keep polling for messages every second to also act as a heartbeat
 		// to prevent being kicked from consumer group
@@ -196,9 +221,6 @@ func pollConsumer(c *kafka.Consumer) {
 		// Parse operation type
 		opType := SagaOperationType(opTypeBytes[0])
 
-		fmt.Printf("Consumed message: topicPartition=%s op=%s key=%s value=%s headers=%s\n", msg.TopicPartition,
-			opType, string(msg.Key), string(msg.Value), headers)
-
 		meta := SagaMetadata{
 			Partition: msg.TopicPartition.Partition,
 			Offset:    int64(msg.TopicPartition.Offset),
@@ -210,11 +232,14 @@ func pollConsumer(c *kafka.Consumer) {
 			metadata:      meta,
 			key:           string(msg.Key),
 			value:         msg.Value,
+			signature:     headers["signature"],
 		}
 
 		if hdr, ok := headers["newOwner"]; ok {
 			op.newOwner = string(hdr)
 		}
+
+		fmt.Printf("Consumed message: %s\n", op)
 
 		// Get and store the result of processing this operation
 		result := op.process()

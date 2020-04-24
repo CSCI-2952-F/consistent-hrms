@@ -8,15 +8,15 @@ func _() {
 	// An "invalid array index" compiler error signifies that the constant values have changed.
 	// Re-run the stringer command to generate them again.
 	var x [1]struct{}
-	_ = x[MetaOperation-0]
-	_ = x[PutOperation-1]
-	_ = x[RemoveOperation-2]
-	_ = x[TransferOperation-3]
+	_ = x[PutOperation-0]
+	_ = x[RemoveOperation-1]
+	_ = x[TransferOperation-2]
+	_ = x[SetPublicKeyOperation-3]
 }
 
-const _SagaOperationType_name = "MetaOperationPutOperationRemoveOperationTransferOperation"
+const _SagaOperationType_name = "PutOperationRemoveOperationTransferOperationSetPublicKeyOperation"
 
-var _SagaOperationType_index = [...]uint8{0, 13, 25, 40, 57}
+var _SagaOperationType_index = [...]uint8{0, 12, 27, 44, 65}
 
 func (i SagaOperationType) String() string {
 	if i < 0 || i >= SagaOperationType(len(_SagaOperationType_index)-1) {

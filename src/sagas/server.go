@@ -11,7 +11,7 @@ import (
 type sagasConsistentStorageServer struct{}
 
 func (s *sagasConsistentStorageServer) Get(_ context.Context, r *GetRequest) (*GetResponse, error) {
-	log.Printf("Received Get request: %v\n", r)
+	log.Printf("Received Get request: key=%s\n", r.Key)
 
 	// Retrieve from storage
 	val, err := storage.Retrieve(r.Key)
@@ -33,7 +33,7 @@ func (s *sagasConsistentStorageServer) Get(_ context.Context, r *GetRequest) (*G
 }
 
 func (s *sagasConsistentStorageServer) Put(_ context.Context, r *PutRequest) (*PutResponse, error) {
-	log.Printf("Received Put request: %v\n", r)
+	log.Printf("Received Put request: key=%s\n", r.Key)
 
 	// Produce to Kafka
 	partition, offset, err := produce(PutOperation, []byte(r.Key), r.Value, "")
@@ -60,7 +60,7 @@ func (s *sagasConsistentStorageServer) Put(_ context.Context, r *PutRequest) (*P
 }
 
 func (s *sagasConsistentStorageServer) Remove(_ context.Context, r *RemoveRequest) (*RemoveResponse, error) {
-	log.Printf("Received Remove request: %v\n", r)
+	log.Printf("Received Remove request: key=%s\n", r.Key)
 
 	// Produce to Kafka
 	partition, offset, err := produce(RemoveOperation, []byte(r.Key), nil, "")
@@ -88,7 +88,7 @@ func (s *sagasConsistentStorageServer) Remove(_ context.Context, r *RemoveReques
 }
 
 func (s *sagasConsistentStorageServer) Transfer(_ context.Context, r *TransferRequest) (*TransferResponse, error) {
-	log.Printf("Received Transfer request: %v\n", r)
+	log.Printf("Received Transfer request: key=%s\n", r.Key)
 
 	// Produce to Kafka
 	partition, offset, err := produce(TransferOperation, []byte(r.Key), nil, r.NewOwner)
@@ -116,9 +116,18 @@ func (s *sagasConsistentStorageServer) Transfer(_ context.Context, r *TransferRe
 }
 
 func produce(operation SagaOperationType, key []byte, val []byte, newOwner string) (partition int32, offset kafka.Offset, err error) {
+	// Sign value with private key
+	signature, e := privateKey.Sign(val)
+	if e != nil {
+		err = e
+		return
+	}
+
+	// Prepare headers
 	headers := []kafka.Header{
 		{Key: "owner", Value: []byte(groupId)},
 		{Key: "operation", Value: []byte{byte(operation)}},
+		{Key: "signature", Value: signature},
 	}
 
 	if operation == TransferOperation {
