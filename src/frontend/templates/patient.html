@@ -21,10 +21,21 @@
     </div>
   </div>
   <div class="row">
-    <div id="patient_card" class="card w-50 mb-2 ml-2 mr-2" style="display: none; height: 300px; overflow-y: scroll;">
+    <form class="form-inline">
+      <div class="form-group">
+        <label for="files">Upload a CSV formatted file:</label>
+        <input type="file" id="files" class="form-control" accept=".csv" required />
+      </div>
+      <div class="form-group">
+      <button type="submit" id="submit-file" class="btn btn-primary" onclick="remove()">Remove File</button>
+      </div>
+    </form>
+    <output id="out">
+      file contents will appear here
+    </output>
+    <div id="patient_card" class="card w-50 mb-2 ml-2 mr-2" style="height: 300px; overflow-y: scroll;">
       <div class="card-body">
         <h4 class="card-title">Patient Card</h4>
-        <div class="card-subtitle mb-2 text-muted">Patient Name: <span class="card-text" id="patient_card_name"></span></div>
         <div class="card-subtitle mb-2 text-muted">Patient UID: <span class="card-text" id="patient_card_uid"></span></div>
         <div class="card-subtitle mb-2 text-muted">Hospital Name: <span class="card-text"> {{ hospital_name }} </span></div>
         <div class="card-subtitle mb-2 text-muted">Private Key: <span class="card-text" id="patient_card_private_key"></span></div>
@@ -62,10 +73,11 @@
    * stores the private key.
    */
   function register() {
-    patient_name_div = $('#patient_name');
-    let patient_name = patient_name_div.val();
     patient_id_div = $('#patient_id');
     let patient_id = patient_id_div.val();
+
+    // In the process of storing patient card info.
+    var patient_data = [['', '']];
 
     // Generate the priv/pub key pair.
     crypto.subtle
@@ -81,8 +93,6 @@
       )
       .then(function (keyPair) {
         // Populate patient card.
-        let card_patient_name = document.getElementById('patient_card_name');
-        card_patient_name.innerHTML = patient_name;
         let card_private_key_div = document.getElementById('patient_card_private_key');
 
         // Private Key Extraction.
@@ -92,6 +102,7 @@
             // Converting exported private key to PEM format
             var pem = toPrivPem(exportedPrivateKey);
             card_private_key_div.innerHTML = pem;
+            patient_data[0][1] = pem;
           })
           .catch(function (err) {
             console.log(err);
@@ -118,10 +129,11 @@
               success: function (response) {
                 let reg_div = document.getElementById('registration-output');
                 reg_div.innerHTML = 'Registration Successful.';
-                // Display patient card.
-                document.getElementById('patient_card').style.display = 'block';
+                // Download patient card.
                 let card_patient_uid_div = document.getElementById('patient_card_uid');
                 card_patient_uid_div.innerHTML = response.uid;
+                patient_data[0][0] = response.uid;
+                download(patient_data);
               },
             });
           })
@@ -167,7 +179,45 @@
     }
   }
 
-  /* CRYPTO HELPER FUNCTIONS */
+  /* Upload/Download Helper Function */
+ 
+  var fileInput = document.getElementById("files"),
+
+  readFile = function () {
+      var reader = new FileReader();
+      reader.onload = function () {
+          debugger;
+          reader.result = reader.result.split('\n')[1].split(",");
+          debugger;
+          let card_private_key_div = document.getElementById('patient_card_private_key');
+          card_private_key_div.innerHTML = reader.result[0];
+
+          let card_patient_uid_div = document.getElementById('patient_card_uid');
+          card_patient_uid_div.innerHTML = reader.result[1];
+
+          document.getElementById('out').innerHTML = reader.result;
+      };
+      // start reading the file. When it is done, calls the onload event defined above.
+      reader.readAsBinaryString(fileInput.files[0]);
+  };
+
+  fileInput.addEventListener('change', readFile);
+
+  function download(data) {
+    var csv = 'UID,PRIV_KEY\n';
+    data.forEach(function(row) {
+            csv += row.join(',');
+            csv += "\n";
+    });
+    console.log(csv);
+    var hiddenElement = document.createElement('a');
+    hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+    hiddenElement.target = '_blank';
+    hiddenElement.download = 'patient_card.csv';
+    hiddenElement.click();
+  }
+
+  /* Crypto Helper Functions */
   function arrayBufferToBase64(arrayBuffer) {
     var byteArray = new Uint8Array(arrayBuffer);
     var byteString = '';
