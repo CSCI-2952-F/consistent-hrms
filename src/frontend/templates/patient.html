@@ -2,62 +2,70 @@
 <div class="header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
   <h1 class="display-4">Patient Portal</h1>
 </div>
-<div class="container">
-  <div class="row">
-    <div class="card w-50 mb-2 ml-2 mr-2">
-      <div class="card-body">
-        <h4 class="card-title">Patient Register</h4>
-        <p class="card-text">Register with {{ hospital_name }}.</p>
-        <form>
-          <div class="form-group">
-            <input type="text" class="form-control" id="patient_name" placeholder="Patient Name" />
-            <input type="text" class="form-control" id="patient_id" placeholder="Patient ID" />
-            <a href="#" class="btn btn-primary" role="button" onclick="register()">Register</a>
-          </div>
-        </form>
-        <div class="card-subtitle mb-2 text-muted">Response:</div>
-        <div class="card-text" id="registration-output"></div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <form class="form-inline">
-      <div class="form-group">
-        <label for="files">Upload a CSV formatted file:</label>
+<div class="row p-3 justify-content-center">
+  <form class="form-inline">
+    <div class="form-group">
+      <label for="files">Upload Patient Card:</label>
+      <div class="pl-3">
         <input type="file" id="files" class="form-control" accept=".csv" required />
       </div>
-      <div class="form-group">
-      <button type="submit" id="submit-file" class="btn btn-primary" onclick="remove()">Remove File</button>
-      </div>
-    </form>
-    <output id="out">
-      file contents will appear here
-    </output>
-    <div id="patient_card" class="card w-50 mb-2 ml-2 mr-2" style="height: 300px; overflow-y: scroll;">
-      <div class="card-body">
-        <h4 class="card-title">Patient Card</h4>
-        <div class="card-subtitle mb-2 text-muted">Patient UID: <span class="card-text" id="patient_card_uid"></span></div>
-        <div class="card-subtitle mb-2 text-muted">Hospital Name: <span class="card-text"> {{ hospital_name }} </span></div>
-        <div class="card-subtitle mb-2 text-muted">Private Key: <span class="card-text" id="patient_card_private_key"></span></div>
-      </div>
     </div>
-  </div>
+    <div class="pl-3 form-group">
+      <button type="submit" class="btn btn-secondary" onclick="removeCard()">Remove Card</button>
+    </div>
+  </form>
+</div>
+<div class="container">
   <div class="row">
-    <div class="card w-50 mb-2 ml-2 mr-2">
-      <div class="card-body">
-        <h4 class="card-title">Patient Read</h4>
-        <p class="card-text">Obtain patient medical records.</p>
-        <form>
-          <div class="form-group">
-            <a href="#" class="btn btn-primary" role="button" onclick="read()">Read</a>
+    <div class="col-6">
+      <div class="row">
+        <div class="card w-100 mb-2 ml-2 mr-2">
+          <div class="card-body">
+            <h4 class="card-title">Patient Register</h4>
+            <p class="card-text">Register with {{ hospital_name }}.</p>
+            <form>
+              <div class="form-group">
+                <input type="text" class="form-control w-75" id="patient_name" placeholder="Patient Name" />
+                <input type="text" class="form-control w-75" id="patient_id" placeholder="Patient ID" />
+                <a href="#" class="btn btn-primary" role="button" onclick="register()">Register</a>
+              </div>
+            </form>
+            <div class="card-subtitle mb-2 text-muted">Response:</div>
+            <div class="card-text" id="registration-output"></div>
           </div>
-        </form>
-        <div class="card-subtitle mb-2 text-muted">Response:</div>
-        <div class="card-text" id="read-output"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="card w-100 mb-2 ml-2 mr-2">
+          <div class="card-body">
+            <h4 class="card-title">Patient Read</h4>
+            <p class="card-text">Obtain patient medical records.</p>
+            <form>
+              <div class="form-group">
+                <a href="#" class="btn btn-primary" role="button" onclick="read()">Read</a>
+              </div>
+            </form>
+            <div class="card-subtitle mb-2 text-muted">Response:</div>
+            <div class="card-text" id="read-output"></div>
+          </div>
+        </div>
       </div>
     </div>
+    <div class="col-6">
+      <div class="row">
+        <div id="patient_card" class="card w-75 mb-2 ml-2 mr-2" style="height: 200px; overflow-y: scroll;">
+          <div class="card-body">
+            <h4 class="card-title">Patient Card</h4>
+            <div class="card-subtitle mb-2 text-muted">Patient UID: <span class="card-text" id="patient_card_uid"></span></div>
+            <div class="card-subtitle mb-2 text-muted">Hospital Name: <span class="card-text"> {{ hospital_name }} </span></div>
+            <div class="card-subtitle mb-2 text-muted">Private Key: <span class="card-text" id="patient_card_private_key"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>    
   </div>
 </div>
+
 <script>
   /*
    * Register takes a patient name and id and also generates a
@@ -73,6 +81,9 @@
    * stores the private key.
    */
   function register() {
+    patient_name_div = $('#patient_name');
+    let patient_name = patient_name_div.val();
+
     patient_id_div = $('#patient_id');
     let patient_id = patient_id_div.val();
 
@@ -92,16 +103,12 @@
         ['encrypt', 'decrypt']
       )
       .then(function (keyPair) {
-        // Populate patient card.
-        let card_private_key_div = document.getElementById('patient_card_private_key');
-
         // Private Key Extraction.
         crypto.subtle
           .exportKey('pkcs8', keyPair.privateKey)
           .then(function (exportedPrivateKey) {
             // Converting exported private key to PEM format
             var pem = toPrivPem(exportedPrivateKey);
-            card_private_key_div.innerHTML = pem;
             patient_data[0][1] = pem;
           })
           .catch(function (err) {
@@ -130,8 +137,6 @@
                 let reg_div = document.getElementById('registration-output');
                 reg_div.innerHTML = 'Registration Successful.';
                 // Download patient card.
-                let card_patient_uid_div = document.getElementById('patient_card_uid');
-                card_patient_uid_div.innerHTML = response.uid;
                 patient_data[0][0] = response.uid;
                 download(patient_data);
               },
@@ -147,36 +152,51 @@
   }
 
   /*
-   * Read will check if the patient has a card. If the patient
-   * has a card, the uid is sent in the request. The patient
-   * can then decrypt their encrypted medical records client
-   * side.
+   * If the patient has a card, the uid is sent in the request. 
+   * The patient can then decrypt their encrypted medical records 
+   * client side.
    */
   function read() {
     let read_output_div = document.getElementById('read-output');
-
-    if ($('#patient_card').css('display') == 'none') {
-      read_output_div.innerHTML = 'Must have a patient card for this hospital.';
-    } else {
-      card_patient_uid_div = $('#patient_card_uid');
-      let patient_uid = card_patient_uid_div.text();
-      data = { uid: patient_uid };
-      $.ajax({
-        url: 'http://localhost:{{api_gateway_port}}/patient_read',
-        type: 'POST',
-        dataType: 'json',
-        data: JSON.stringify(data),
-        error: function (request, status, error) {
-          read_output_div.innerHTML = 'Read Unsuccessful.';
-        },
-        success: function (response) {
-          for (let i = 0; i < response.data.length; i++) {
-            // TODO: change this to append divs.
-            read_output_div.innerHTML = decrypt(response.data[i]);
-          }
-        },
-      });
+    // Grap the uid from the card.
+    card_patient_uid_div = $('#patient_card_uid');
+    let patient_uid = card_patient_uid_div.text();
+    if (patient_uid == "") {
+      read_output_div.innerHTML = 'Please upload your patient card.';
+      return
     }
+    data = { uid: patient_uid };
+
+    // Make the request.
+    $.ajax({
+      url: 'http://localhost:{{api_gateway_port}}/patient_read',
+      type: 'POST',
+      dataType: 'json',
+      data: JSON.stringify(data),
+      error: function (request, status, error) {
+        read_output_div.innerHTML = 'Read Unsuccessful.';
+      },
+      success: function (response) {
+        for (let i = 0; i < response.data.length; i++) {
+          // TODO: change this to append divs.
+          read_output_div.innerHTML = decrypt(response.data[i]);
+        }
+      },
+    });
+  }
+
+  function removeCard() {
+    var fileInput = document.getElementById("files");
+    fileInput.value = "";
+
+    let card_patient_uid_div = document.getElementById('patient_card_uid');
+    card_patient_uid_div.innerHTML = "";
+
+    let card_private_key_div = document.getElementById('patient_card_private_key');
+    card_private_key_div.innerHTML = "";
+
+    let read_output_div = document.getElementById('read-output');
+    read_output_div.innerHTML = "";
   }
 
   /* Upload/Download Helper Function */
@@ -185,19 +205,19 @@
 
   readFile = function () {
       var reader = new FileReader();
+      var uid = "";
+      var result = "";
       reader.onload = function () {
-          debugger;
-          reader.result = reader.result.split('\n')[1].split(",");
-          debugger;
-          let card_private_key_div = document.getElementById('patient_card_private_key');
-          card_private_key_div.innerHTML = reader.result[0];
+          result = reader.result.split(",");
+          uid = reader.result.split(",")[1].split("\n")[1];
 
           let card_patient_uid_div = document.getElementById('patient_card_uid');
-          card_patient_uid_div.innerHTML = reader.result[1];
+          card_patient_uid_div.innerHTML = uid;
 
-          document.getElementById('out').innerHTML = reader.result;
+          let card_private_key_div = document.getElementById('patient_card_private_key');
+          card_private_key_div.innerHTML = result[2];
       };
-      // start reading the file. When it is done, calls the onload event defined above.
+      // Read the file.
       reader.readAsBinaryString(fileInput.files[0]);
   };
 
@@ -209,7 +229,6 @@
             csv += row.join(',');
             csv += "\n";
     });
-    console.log(csv);
     var hiddenElement = document.createElement('a');
     hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
     hiddenElement.target = '_blank';
