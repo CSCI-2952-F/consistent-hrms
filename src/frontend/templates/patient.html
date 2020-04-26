@@ -11,6 +11,9 @@
       </div>
     </div>
     <div class="pl-3 form-group">
+      <button type="submit" class="btn btn-info" onclick="downloadCard()">Download Card</button>
+    </div>
+    <div class="pl-3 form-group">
       <button type="submit" class="btn btn-secondary" onclick="removeCard()">Remove Card</button>
     </div>
   </form>
@@ -47,6 +50,22 @@
             </form>
             <div class="card-subtitle mb-2 text-muted">Response:</div>
             <div class="card-text" id="read-output"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="card w-100 mb-2 ml-2 mr-2">
+          <div class="card-body">
+            <h4 class="card-title">Patient Transfer</h4>
+            <p class="card-text">Transfer medical records.</p>
+            <form>
+              <div class="form-group">
+                <input type="text" class="form-control w-75" id="patient_name" placeholder="Patient Name" />                
+                <a href="#" class="btn btn-primary" role="button" onclick="transfer()">Transfer</a>
+              </div>
+            </form>
+            <div class="card-subtitle mb-2 text-muted">Response:</div>
+            <div class="card-text" id="transfer-output"></div>
           </div>
         </div>
       </div>
@@ -136,9 +155,14 @@
               success: function (response) {
                 let reg_div = document.getElementById('registration-output');
                 reg_div.innerHTML = 'Registration Successful.';
-                // Download patient card.
                 patient_data[0][0] = response.uid;
-                download(patient_data);
+         
+                // Update patient card UI.         
+                let card_patient_uid_div = document.getElementById('patient_card_uid');
+                card_patient_uid_div.innerHTML = patient_data[0][0];
+
+                let card_private_key_div = document.getElementById('patient_card_private_key');
+                card_private_key_div.innerHTML = patient_data[0][1];
               },
             });
           })
@@ -158,7 +182,7 @@
    */
   function read() {
     let read_output_div = document.getElementById('read-output');
-    // Grap the uid from the card.
+    // Grab the uid from the card.
     card_patient_uid_div = $('#patient_card_uid');
     let patient_uid = card_patient_uid_div.text();
     if (patient_uid == "") {
@@ -223,7 +247,13 @@
 
   fileInput.addEventListener('change', readFile);
 
-  function download(data) {
+  function downloadCard() {
+    var data = [['', '']];
+    let card_patient_uid_div = document.getElementById('patient_card_uid');
+    let card_private_key_div = document.getElementById('patient_card_private_key');
+    data[0][0] = card_patient_uid_div.innerHTML;
+    data[0][1] = card_private_key_div.innerHTML;
+ 
     var csv = 'UID,PRIV_KEY\n';
     data.forEach(function(row) {
             csv += row.join(',');
