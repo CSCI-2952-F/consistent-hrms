@@ -2,8 +2,8 @@ from datetime import datetime
 
 import grpc
 
-from api_gateway.discovery_svc.pb.discovery_pb2 import *
-from api_gateway.discovery_svc.pb.discovery_pb2_grpc import HospitalDiscoveryStub
+from lib.discovery_svc.pb.discovery_pb2 import *
+from lib.discovery_svc.pb.discovery_pb2_grpc import HospitalDiscoveryStub
 
 
 class DiscoveryService:

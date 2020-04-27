@@ -5,7 +5,7 @@ from nameko.exceptions import RemoteError, safe_for_serialization
 from nameko.rpc import RpcProxy
 from werkzeug.wrappers import Response
 
-from api_gateway.discovery_svc import DiscoveryService
+from lib.discovery_svc import DiscoveryService
 from lib.nameko_cors import CorsHttpRequestHandler
 
 
