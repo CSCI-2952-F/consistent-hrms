@@ -20,12 +20,7 @@ class CorsHttpRequestHandler(HttpRequestHandler):
 
     def handle_request(self, request):
         self.request = request
-        if request.method == 'OPTIONS':
-            return self.response_from_result(result='')
-        return super().handle_request(request)
-
-    def response_from_result(self, *args, **kwargs):
-        response = super(CorsHttpRequestHandler, self).response_from_result(*args, **kwargs)
+        response = super(CorsHttpRequestHandler, self).handle_request(request)
         response.headers.add("Access-Control-Allow-Headers", self.request.headers.get("Access-Control-Request-Headers"))
         response.headers.add("Access-Control-Allow-Credentials", str(self.allow_credentials).lower())
         response.headers.add("Access-Control-Allow-Methods", ",".join(self.allowed_methods))
