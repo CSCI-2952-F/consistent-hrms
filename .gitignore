@@ -1,5 +1,7 @@
 **/.DS_Store
 
+docker-compose*.override.yml
+
 # Ignore node modules
 /src/frontend/templates/node_modules
 

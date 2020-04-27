@@ -13,7 +13,7 @@ from subprocess import Popen
 BASE_FRONTEND_PORT = 8000
 BASE_API_GATEWAY_PORT = 8100
 
-DOCKER_COMPOSE_FILE = 'docker-compose.hospital.yml'
+DOCKER_COMPOSE_FILES = ['docker-compose.hospital.yml', 'docker-compose.hospital.override.yml']
 HOSPITAL_NAMES_FILE = 'data/hospitals.txt'
 
 PROXIED_COMMANDS = {
@@ -63,7 +63,9 @@ def dco(project_name, command_args, env=None):
         env = {}
 
     docker_compose = get_docker_compose_executable()
-    args = [docker_compose, '-f', DOCKER_COMPOSE_FILE]
+    args = [docker_compose]
+    for f in DOCKER_COMPOSE_FILES:
+        args += ['-f', f]
     if project_name:
         args += ['-p', project_name]
     args += command_args
