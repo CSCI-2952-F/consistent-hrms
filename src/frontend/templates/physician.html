@@ -2,66 +2,111 @@
 <div class="header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
   <h1 class="display-4">Physician Portal</h1>
 </div>
+<div class="row p-3 justify-content-center">
+  <form class="form-inline">
+    <div class="form-group">
+      <label for="files">Upload Patient Card:</label>
+      <div class="pl-3">
+        <input type="file" id="patient_files" class="form-control" accept=".csv" required />
+      </div>
+    </div>
+    <div class="pl-3 form-group">
+      <button type="submit" class="btn btn-secondary" onclick="removePatientCard()">Remove Card</button>
+    </div>
+  </form>
+</div>
+<div class="row p-3 justify-content-center">
+  <form class="form-inline">
+    <div class="form-group">
+      <label for="files">Upload Physician Card:</label>
+      <div class="pl-3">
+        <input type="file" id="phys_files" class="form-control" accept=".csv" required />
+      </div>
+    </div>
+    <div class="pl-3 form-group">
+      <button type="submit" class="btn btn-info" onclick="downloadPhysCard()">Download Card</button>
+    </div>
+    <div class="pl-3 form-group">
+      <button type="submit" class="btn btn-secondary" onclick="removePhysCard()">Remove Card</button>
+    </div>
+  </form>
+</div>
 <div class="container">
   <div class="row">
-    <div class="card w-50 mb-2 ml-2 mr-2">
-      <div class="card-body">
-        <h4 class="card-title">Physician Register</h4>
-        <p class="card-text">Register with {{ hospital_name }}.</p>
-        <form>
-          <div class="form-group">
-            <input type="text" class="form-control w-75" id="physician_name" placeholder="Physician Name" />
-            <input type="text" class="form-control w-75" id="physician_id" placeholder="Physician ID" />
-            <a href="#" class="btn btn-primary" role="button" onclick="phys_register()">Register</a>
+    <div class="col-6">
+      <div class="row">
+        <div class="card w-100 mb-2 ml-2 mr-2">
+          <div class="card-body">
+            <h4 class="card-title">Physician Register</h4>
+            <p class="card-text">Register with {{ hospital_name }}.</p>
+            <form>
+              <div class="form-group">
+                <input type="text" class="form-control w-75" id="physician_name" placeholder="Physician Name" />
+                <input type="text" class="form-control w-75" id="physician_id" placeholder="Physician ID" />
+                <div class="pt-3">
+                  <a href="#" class="btn btn-primary" role="button" onclick="phys_register()">Register</a>
+                </div>
+              </div>
+            </form>
+            <div class="card-subtitle mb-2 text-muted">Response:</div>
+            <div class="card-text" id="registration-output"></div>
           </div>
-        </form>
-        <div class="card-subtitle mb-2 text-muted">Response:</div>
-        <div class="card-text" id="registration-output"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="card w-100 mb-2 ml-2 mr-2">
+          <div class="card-body">
+            <h4 class="card-title">Physician Read</h4>
+            <p class="card-text">Obtain patient medical records.</p>
+            <form>
+              <div class="form-group">
+                <a href="#" class="btn btn-primary" role="button" onclick="phys_read()">Read</a>
+              </div>
+            </form>
+            <div class="card-subtitle mb-2 text-muted">Response:</div>
+            <div class="card-text" id="read-output"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="card w-100 mb-2 ml-2 mr-2">
+          <div class="card-body">
+            <h4 class="card-title">Physician Write</h4>
+            <p class="card-text">Add patient medical record</p>
+            <form>
+              <div class="form-group">
+                <input type="text" class="form-control" id="note" placeholder="Add a note..." />
+                <div class="pt-3">
+                  <a href="#" class="btn btn-primary" role="button" onclick="phys_write()">Write</a>
+                </div>
+              </div>
+            </form>
+            <div class="card-subtitle mb-2 text-muted">Response:</div>
+            <div class="card-text" id="write-output"></div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div id="physician_card" class="card w-50 mb-2 ml-2 mr-2" style="display: none;">
-      <div class="card-body">
-        <h4 class="card-title">Physician Card</h4>
-        <div class="card-subtitle mb-2 text-muted">Physician Name: <span class="card-text" id="physician_card_name"></span></div>
-        <div class="card-subtitle mb-2 text-muted">Physician UID: <span class="card-text" id="physician_card_uid"></span></div>
-        <div class="card-subtitle mb-2 text-muted">Hospital Name: <span class="card-text"> {{ hospital_name }} </span></div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="card w-50 mb-2 ml-2 mr-2">
-      <div class="card-body">
-        <h4 class="card-title">Physician Read</h4>
-        <p class="card-text">Obtain patient medical records.</p>
-        <form>
-          <div class="form-group">
-            <input type="text" class="form-control" id="patient_uid" placeholder="Patient UID" />
-            <a href="#" class="btn btn-primary" role="button" onclick="phys_read()">Read</a>
+    <div class="col-6">
+      <div class="row">
+        <div id="physician_card" class="card w-75 mb-2 ml-2 mr-2">
+          <div class="card-body">
+            <h4 class="card-title">Physician Card</h4>
+            <div class="card-subtitle mb-2 text-muted">Physician UID: <span class="card-text" id="physician_card_uid"></span></div>
+            <div class="card-subtitle mb-2 text-muted">Hospital Name: <span class="card-text"> {{ hospital_name }} </span></div>
           </div>
-        </form>
-        <div class="card-subtitle mb-2 text-muted">Response:</div>
-        <div class="card-text" id="read-output"></div>
+        </div>
       </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="card w-50 mb-2 ml-2 mr-2">
-      <div class="card-body">
-        <h4 class="card-title">Physician Write</h4>
-        <p class="card-text">Add patient medical record</p>
-        <form>
-          <div class="form-group">
-            <input type="text" class="form-control" id="write_physician_id" placeholder="Physician ID" />
-            <input type="text" class="form-control" id="write_patient_uid" placeholder="Patient UID" />
-            <input type="text" class="form-control" id="note" placeholder="Add a note..." />
-            <a href="#" class="btn btn-primary" role="button" onclick="phys_write()">Write</a>
+      <div class="row">
+        <div id="patient_card" class="card w-75 mb-2 ml-2 mr-2">
+          <div class="card-body">
+            <h4 class="card-title">Patient Card</h4>
+            <div class="card-subtitle mb-2 text-muted">Patient UID: <span class="card-text" id="patient_card_uid"></span></div>
+            <div class="card-subtitle mb-2 text-muted">Hospital Name: <span class="card-text"> {{ hospital_name }} </span></div>
+            <div class="card-subtitle mb-2 text-muted">Private Key: <span class="card-text" id="patient_card_private_key"></span></div>
           </div>
-        </form>
-        <div class="card-subtitle mb-2 text-muted">Response:</div>
-        <div class="card-text" id="write-output"></div>
-      </div>
+        </div>
+      </div>      
     </div>
   </div>
 </div>
@@ -83,14 +128,10 @@
         reg_div.innerHTML = 'Registration Unsuccessful.';
       },
       success: function (response) {
-        console.log(response);
         let reg_div = document.getElementById('registration-output');
         reg_div.innerHTML = 'Registration Successful.';
-        // Display patient card.
-        document.getElementById('physician_card').style.display = 'block';
-        // Populate patient card.
-        let card_physician_name = document.getElementById('physician_card_name');
-        card_physician_name.innerHTML = physician_name;
+        let card_physician_uid = document.getElementById('physician_card_uid');
+        card_physician_uid.innerHTML = response;
       },
     });
     physician_name_div.val('');
@@ -98,8 +139,14 @@
   }
 
   function phys_read() {
-    patient_uid_div = $('#patient_uid');
-    let patient_uid = patient_uid_div.val();
+    let read_output_div = document.getElementById('read-output');
+    // Grab the uid from the card.
+    card_patient_uid_div = $('#patient_card_uid');
+    let patient_uid = card_patient_uid_div.text();
+    if (patient_uid == "") {
+      read_output_div.innerHTML = 'Please upload your patient card.';
+      return
+    }
     data = { uid: patient_uid };
 
     $.ajax({
@@ -108,15 +155,15 @@
       dataType: 'json',
       data: JSON.stringify(data),
       error: function (request, status, error) {
-        console.log('Error: ' + error);
+        read_output_div.innerHTML = 'Read Unsuccessful.';
       },
       success: function (response) {
-        let read_div = $('#read-output');
-        read_div.innerHTML = response;
-        alert(response);
+        for (let i = 0; i < response.data.length; i++) {
+          // TODO: change this to append divs.
+          read_output_div.innerHTML = decrypt(response.data[i]);
+        }
       },
     });
-    patient_uid_div.val('');
   }
 
   function phys_write() {
@@ -147,5 +194,106 @@
     write_patient_uid_div.val('');
     note_div.val('');
   }
+
+  /*************/
+  /* UI Helper Functions */
+  /*************/
+
+  function removePatientCard() {
+    var fileInput = document.getElementById("patient_files");
+    fileInput.value = "";
+
+    let card_patient_uid_div = document.getElementById('patient_card_uid');
+    card_patient_uid_div.innerHTML = "";
+
+    let card_private_key_div = document.getElementById('patient_card_private_key');
+    card_private_key_div.innerHTML = "";
+
+    let read_output_div = document.getElementById('read-output');
+    read_output_div.innerHTML = "";
+  }
+
+  function removePhysCard() {
+    var fileInput = document.getElementById("phys_files");
+    fileInput.value = "";
+
+    let card_physician_uid = document.getElementById('physician_card_uid');
+    card_physician_uid.innerHTML = "";
+
+  }
+
+  /* Upload/Download Helper Functions */
+
+  // Patient
+  var patientFileInput = document.getElementById("patient_files"),
+
+  readPatientFile = function () {
+      var reader = new FileReader();
+      var uid = "";
+      var result = "";
+      reader.onload = function () {
+          // Ugly code to get params from file.
+          result = reader.result.split(",");
+          uid = reader.result.split(",")[1].split("\n")[1];
+
+          let card_patient_uid_div = document.getElementById('patient_card_uid');
+          card_patient_uid_div.innerHTML = uid;
+
+          let card_private_key_div = document.getElementById('patient_card_private_key');
+          card_private_key_div.innerHTML = result[2];
+      };
+      // Read the file.
+      reader.readAsBinaryString(patientFileInput.files[0]);
+  };
+
+  patientFileInput.addEventListener('change', readPatientFile);
+
+  // Phys
+  var physFileInput = document.getElementById("phys_files"),
+
+  readPhysFile = function () {
+      var reader = new FileReader();
+      var uid = "";
+      var result = "";
+      reader.onload = function () {
+          uid = reader.result.split(",")[1].split("\n")[1];
+
+          let card_physician_uid = document.getElementById('physician_card_uid');
+          card_physician_uid.innerHTML = uid;
+      };
+      // Read the file.
+      reader.readAsBinaryString(physFileInput.files[0]);
+  };
+
+  physFileInput.addEventListener('change', readPhysFile);
+
+  function downloadPhysCard() {
+    var data = [['', '']];
+    let card_physician_uid = document.getElementById('physician_card_uid');
+
+    data[0][0] = card_physician_uid.innerHTML;
+ 
+    var csv = 'UID,PRIV_KEY\n';
+    data.forEach(function(row) {
+            csv += row.join(',');
+            csv += "\n";
+    });
+    var hiddenElement = document.createElement('a');
+    hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+    hiddenElement.target = '_blank';
+    hiddenElement.download = 'patient_card.csv';
+    hiddenElement.click();
+  }
+
+  /* Decrypt Helper Function */
+
+  function decrypt(data) {
+    const privateKey = document.getElementById('patient_card_private_key').innerHTML;
+    const decrypt = new JSEncrypt();
+    decrypt.setPrivateKey(privateKey);
+    const plainText = decrypt.decrypt(data) || 'DECRYPTION FAILED';
+    return plainText;
+  }
+
 </script>
 {% endblock %}

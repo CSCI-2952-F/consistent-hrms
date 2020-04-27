@@ -30,7 +30,9 @@
               <div class="form-group">
                 <input type="text" class="form-control w-75" id="patient_name" placeholder="Patient Name" />
                 <input type="text" class="form-control w-75" id="patient_id" placeholder="Patient ID" />
-                <a href="#" class="btn btn-primary" role="button" onclick="register()">Register</a>
+                <div class="pt-3">
+                  <a href="#" class="btn btn-primary" role="button" onclick="register()">Register</a>
+                </div>
               </div>
             </form>
             <div class="card-subtitle mb-2 text-muted">Response:</div>
@@ -60,12 +62,37 @@
             <p class="card-text">Transfer medical records.</p>
             <form>
               <div class="form-group">
-                <input type="text" class="form-control w-75" id="patient_name" placeholder="Patient Name" />                
-                <a href="#" class="btn btn-primary" role="button" onclick="transfer()">Transfer</a>
+                <div class="input-group">
+                  <input id="transfer-input" type="text" class="form-control" aria-label="Text input with dropdown button">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Please Select</button>
+                    <div id="dropdown-menu" class="dropdown-menu">
+                      <!-- Populated in js -->
+                    </div>
+                  </div>
+                </div>      
+                <div class="pt-3">          
+                  <a href="#" class="btn btn-primary" role="button" onclick="transfer()">Transfer</a>
+                </div>
               </div>
             </form>
             <div class="card-subtitle mb-2 text-muted">Response:</div>
             <div class="card-text" id="transfer-output"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="card w-100 mb-2 ml-2 mr-2">
+          <div class="card-body">
+            <h4 class="card-title">Patient Unregister</h4>
+            <p class="card-text">Unregister from hospital ecosystem.</p>
+            <form></form>
+              <div class="form-group">
+                <a href="#" class="btn btn-dark text-white" role="button" onclick="unregister()">Unregister</a>
+              </div>
+            </form>
+            <div class="card-subtitle mb-2 text-muted">Response:</div>
+            <div class="card-text" id="unregister-output"></div>
           </div>
         </div>
       </div>
@@ -209,6 +236,84 @@
     });
   }
 
+  /*
+   * Transfer patient records from this hospital to 
+   * dest hospital.
+   */
+  function transfer() {
+    let transfer_output_div = document.getElementById('transfer-output');
+    // Grab the uid from the card.
+    card_patient_uid_div = $('#patient_card_uid');
+    let patient_uid = card_patient_uid_div.text();
+    if (patient_uid == "") {
+      transfer_output_div.innerHTML = 'Please upload your patient card.';
+      return
+    }
+
+    // TODO generate auth_token
+    let auth_token = "abcdef";
+
+    // Grab dest hospital.
+    let dest_hospital = document.getElementById('transfer-input').value;
+    if (dest_hospital == "") {
+      transfer_output_div.innerHTML = 'Please select hospital to transfer records to.';
+      return
+    }
+
+    data = { uid: patient_uid, auth_token: auth_token, dest_hospital: dest_hospital};
+
+    // Make the request.
+    $.ajax({
+      url: 'http://localhost:{{api_gateway_port}}/patient_transfer',
+      type: 'POST',
+      dataType: 'json',
+      data: JSON.stringify(data),
+      error: function (request, status, error) {
+        transfer_output_div.innerHTML = 'Transfer Unsuccessful.';
+      },
+      success: function (response) {
+        transfer_output_div.innerHTML = 'Transfer Successful.';
+      },
+    });
+  }
+
+  /*
+  * Unregister patient from this hospital ecosystem.
+  */
+  function unregister() {
+    let unregister_output_div = document.getElementById('unregister-output');
+    // Grab the uid from the card.
+    card_patient_uid_div = $('#patient_card_uid');
+    let patient_uid = card_patient_uid_div.text();
+    if (patient_uid == "") {
+      unregister_output_div.innerHTML = 'Please upload your patient card.';
+      return
+    }
+
+    // TODO generate auth_token
+    let auth_token = "abcdef";
+
+    data = { uid: patient_uid, auth_token: auth_token };
+
+    // Make the request.
+    $.ajax({
+      url: 'http://localhost:{{api_gateway_port}}/patient_unreg',
+      type: 'POST',
+      dataType: 'json',
+      data: JSON.stringify(data),
+      error: function (request, status, error) {
+        unregister_output_div.innerHTML = 'Unregister Unsuccessful.';
+      },
+      success: function (response) {
+        unregister_output_div.innerHtml = 'Unregister Successful.'
+      },
+    });
+  }
+
+  /*************/
+  /* UI Helper Functions */
+  /*************/
+
   function removeCard() {
     var fileInput = document.getElementById("files");
     fileInput.value = "";
@@ -223,8 +328,8 @@
     read_output_div.innerHTML = "";
   }
 
-  /* Upload/Download Helper Function */
- 
+  /* Upload/Download Helper Functions */
+
   var fileInput = document.getElementById("files"),
 
   readFile = function () {
@@ -232,6 +337,7 @@
       var uid = "";
       var result = "";
       reader.onload = function () {
+          // Ugly code to get params from file.
           result = reader.result.split(",");
           uid = reader.result.split(",")[1].split("\n")[1];
 
@@ -264,6 +370,11 @@
     hiddenElement.target = '_blank';
     hiddenElement.download = 'patient_card.csv';
     hiddenElement.click();
+  }
+
+  function transferInput(data) {
+    let transferInput = document.getElementById('transfer-input');
+    transferInput.value = data;
   }
 
   /* Crypto Helper Functions */
@@ -305,5 +416,28 @@
     const plainText = decrypt.decrypt(data) || 'DECRYPTION FAILED';
     return plainText;
   }
+
+  /* Get all hospitals in this ecosystem. */
+  $.ajax({
+    url: 'http://localhost:{{api_gateway_port}}/list_hospitals',
+    type: 'GET',
+    dataType: 'json',
+    error: function (request, status, error) {
+      console.log(error);
+    },
+    success: function (response) {
+      var dropdown = document.getElementById('dropdown-menu');
+      for (let i = 0; i < response.length; i++) {
+        var elem = document.createElement("a");
+        elem.classList.add("dropdown-item");
+        elem.onclick = function() {
+          transferInput(response[i].name);
+        }
+        elem.innerHTML = response[i].name;
+        dropdown.appendChild(elem);
+      }
+    },
+  });
+
 </script>
 {% endblock %}

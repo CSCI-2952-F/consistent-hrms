@@ -71,13 +71,13 @@ class ApiGatewayService:
     @http('POST', '/physician_read')
     def physician_read_hospital(self, request):
         data = json.loads(request.get_data(as_text=True))
-        success = self.physician_rpc.read(patient_uid=data['uid'])
-        return json.dumps({'success': success})
+        res = self.patient_rpc.read(patient_uid=data['uid'])
+        return json.dumps({'success': True, 'data': res})
 
     @http('POST', '/physician_write')
     def physician_write_hospital(self, request):
         data = json.loads(request.get_data(as_text=True))
-        success = self.physician_rpc.write(physician_id=data['phys_id'], patient_uid=data['patient_uid'], data=data['data'])
+        success = self.physician_rpc.write(physician_uid=data['phys_uid'], patient_uid=data['patient_uid'], data=data['data'])
         return json.dumps({'success': success})
 
     @http('GET', '/list_hospitals')
