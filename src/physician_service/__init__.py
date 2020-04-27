@@ -9,13 +9,16 @@ from lib.hospital import get_hospital_name
 from lib.local_storage import LocalStorage
 from lib.medical_record import MedicalRecord
 
+
 class PhysicianNotRegistered(Exception):
     def __init__(self, physician_uid):
         super().__init__(f'Physician "{physician_uid}" is not registered at "{get_hospital_name()}"')
 
+
 class PatientNotRegistered(Exception):
     def __init__(self, patient_id):
         super().__init__(f'Patient "{patient_id}" is not registered at "{get_hospital_name()}"')
+
 
 class PhysicianService:
     name = 'physician_service'
@@ -75,7 +78,7 @@ class PhysicianService:
         res = self.consistent_storage.get(hash_uid)
         if not res['exists'] or not res['value']:
             raise PatientNotRegistered(patient_uid)
-        
+
         pub_key = res['value']
 
         # Store medical record in local storage
