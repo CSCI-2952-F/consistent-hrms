@@ -21,6 +21,7 @@ class DiscoveryService:
                 'id': hospital.id,
                 'name': hospital.name,
                 'registered_time': datetime.fromtimestamp(hospital.registeredTime).isoformat(),
+                'public_key': hospital.publicKey.decode('utf-8'),
             })
 
         return hospitals

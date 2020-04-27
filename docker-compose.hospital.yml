@@ -48,6 +48,7 @@ services:
     environment:
       - HOSPITAL_ID=${HOSPITAL_NAME_SLUG}
       - HOSPITAL_NAME
+      - HOSPITAL_GATEWAY_ADDR=${HOSPITAL_NAME_SLUG}:80
       - ZK_ADDR=zookeeper:2181
       - KEY_PREFIX=/hrms/hospitals/
       - GRPC_LISTEN_ADDR=:8080

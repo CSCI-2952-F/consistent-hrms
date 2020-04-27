@@ -13,14 +13,11 @@ func NewServer(sd ServiceDiscovery) *Server {
 }
 
 func (s *Server) GetInfo(context.Context, *InfoRequest) (*InfoResponse, error) {
-	hospital := Hospital{
+	res := InfoResponse{
 		Id:             hospitalId,
 		Name:           hospitalName,
+		PrivateKey:     hospitalPrivateKey,
 		RegisteredTime: registeredTime.Unix(),
-	}
-
-	res := InfoResponse{
-		Hospital: &hospital,
 	}
 
 	return &res, nil
@@ -38,6 +35,8 @@ func (s *Server) ListHospitals(ctx context.Context, _ *ListRequest) (*ListRespon
 		hospital := Hospital{
 			Id:             value.Id,
 			Name:           value.Name,
+			GatewayAddr:    value.GatewayAddr,
+			PublicKey:      value.PublicKey,
 			RegisteredTime: value.RegisteredTime,
 		}
 

@@ -75,17 +75,13 @@ func main() {
 	}
 
 	// Use the discovery service to get our unique ID as our consumer group ID.
-	info, err := discoveryClient.GetInfo()
+	uniqueId, err := discoveryClient.GetUniqueId()
 	if err != nil {
-		log.Fatalf("could not lookup discovery svc: %s", err)
-	}
-
-	if info.Hospital.Id == "" {
-		log.Fatal("discovery svc returned empty hospital id")
+		log.Fatalf("could not get unique group id: %s", err)
 	}
 
 	// Use the retrieved hospital information as our unique group ID
-	groupId = info.Hospital.Id
+	groupId = uniqueId
 	log.Printf("Acquired unique group ID: %s\n", groupId)
 
 	// Initialize private key for signing Kafka messages

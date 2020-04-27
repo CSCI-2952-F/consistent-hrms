@@ -16,9 +16,13 @@ var (
 	serviceDiscovery ServiceDiscovery
 	keyPrefix        string
 
-	hospitalId     string
-	hospitalName   string
-	registeredTime time.Time
+	hospitalId         string
+	hospitalName       string
+	hospitalPublicKey  []byte
+	hospitalPrivateKey []byte
+	registeredTime     time.Time
+
+	keyStorage *KeyStorage
 )
 
 type ServiceDiscovery interface {
@@ -31,13 +35,15 @@ type ServiceDiscovery interface {
 type RegisterValue struct {
 	Id             string `json:"id"`
 	Name           string `json:"name"`
+	GatewayAddr    string `json:"gateway_addr"`
+	PublicKey      []byte `json:"public_key"`
 	RegisteredTime int64  `json:"registered_time"`
 }
 
 func main() {
 	ctx, cancelFunc := context.WithCancel(context.Background())
 
-	// Parse environment variables
+	// Service metadata environment variables
 	hospitalId = os.Getenv("HOSPITAL_ID")
 	if hospitalId == "" {
 		log.Fatalf("HOSPITAL_ID not set")
@@ -46,6 +52,12 @@ func main() {
 	if hospitalName == "" {
 		log.Fatalf("HOSPITAL_NAME not set")
 	}
+	hospitalGatewayAddr := os.Getenv("HOSPITAL_GATEWAY_ADDR")
+	if hospitalGatewayAddr == "" {
+		log.Fatalf("HOSPITAL_GATEWAY_ADDR not set")
+	}
+
+	// Configuration environment variables
 	grpcListenAddr := os.Getenv("GRPC_LISTEN_ADDR")
 	keyPrefix = os.Getenv("KEY_PREFIX")
 
@@ -58,6 +70,32 @@ func main() {
 		}
 		leaseExpiry = expiry
 	}
+
+	// Initialize key storage
+	storage, err := NewKeyStorage(keyPath)
+	if err != nil {
+		log.Fatalf("could not initialize key storage: %s", err)
+	}
+	keyStorage = storage
+
+	// Load or generate private key
+	signer, err := loadPrivateKey()
+	if err != nil {
+		log.Fatalf("could not load private key from storage: %s", err)
+	}
+
+	// Export keys to bytes
+	privKey, err := signer.MarshalBinary()
+	if err != nil {
+		log.Fatalf("could not export public key: %s", err)
+	}
+	pubKey, err := signer.GetUnsigner().MarshalBinary()
+	if err != nil {
+		log.Fatalf("could not export public key: %s", err)
+	}
+
+	hospitalPrivateKey = privKey
+	hospitalPublicKey = pubKey
 
 	// Create service discovery backed by ZooKeeper
 	zkAddr := os.Getenv("ZK_ADDR")
@@ -72,6 +110,8 @@ func main() {
 	value := RegisterValue{
 		Id:             hospitalId,
 		Name:           hospitalName,
+		GatewayAddr:    hospitalGatewayAddr,
+		PublicKey:      hospitalPublicKey,
 		RegisteredTime: registeredTime.Unix(),
 	}
 
