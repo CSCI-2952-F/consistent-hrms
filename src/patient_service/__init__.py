@@ -76,7 +76,7 @@ class PatientService:
             raise PatientRegistrationViolation(uid, res['owner'])
 
         # Store medical record in local storage
-        record = MedicalRecord(self.hospital_name, uid)
+        record = MedicalRecord(self.hospital_name, uid, None)
         self.local_storage.insert_item(hash_uid, pub_key, record)
 
         # Return patient unique identifier

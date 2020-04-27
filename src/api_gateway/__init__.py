@@ -65,8 +65,8 @@ class ApiGatewayService:
     @http('POST', '/physician_reg')
     def physician_register_hospital(self, request):
         data = json.loads(request.get_data(as_text=True))
-        success = self.physician_rpc.register(physician_name=data['name'], physician_id=data['id'])
-        return json.dumps({'success': success})
+        uid = self.physician_rpc.register(physician_name=data['name'], physician_id=data['id'])
+        return json.dumps({'success': True, 'uid': uid})
 
     @http('POST', '/physician_read')
     def physician_read_hospital(self, request):

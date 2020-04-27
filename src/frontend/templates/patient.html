@@ -229,8 +229,9 @@
       },
       success: function (response) {
         for (let i = 0; i < response.data.length; i++) {
-          // TODO: change this to append divs.
-          read_output_div.innerHTML = decrypt(response.data[i]);
+          var elem = document.createElement("div");
+          elem.innerHTML = decrypt(response.data[i]);
+          read_output_div.append(elem);
         }
       },
     });

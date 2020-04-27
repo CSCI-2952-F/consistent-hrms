@@ -9,6 +9,14 @@ from lib.hospital import get_hospital_name
 from lib.local_storage import LocalStorage
 from lib.medical_record import MedicalRecord
 
+class PhysicianNotRegistered(Exception):
+    def __init__(self, physician_uid):
+        super().__init__(f'Physician "{physician_uid}" is not registered at "{get_hospital_name()}"')
+
+class PatientNotRegistered(Exception):
+    def __init__(self, patient_id):
+        super().__init__(f'Patient "{patient_id}" is not registered at "{get_hospital_name()}"')
+
 class PhysicianService:
     name = 'physician_service'
     consistent_storage: BaseStorageBackend = RpcProxy('consistent_storage')
@@ -54,16 +62,24 @@ class PhysicianService:
     def write(self, physician_uid, patient_uid, data):
         """
         Create medical record for patient and put in local storage.
-        Return True if successful.
         """
 
         # Check that the physician has registered with this hospital.
         if not self.local_storage.valid_staff(physician_uid):
-            return False
+            raise PhysicianNotRegistered(physician_uid)
 
         # Obtain the hashed UID.
         hash_uid = hasher.hash(patient_uid)
 
-        # Get the public key from consistent storage if it exists.
-        pub_key = self.consistent_storage.get(hash_uid)
-        self.local_storage.insert_item(hash_uid, pub_key, data)
+        # Retrieve patient public key from consistent storage.
+        res = self.consistent_storage.get(hash_uid)
+        if not res['exists'] or not res['value']:
+            raise PatientNotRegistered(patient_uid)
+        
+        pub_key = res['value']
+
+        # Store medical record in local storage
+        record = MedicalRecord(physician_uid, patient_uid, data)
+        self.local_storage.insert_item(hash_uid, pub_key, record)
+
+        return True

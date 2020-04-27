@@ -44,4 +44,4 @@ class LocalStorage():
         Return True if physician_id exists in staff roster.
         """
 
-        raise self.redis.exists(physician_id)
+        return self.redis.exists(physician_id)

@@ -75,7 +75,7 @@
             <p class="card-text">Add patient medical record</p>
             <form>
               <div class="form-group">
-                <input type="text" class="form-control" id="note" placeholder="Add a note..." />
+                <input type="text" class="form-control" id="note" required placeholder="Add a note..." />
                 <div class="pt-3">
                   <a href="#" class="btn btn-primary" role="button" onclick="phys_write()">Write</a>
                 </div>
@@ -131,7 +131,7 @@
         let reg_div = document.getElementById('registration-output');
         reg_div.innerHTML = 'Registration Successful.';
         let card_physician_uid = document.getElementById('physician_card_uid');
-        card_physician_uid.innerHTML = response;
+        card_physician_uid.innerHTML = response.uid;
       },
     });
     physician_name_div.val('');
@@ -159,22 +159,34 @@
       },
       success: function (response) {
         for (let i = 0; i < response.data.length; i++) {
-          // TODO: change this to append divs.
-          read_output_div.innerHTML = decrypt(response.data[i]);
+          var elem = document.createElement("div");
+          elem.innerHTML = decrypt(response.data[i]);
+          read_output_div.append(elem);
         }
       },
     });
   }
 
   function phys_write() {
-    physician_id_div = $('#write_physician_id');
-    let physician_id = physician_id_div.val();
-    write_patient_uid_div = $('#write_patient_uid');
-    let write_patient_uid = write_patient_uid_div.val();
+    let card_patient_uid_div = document.getElementById('patient_card_uid');
+    patient_uid = card_patient_uid_div.innerHTML;
+    let card_physician_uid_div =  document.getElementById('physician_card_uid');
+    let physician_uid = card_physician_uid_div.innerHTML;
     note_div = $('#note');
     let note = note_div.val();
+    let write_output_div = document.getElementById('write-output');
 
-    data = { phys_id: physician_id, patient_uid: write_patient_uid, data: note };
+    if (patient_uid == "") {
+      write_output_div.innerHTML = 'Please upload a patient card.';
+      return
+    }
+
+    if (physician_uid == "") {
+      write_output_div.innerHTML = 'Please upload your physician card.';
+      return
+    }
+
+    data = { phys_uid: physician_uid, patient_uid: patient_uid, data: note };
 
     $.ajax({
       url: 'http://localhost:{{api_gateway_port}}/physician_write',
@@ -182,16 +194,12 @@
       dataType: 'json',
       data: JSON.stringify(data),
       error: function (request, status, error) {
-        console.log('Error: ' + error);
+        write_output_div.innerHTML = "Write Unsuccessful.";
       },
       success: function (response) {
-        let write_div = $('#write-output');
-        write_div.innerHTML = response;
-        alert(response);
+        write_output_div.innerHTML = "Write Successful.";
       },
     });
-    physician_id_div.val('');
-    write_patient_uid_div.val('');
     note_div.val('');
   }
 
@@ -256,10 +264,10 @@
       var uid = "";
       var result = "";
       reader.onload = function () {
-          uid = reader.result.split(",")[1].split("\n")[1];
+        uid = reader.result.split(",")[1].split("\n")[1];
 
-          let card_physician_uid = document.getElementById('physician_card_uid');
-          card_physician_uid.innerHTML = uid;
+        let card_physician_uid = document.getElementById('physician_card_uid');
+        card_physician_uid.innerHTML = uid;
       };
       // Read the file.
       reader.readAsBinaryString(physFileInput.files[0]);
@@ -281,7 +289,7 @@
     var hiddenElement = document.createElement('a');
     hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
     hiddenElement.target = '_blank';
-    hiddenElement.download = 'patient_card.csv';
+    hiddenElement.download = 'physician_card.csv';
     hiddenElement.click();
   }
 

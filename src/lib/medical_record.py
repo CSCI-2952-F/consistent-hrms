@@ -6,7 +6,7 @@ class MedicalRecord:
     """
     Standardized medical record format.
     """
-    def __init__(self, name, uid):
+    def __init__(self, name, uid, notes):
         """
         Construct a new MedicalRecord object.
         :param name: Name of entity that is creating the medical record.
@@ -14,7 +14,7 @@ class MedicalRecord:
         """
 
         self.date = time.ctime()
-        self.notes = None
+        self.notes = notes
         self.signature = name
         self.uid = uid
 
