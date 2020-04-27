@@ -11,10 +11,10 @@
       </div>
     </div>
     <div class="pl-3 form-group">
-      <button type="submit" class="btn btn-info" onclick="downloadCard()">Download Card</button>
+      <button type="submit" class="btn btn-info" onclick="downloadCard(); return false;">Download Card</button>
     </div>
     <div class="pl-3 form-group">
-      <button type="submit" class="btn btn-secondary" onclick="removeCard()">Remove Card</button>
+      <button type="submit" class="btn btn-secondary" onclick="removeCard(); return false;">Remove Card</button>
     </div>
   </form>
 </div>
@@ -31,7 +31,7 @@
                 <input type="text" class="form-control w-75" id="patient_name" placeholder="Patient Name" />
                 <input type="text" class="form-control w-75" id="patient_id" placeholder="Patient ID" />
                 <div class="pt-3">
-                  <a href="#" class="btn btn-primary" role="button" onclick="register()">Register</a>
+                  <a href="#" class="btn btn-primary" role="button" onclick="register(); return false;">Register</a>
                 </div>
               </div>
             </form>
@@ -47,7 +47,7 @@
             <p class="card-text">Obtain patient medical records.</p>
             <form>
               <div class="form-group">
-                <a href="#" class="btn btn-primary" role="button" onclick="read()">Read</a>
+                <a href="#" class="btn btn-primary" role="button" onclick="read(); return false;">Read</a>
               </div>
             </form>
             <div class="card-subtitle mb-2 text-muted">Response:</div>
@@ -63,16 +63,24 @@
             <form>
               <div class="form-group">
                 <div class="input-group">
-                  <input id="transfer-input" type="text" class="form-control" aria-label="Text input with dropdown button">
+                  <input id="transfer-input" type="text" class="form-control" aria-label="Text input with dropdown button" />
                   <div class="input-group-append">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Please Select</button>
+                    <button
+                      class="btn btn-outline-secondary dropdown-toggle"
+                      type="button"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                    >
+                      Please Select
+                    </button>
                     <div id="dropdown-menu" class="dropdown-menu">
                       <!-- Populated in js -->
                     </div>
                   </div>
-                </div>      
-                <div class="pt-3">          
-                  <a href="#" class="btn btn-primary" role="button" onclick="transfer()">Transfer</a>
+                </div>
+                <div class="pt-3">
+                  <a href="#" class="btn btn-primary" role="button" onclick="transfer(); return false;">Transfer</a>
                 </div>
               </div>
             </form>
@@ -86,9 +94,9 @@
           <div class="card-body">
             <h4 class="card-title">Patient Unregister</h4>
             <p class="card-text">Unregister from hospital ecosystem.</p>
-            <form></form>
+            <form>
               <div class="form-group">
-                <a href="#" class="btn btn-dark text-white" role="button" onclick="unregister()">Unregister</a>
+                <a href="#" class="btn btn-dark text-white" role="button" onclick="unregister(); return false;">Unregister</a>
               </div>
             </form>
             <div class="card-subtitle mb-2 text-muted">Response:</div>
@@ -108,7 +116,7 @@
           </div>
         </div>
       </div>
-    </div>    
+    </div>
   </div>
 </div>
 
@@ -154,8 +162,8 @@
           .exportKey('pkcs8', keyPair.privateKey)
           .then(function (exportedPrivateKey) {
             // Converting exported private key to PEM format
-            var pem = toPrivPem(exportedPrivateKey);
-            patient_data[0][1] = pem;
+            privateKey = toPrivPem(exportedPrivateKey);
+            patient_data[0][1] = privateKey;
           })
           .catch(function (err) {
             console.log(err);
@@ -169,7 +177,7 @@
             var pem = toPubPem(exportedPublicKey);
 
             // Sending the patient registration request.
-            data = { name: patient_name, id: patient_id, pub_key: pem };
+            const data = { name: patient_name, id: patient_id, pub_key: pem };
             $.ajax({
               url: 'http://localhost:{{api_gateway_port}}/patient_reg',
               type: 'POST',
@@ -183,8 +191,8 @@
                 let reg_div = document.getElementById('registration-output');
                 reg_div.innerHTML = 'Registration Successful.';
                 patient_data[0][0] = response.uid;
-         
-                // Update patient card UI.         
+
+                // Update patient card UI.
                 let card_patient_uid_div = document.getElementById('patient_card_uid');
                 card_patient_uid_div.innerHTML = patient_data[0][0];
 
@@ -203,8 +211,8 @@
   }
 
   /*
-   * If the patient has a card, the uid is sent in the request. 
-   * The patient can then decrypt their encrypted medical records 
+   * If the patient has a card, the uid is sent in the request.
+   * The patient can then decrypt their encrypted medical records
    * client side.
    */
   function read() {
@@ -212,11 +220,11 @@
     // Grab the uid from the card.
     card_patient_uid_div = $('#patient_card_uid');
     let patient_uid = card_patient_uid_div.text();
-    if (patient_uid == "") {
+    if (patient_uid == '') {
       read_output_div.innerHTML = 'Please upload your patient card.';
-      return
+      return;
     }
-    data = { uid: patient_uid };
+    const data = { uid: patient_uid };
 
     // Make the request.
     $.ajax({
@@ -229,7 +237,7 @@
       },
       success: function (response) {
         for (let i = 0; i < response.data.length; i++) {
-          var elem = document.createElement("div");
+          var elem = document.createElement('div');
           elem.innerHTML = decrypt(response.data[i]);
           read_output_div.append(elem);
         }
@@ -238,30 +246,39 @@
   }
 
   /*
-   * Transfer patient records from this hospital to 
+   * Transfer patient records from this hospital to
    * dest hospital.
    */
   function transfer() {
     let transfer_output_div = document.getElementById('transfer-output');
+
     // Grab the uid from the card.
     card_patient_uid_div = $('#patient_card_uid');
     let patient_uid = card_patient_uid_div.text();
-    if (patient_uid == "") {
+    if (patient_uid == '') {
       transfer_output_div.innerHTML = 'Please upload your patient card.';
-      return
+      return;
     }
 
-    // TODO generate auth_token
-    let auth_token = "abcdef";
+    // Get private key
+    const privateKey = document.getElementById('patient_card_private_key').innerHTML;
+    if (privateKey.length === 0) {
+      transfer_output_div.innerHTML = 'Please upload your patient card.';
+      return;
+    }
+
+    // Generate auth token
+    const exp = Math.floor(Date.now()) + 60;
+    const auth_token = KJUR.jws.JWS.sign(null, { alg: 'RS256' }, { exp: exp }, privateKey);
 
     // Grab dest hospital.
     let dest_hospital = document.getElementById('transfer-input').value;
-    if (dest_hospital == "") {
+    if (dest_hospital == '') {
       transfer_output_div.innerHTML = 'Please select hospital to transfer records to.';
-      return
+      return;
     }
 
-    data = { uid: patient_uid, auth_token: auth_token, dest_hospital: dest_hospital};
+    const data = { uid: patient_uid, auth_token: auth_token, dest_hospital: dest_hospital };
 
     // Make the request.
     $.ajax({
@@ -279,22 +296,30 @@
   }
 
   /*
-  * Unregister patient from this hospital ecosystem.
-  */
+   * Unregister patient from this hospital ecosystem.
+   */
   function unregister() {
     let unregister_output_div = document.getElementById('unregister-output');
     // Grab the uid from the card.
     card_patient_uid_div = $('#patient_card_uid');
     let patient_uid = card_patient_uid_div.text();
-    if (patient_uid == "") {
+    if (patient_uid == '') {
       unregister_output_div.innerHTML = 'Please upload your patient card.';
-      return
+      return;
     }
 
-    // TODO generate auth_token
-    let auth_token = "abcdef";
+    // Get private key
+    const privateKey = document.getElementById('patient_card_private_key').innerHTML;
+    if (privateKey.length === 0) {
+      transfer_output_div.innerHTML = 'Please upload your patient card.';
+      return;
+    }
 
-    data = { uid: patient_uid, auth_token: auth_token };
+    // Generate auth token
+    const exp = Math.floor(Date.now()) + 60;
+    const auth_token = KJUR.jws.JWS.sign(null, { alg: 'RS256' }, { exp: exp }, privateKey);
+
+    const data = { uid: patient_uid, auth_token: auth_token };
 
     // Make the request.
     $.ajax({
@@ -306,7 +331,7 @@
         unregister_output_div.innerHTML = 'Unregister Unsuccessful.';
       },
       success: function (response) {
-        unregister_output_div.innerHtml = 'Unregister Successful.'
+        unregister_output_div.innerHtml = 'Unregister Successful.';
       },
     });
   }
@@ -316,61 +341,64 @@
   /*************/
 
   function removeCard() {
-    var fileInput = document.getElementById("files");
-    fileInput.value = "";
+    var fileInput = document.getElementById('files');
+    fileInput.value = '';
 
     let card_patient_uid_div = document.getElementById('patient_card_uid');
-    card_patient_uid_div.innerHTML = "";
+    card_patient_uid_div.innerHTML = '';
 
     let card_private_key_div = document.getElementById('patient_card_private_key');
-    card_private_key_div.innerHTML = "";
+    card_private_key_div.innerHTML = '';
 
     let read_output_div = document.getElementById('read-output');
-    read_output_div.innerHTML = "";
+    read_output_div.innerHTML = '';
+
+    return false;
   }
 
   /* Upload/Download Helper Functions */
 
-  var fileInput = document.getElementById("files"),
-
-  readFile = function () {
+  var fileInput = document.getElementById('files'),
+    readFile = function () {
       var reader = new FileReader();
-      var uid = "";
-      var result = "";
+      var uid = '';
+      var result = '';
       reader.onload = function () {
-          // Ugly code to get params from file.
-          result = reader.result.split(",");
-          uid = reader.result.split(",")[1].split("\n")[1];
+        // Ugly code to get params from file.
+        result = reader.result.split(',');
+        uid = reader.result.split(',')[1].split('\n')[1];
 
-          let card_patient_uid_div = document.getElementById('patient_card_uid');
-          card_patient_uid_div.innerHTML = uid;
+        let card_patient_uid_div = document.getElementById('patient_card_uid');
+        card_patient_uid_div.innerHTML = uid;
 
-          let card_private_key_div = document.getElementById('patient_card_private_key');
-          card_private_key_div.innerHTML = result[2];
+        let card_private_key_div = document.getElementById('patient_card_private_key');
+        card_private_key_div.innerHTML = result[2];
       };
       // Read the file.
       reader.readAsBinaryString(fileInput.files[0]);
-  };
+    };
 
   fileInput.addEventListener('change', readFile);
 
   function downloadCard() {
-    var data = [['', '']];
+    let data = [['', '']];
     let card_patient_uid_div = document.getElementById('patient_card_uid');
     let card_private_key_div = document.getElementById('patient_card_private_key');
     data[0][0] = card_patient_uid_div.innerHTML;
     data[0][1] = card_private_key_div.innerHTML;
- 
-    var csv = 'UID,PRIV_KEY\n';
-    data.forEach(function(row) {
-            csv += row.join(',');
-            csv += "\n";
+
+    let csv = 'UID,PRIV_KEY\n';
+    data.forEach(function (row) {
+      csv += row.join(',');
+      csv += '\n';
     });
-    var hiddenElement = document.createElement('a');
+    const hiddenElement = document.createElement('a');
     hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
     hiddenElement.target = '_blank';
     hiddenElement.download = 'patient_card.csv';
     hiddenElement.click();
+
+    return false;
   }
 
   function transferInput(data) {
@@ -429,16 +457,15 @@
     success: function (response) {
       var dropdown = document.getElementById('dropdown-menu');
       for (let i = 0; i < response.length; i++) {
-        var elem = document.createElement("a");
-        elem.classList.add("dropdown-item");
-        elem.onclick = function() {
+        var elem = document.createElement('a');
+        elem.classList.add('dropdown-item');
+        elem.onclick = function () {
           transferInput(response[i].name);
-        }
+        };
         elem.innerHTML = response[i].name;
         dropdown.appendChild(elem);
       }
     },
   });
-
 </script>
 {% endblock %}
