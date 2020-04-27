@@ -466,7 +466,7 @@
         var elem = document.createElement('a');
         elem.classList.add('dropdown-item');
         elem.onclick = function () {
-          transferInput(response[i].name);
+          transferInput(response[i].id);
         };
         elem.innerHTML = response[i].name;
         dropdown.appendChild(elem);
