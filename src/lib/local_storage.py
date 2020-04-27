@@ -13,6 +13,15 @@ class LocalStorage():
         # Returned responses are always decoded into strings
         self.redis = Redis(host=redis_host, port=redis_port, decode_responses=True)
 
+    def delete_key(self, uid):
+        """
+        Removes a key from local storage.
+        If the key refers to a list (patient records), all records are deleted.
+        Returns the total number of items deleted.
+        """
+
+        return self.redis.delete(uid)
+
     def insert_item(self, uid, public_key, value):
         """
         Inserts a new item into a list in local storage with encrypted data.

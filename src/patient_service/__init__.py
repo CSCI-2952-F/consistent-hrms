@@ -125,6 +125,9 @@ class PatientService:
         if not res['removed']:
             raise PatientConsistencyViolation('Remove', res['error'])
 
+        # Delete patient data from local storage.
+        self.local_storage.delete_key(hash_uid)
+
         return True
 
     @rpc
@@ -148,10 +151,13 @@ class PatientService:
         if not self._verify_auth_token(pub_key, auth_token):
             raise Unauthorized()
 
-        # If not, all good! Transfer patient
+        # If not, all good! Transfer patient in consistent storage.
         res = self.consistent_storage.transfer(hash_uid, dest_hospital)
         if not res['transferred']:
             raise PatientConsistencyViolation('Transfer', res['error'])
+
+        # TODO: Actually transfer the encrypted patient data to the target hospital.
+        #       Maybe make this part of the request asynchronous? (i.e. push onto a work queue)
 
         return True
 
