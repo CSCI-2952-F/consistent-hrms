@@ -1,7 +1,5 @@
-.PHONY: help run start stop logs test test-unit test-unit-watch test-acceptance cov doc doc-acceptance clean reset release dist check-deps clean-build clean-pyc clean-test
-
+.PHONY: help install start stop reset test test-watch docs lint cov clean release root-url dist check-deps clean-build clean-pyc clean-test
 .DEFAULT_GOAL := help
-
 
 #############################
 # Open a URL in the browser #
@@ -17,15 +15,14 @@ webbrowser.open("file://" + pathname2url(os.path.abspath(sys.argv[1])))
 endef
 export BROWSER_PYSCRIPT
 
-
 ##################################
 # Display help for this makefile #
 ##################################
 define PRINT_HELP_PYSCRIPT
 import re, sys
 
-print("BigchainDB 2.0 developer toolbox")
-print("--------------------------------")
+print("BigchainDB Driver 0.5 developer toolbox")
+print("---------------------------------------")
 print("Usage:  make COMMAND")
 print("")
 print("Commands:")
@@ -45,74 +42,58 @@ DC := docker-compose
 BROWSER := python -c "$$BROWSER_PYSCRIPT"
 HELP := python -c "$$PRINT_HELP_PYSCRIPT"
 ECHO := /usr/bin/env echo
-
 IS_DOCKER_COMPOSE_INSTALLED := $(shell command -v docker-compose 2> /dev/null)
 
-################
-# Main targets #
-################
-
-help: ## Show this help
+# User-friendly check for sphinx-build
+help:
 	@$(HELP) < $(MAKEFILE_LIST)
 
-run: check-deps ## Run BigchainDB from source (stop it with ctrl+c)
-	# although bigchaindb has tendermint and mongodb in depends_on,
-	# launch them first otherwise tendermint will get stuck upon sending yet another log
-	# due to some docker-compose issue; does not happen when containers are run as daemons
-	@$(DC) up --no-deps mongodb tendermint bigchaindb
+install: clean ## Install the package to the active Python's site-packages
+	python setup.py install
 
-start: check-deps ## Run BigchainDB from source and daemonize it (stop with `make stop`)
+start: check-deps ## Run BigchainDB driver from source and daemonize it (stop with `make stop`)
 	@$(DC) up -d bigchaindb
 
-stop: check-deps ## Stop BigchainDB
+stop: check-deps ## Stop BigchainDB driver
 	@$(DC) stop
 
-logs: check-deps ## Attach to the logs
-	@$(DC) logs -f bigchaindb
+reset: check-deps ## Stop and REMOVE all containers. WARNING: you will LOSE all data stored in BigchainDB server.
+	@$(DC) down
 
-test: check-deps test-unit test-acceptance ## Run unit and acceptance tests
-
-test-unit: check-deps ## Run all tests once
+test: check-deps ## Run all tests once or specify a file/test with TEST=tests/file.py::Class::test
 	@$(DC) up -d bdb
-	@$(DC) exec bigchaindb pytest
+	@$(DC) run --rm bigchaindb-driver pytest ${TEST} -v
 
-test-unit-watch: check-deps ## Run all tests and wait. Every time you change code, tests will be run again
-	@$(DC) run --rm --no-deps bigchaindb pytest -f
+test-watch: check-deps ## Run all, or only one with TEST=tests/file.py::Class::test, tests and wait. Every time you change code, test/s will be run again.
+	@$(DC) run --rm bigchaindb-driver pytest ${TEST} -f -v
 
-test-acceptance: check-deps ## Run all acceptance tests
-	@./run-acceptance-test.sh
+docs: ## Generate Sphinx HTML documentation, including API docs
+	@$(DC) run --rm --no-deps bdocs make -C docs html
+	$(BROWSER) docs/_build/html/index.html
+
+lint: check-deps ## Check style with flake8
+	@$(DC) run --rm bigchaindb-driver flake8 bigchaindb_driver tests
 
 cov: check-deps ## Check code coverage and open the result in the browser
-	@$(DC) run --rm bigchaindb pytest -v --cov=bigchaindb --cov-report html
+	@$(DC) run --rm bigchaindb-driver pytest -v --cov=bigchaindb_driver --cov-report html
 	$(BROWSER) htmlcov/index.html
-
-doc: check-deps ## Generate HTML documentation and open it in the browser
-	@$(DC) run --rm --no-deps bdocs make -C docs/root html
-	@$(DC) run --rm --no-deps bdocs make -C docs/server html
-	@$(DC) run --rm --no-deps bdocs make -C docs/contributing html
-	$(BROWSER) docs/root/build/html/index.html
-
-doc-acceptance: check-deps ## Create documentation for acceptance tests
-	@$(DC) run --rm python-acceptance pycco -i -s /src -d /docs
-	$(BROWSER) acceptance/python/docs/index.html
 
 clean: clean-build clean-pyc clean-test ## Remove all build, test, coverage and Python artifacts
 	@$(ECHO) "Cleaning was successful."
 
-reset: check-deps ## Stop and REMOVE all containers. WARNING: you will LOSE all data stored in BigchainDB.
-	@$(DC) down
-
 release: dist ## package and upload a release
 	twine upload dist/*
 
-dist: clean ## builds source (and not for now, wheel package)
-	python setup.py sdist
-	# python setup.py bdist_wheel
-	ls -l dist
+root-url:
+	@$(DC) port bigchaindb 9984
 
 ###############
 # Sub targets #
 ###############
+
+dist: clean ## builds source (and not for now, wheel package)
+	python setup.py sdist
+	ls -l dist
 
 check-deps:
 ifndef IS_DOCKER_COMPOSE_INSTALLED
@@ -124,21 +105,20 @@ ifndef IS_DOCKER_COMPOSE_INSTALLED
 	@$(DC) # docker-compose is not installed, so we call it to generate an error and exit
 endif
 
-clean-build: # Remove build artifacts
+clean-build: ## Remove build artifacts
 	@rm -fr build/
 	@rm -fr dist/
 	@rm -fr .eggs/
 	@find . -name '*.egg-info' -exec rm -fr {} +
 	@find . -name '*.egg' -exec rm -f {} +
 
-clean-pyc: # Remove Python file artifacts
+clean-pyc: ## Remove Python file artifacts
 	@find . -name '*.pyc' -exec rm -f {} +
 	@find . -name '*.pyo' -exec rm -f {} +
 	@find . -name '*~' -exec rm -f {} +
 	@find . -name '__pycache__' -exec rm -fr {} +
 
-clean-test: # Remove test and coverage artifacts
-	@find . -name '.pytest_cache' -exec rm -fr {} +
+clean-test: ## Remove test and coverage artifacts
 	@rm -fr .tox/
 	@rm -f .coverage
 	@rm -fr htmlcov/
