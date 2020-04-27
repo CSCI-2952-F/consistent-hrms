@@ -216,17 +216,20 @@
    * client side.
    */
   function read() {
-    let read_output_div = document.getElementById('read-output');
+    const read_output_div = document.getElementById('read-output');
+
     // Grab the uid from the card.
     card_patient_uid_div = $('#patient_card_uid');
-    let patient_uid = card_patient_uid_div.text();
+    const patient_uid = card_patient_uid_div.text();
     if (patient_uid == '') {
       read_output_div.innerHTML = 'Please upload your patient card.';
       return;
     }
-    const data = { uid: patient_uid };
+
+    read_output_div.innerHTML = 'Loading...';
 
     // Make the request.
+    const data = { uid: patient_uid };
     $.ajax({
       url: 'http://localhost:{{api_gateway_port}}/patient_read',
       type: 'POST',
@@ -236,6 +239,9 @@
         read_output_div.innerHTML = 'Read Unsuccessful.';
       },
       success: function (response) {
+        // Clear div before printing responses
+        read_output_div.innerHTML = '';
+
         for (let i = 0; i < response.data.length; i++) {
           var elem = document.createElement('div');
           elem.innerHTML = decrypt(response.data[i]);
