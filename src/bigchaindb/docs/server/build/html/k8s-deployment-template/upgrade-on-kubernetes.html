@@ -1,0 +1,338 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Kubernetes Template: Upgrade all Software in a BigchainDB Node &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Kubernetes Template: Deploying a BigchainDB network" href="bigchaindb-network-on-kubernetes.html" />
+    <link rel="prev" title="How to Install &amp; Configure Easy-RSA" href="easy-rsa.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../simple-deployment-template/index.html">Simple Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Kubernetes Deployment Template</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="workflow.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ca-installation.html">How to Set Up a Self-Signed Certificate Authority</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server-tls-certificate.html">How to Generate a Server Certificate for MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client-tls-certificate.html">How to Generate a Client Certificate for MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revoke-tls-certificate.html">How to Revoke an SSL/TLS Certificate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="template-kubernetes-azure.html">Template: Deploy a Kubernetes Cluster on Azure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node-on-kubernetes.html">Kubernetes Template: Deploy a Single BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node-config-map-and-secrets.html">How to Configure a BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="log-analytics.html">Log Analytics on Azure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cloud-manager.html">Configure MongoDB Cloud Manager for Monitoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="easy-rsa.html">How to Install &amp; Configure Easy-RSA</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Kubernetes Template: Upgrade all Software in a BigchainDB Node</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#upgrade-host-os-docker-and-kubernetes">Upgrade Host OS, Docker and Kubernetes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#upgrade-bigchaindb-related-software">Upgrade BigchainDB-Related Software</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="bigchaindb-network-on-kubernetes.html">Kubernetes Template: Deploying a BigchainDB network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tectonic-azure.html">Walkthrough: Deploy a Kubernetes Cluster on Azure using Tectonic by CoreOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshoot.html">Cluster Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html">Architecture of a BigchainDB Node Running in a Kubernetes Cluster</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Kubernetes Deployment Template</a> &raquo;</li>
+        
+      <li>Kubernetes Template: Upgrade all Software in a BigchainDB Node</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/k8s-deployment-template/upgrade-on-kubernetes.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kubernetes-template-upgrade-all-software-in-a-bigchaindb-node">
+<h1>Kubernetes Template: Upgrade all Software in a BigchainDB Node<a class="headerlink" href="#kubernetes-template-upgrade-all-software-in-a-bigchaindb-node" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">A highly-available Kubernetes cluster requires at least five virtual machines
+(three for the master and two for your app’s containers).
+Therefore we don’t recommend using Kubernetes to run a BigchainDB node
+if that’s the only thing the Kubernetes cluster will be running.
+Instead, see our <a class="reference internal" href="../simple-deployment-template/index.html#simple-deployment-template"><span class="std std-ref">Simple Deployment Template</span></a>.
+If your organization already <em>has</em> a big Kubernetes cluster running many containers,
+and your organization has people who know Kubernetes,
+then this Kubernetes deployment template might be helpful.</p>
+</div>
+<p>This page outlines how to upgrade all the software associated
+with a BigchainDB node running on Kubernetes,
+including host operating systems, Docker, Kubernetes,
+and BigchainDB-related software.</p>
+<div class="section" id="upgrade-host-os-docker-and-kubernetes">
+<h2>Upgrade Host OS, Docker and Kubernetes<a class="headerlink" href="#upgrade-host-os-docker-and-kubernetes" title="Permalink to this headline">¶</a></h2>
+<p>Some Kubernetes installation &amp; management systems
+can do full or partial upgrades of host OSes, Docker,
+or Kubernetes, e.g.
+<a class="reference external" href="https://coreos.com/tectonic/">Tectonic</a>,
+<a class="reference external" href="https://docs.rancher.com/rancher/v1.5/en/">Rancher</a>,
+and
+<a class="reference external" href="https://pivotal.io/kubo">Kubo</a>.
+Consult the documentation for your system.</p>
+<p><strong>Azure Container Service (ACS).</strong>
+On Dec. 15, 2016, a Microsoft employee
+<a class="reference external" href="https://github.com/colemickens/azure-kubernetes-status/issues/15#issuecomment-267453251">wrote</a>:
+“In the coming months we [the Azure Kubernetes team] will be building managed updates in the ACS service.”
+At the time of writing, managed updates were not yet available,
+but you should check the latest
+<a class="reference external" href="https://docs.microsoft.com/en-us/azure/container-service/">ACS documentation</a>
+to see what’s available now.
+Also at the time of writing, ACS only supported Ubuntu
+as the host (master and agent) operating system.
+You can upgrade Ubuntu and Docker on Azure
+by SSHing into each of the hosts,
+as documented on
+<a class="reference internal" href="template-kubernetes-azure.html#ssh-to-your-new-kubernetes-cluster-nodes"><span class="std std-ref">another page</span></a>.</p>
+<p>In general, you can SSH to each host in your Kubernetes Cluster
+to update the OS and Docker.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Once you are in an SSH session with a host,
+the <code class="docutils literal notranslate"><span class="pre">docker</span> <span class="pre">info</span></code> command is a handy way to detemine the
+host OS (including version) and the Docker version.</p>
+</div>
+<p>When you want to upgrade the software on a Kubernetes node,
+you should “drain” the node first,
+i.e. tell Kubernetes to gracefully terminate all pods
+on the node and mark it as unscheduleable
+(so no new pods get put on the node during its downtime).</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span>kubectl drain $NODENAME
+</pre></div>
+</div>
+<p>There are <a class="reference external" href="https://kubernetes.io/docs/concepts/cluster-administration/cluster-management/#maintenance-on-a-node">more details in the Kubernetes docs</a>,
+including instructions to make the node scheduleable again.</p>
+<p>To manually upgrade the host OS,
+see the docs for that OS.</p>
+<p>To manually upgrade Docker, see
+<a class="reference external" href="https://docs.docker.com/">the Docker docs</a>.</p>
+<p>To manually upgrade all Kubernetes software in your Kubernetes cluster, see
+<a class="reference external" href="https://kubernetes.io/docs/admin/cluster-management/">the Kubernetes docs</a>.</p>
+</div>
+<div class="section" id="upgrade-bigchaindb-related-software">
+<h2>Upgrade BigchainDB-Related Software<a class="headerlink" href="#upgrade-bigchaindb-related-software" title="Permalink to this headline">¶</a></h2>
+<p>We use Kubernetes “Deployments” for NGINX, BigchainDB,
+and most other BigchainDB-related software.
+The only exception is MongoDB; we use a Kubernetes
+StatefulSet for that.</p>
+<p>The nice thing about Kubernetes Deployments
+is that Kubernetes can manage most of the upgrade process.
+A typical upgrade workflow for a single Deployment would be:</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span>$ KUBE_EDITOR=nano kubectl edit deployment/&lt;name of Deployment&gt;
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">kubectl</span> <span class="pre">edit</span></code> command
+opens the specified editor (nano in the above example),
+allowing you to edit the specified Deployment <em>in the Kubernetes cluster</em>.
+You can change the version tag on the Docker image, for example.
+Don’t forget to save your edits before exiting the editor.
+The Kubernetes docs have more information about
+<a class="reference external" href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/">Deployments</a> (including updating them).</p>
+<p>The upgrade story for the MongoDB StatefulSet is <em>different</em>.
+(This is because MongoDB has persistent state,
+which is stored in some storage associated with a PersistentVolumeClaim.)
+At the time of writing, StatefulSets were still in beta,
+and they did not support automated image upgrade (Docker image tag upgrade).
+We expect that to change.
+Rather than trying to keep these docs up-to-date,
+we advise you to check out the current
+<a class="reference external" href="https://kubernetes.io/docs/tutorials/stateful-application/basic-stateful-set/#updating-containers">Kubernetes docs about updating containers in StatefulSets</a>.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="bigchaindb-network-on-kubernetes.html" class="btn btn-neutral float-right" title="Kubernetes Template: Deploying a BigchainDB network" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="easy-rsa.html" class="btn btn-neutral float-left" title="How to Install &amp; Configure Easy-RSA" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

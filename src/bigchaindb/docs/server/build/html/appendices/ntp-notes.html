@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Notes on NTP Daemon Setup &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Licenses" href="licenses.html" />
+    <link rel="prev" title="Notes for Firewall Setup" href="firewall-notes.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../simple-deployment-template/index.html">Simple Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../k8s-deployment-template/index.html">Kubernetes Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Appendices</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="json-serialization.html">JSON Serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cryptography.html">Cryptography</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aws-setup.html">Basic AWS Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generate-key-pair-for-ssh.html">Generate a Key Pair for SSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="firewall-notes.html">Notes for Firewall Setup</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Notes on NTP Daemon Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#amazon-linux-instances">Amazon Linux Instances</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-ubuntu-ntp-packages">The Ubuntu ntp Packages</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="licenses.html">Licenses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="all-in-one-bigchaindb.html">Run BigchainDB with all-in-one Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="log-rotation.html">Logging and Log Rotation</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Appendices</a> &raquo;</li>
+        
+      <li>Notes on NTP Daemon Setup</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/appendices/ntp-notes.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <!---
+Copyright © 2020 Interplanetary Database Association e.V.,
+BigchainDB and IPDB software contributors.
+SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
+Code is Apache-2.0 and docs are CC-BY-4.0
+---><div class="section" id="notes-on-ntp-daemon-setup">
+<h1>Notes on NTP Daemon Setup<a class="headerlink" href="#notes-on-ntp-daemon-setup" title="Permalink to this headline">¶</a></h1>
+<p>There are several NTP daemons available, including:</p>
+<ul class="simple">
+<li>The reference NTP daemon (<code class="docutils literal notranslate"><span class="pre">ntpd</span></code>) from ntp.org; see <a class="reference external" href="http://support.ntp.org/bin/view/Support/WebHome">their support website</a></li>
+<li><a class="reference external" href="https://chrony.tuxfamily.org/index.html">chrony</a></li>
+<li><a class="reference external" href="http://www.openntpd.org/">OpenNTPD</a></li>
+<li>Maybe <a class="reference external" href="https://www.ntpsec.org/">NTPsec</a>, once it’s production-ready</li>
+<li>Maybe <a class="reference external" href="http://nwtime.org/projects/ntimed/">Ntimed</a>, once it’s production-ready</li>
+<li><a class="reference external" href="https://en.wikipedia.org/wiki/Ntpd#Implementations">More</a></li>
+</ul>
+<p>We suggest you run your NTP daemon in a mode which will tell your OS kernel to handle leap seconds in a particular way: the default NTP way, so that system clock adjustments are localized and not spread out across the minutes, hours, or days surrounding leap seconds (e.g. “slewing” or “smearing”). There’s <a class="reference external" href="https://developers.redhat.com/blog/2015/06/01/five-different-ways-handle-leap-seconds-ntp/">a nice Red Hat Developer Blog post about the various options</a>.</p>
+<p>Use the default mode with <code class="docutils literal notranslate"><span class="pre">ntpd</span></code> and <code class="docutils literal notranslate"><span class="pre">chronyd</span></code>. For another NTP daemon, consult its documentation.</p>
+<p>It’s tricky to make an NTP daemon setup secure. Always install the latest version and read the documentation about how to configure and run it securely. See the <a class="reference internal" href="firewall-notes.html"><span class="doc">notes on firewall setup</span></a>.</p>
+<div class="section" id="amazon-linux-instances">
+<h2>Amazon Linux Instances<a class="headerlink" href="#amazon-linux-instances" title="Permalink to this headline">¶</a></h2>
+<p>If your BigchainDB node is running on an Amazon Linux instance (i.e. a Linux instance packaged by Amazon, not Canonical, Red Hat, or someone else), then an NTP daemon should already be installed and configured. See the EC2 documentation on <a class="reference external" href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/set-time.html">Setting the Time for Your Linux Instance</a>.</p>
+<p>That said, you should check <em>which</em> NTP daemon is installed. Is it recent? Is it configured securely?</p>
+</div>
+<div class="section" id="the-ubuntu-ntp-packages">
+<h2>The Ubuntu ntp Packages<a class="headerlink" href="#the-ubuntu-ntp-packages" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="https://launchpad.net/ubuntu/+source/ntp">Ubuntu <code class="docutils literal notranslate"><span class="pre">ntp</span></code> packages</a> are based on the reference implementation of NTP.</p>
+<p>The following commands will uninstall the <code class="docutils literal notranslate"><span class="pre">ntp</span></code> and <code class="docutils literal notranslate"><span class="pre">ntpdate</span></code> packages, install the latest <code class="docutils literal notranslate"><span class="pre">ntp</span></code> package (which <em>might not be based on the latest ntpd code</em>), and start the NTP daemon (a local NTP server). (<code class="docutils literal notranslate"><span class="pre">ntpdate</span></code> is not reinstalled because it’s <a class="reference external" href="https://askubuntu.com/questions/297560/ntpd-vs-ntpdate-pros-and-cons">deprecated</a> and you shouldn’t use it.)</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>sudo apt-get --purge remove ntp ntpdate
+sudo apt-get autoremove
+sudo apt-get update
+sudo apt-get install ntp
+# That should start the NTP daemon too, but just to be sure:
+sudo service ntp restart
+</pre></div>
+</div>
+<p>You can check if <code class="docutils literal notranslate"><span class="pre">ntpd</span></code> is running using <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">ntpq</span> <span class="pre">-p</span></code>.</p>
+<p>You may want to use different NTP time servers. You can change them by editing the NTP config file <code class="docutils literal notranslate"><span class="pre">/etc/ntp.conf</span></code>.</p>
+<p>Note: A server running an NTP daemon can be used by others for DRDoS amplification attacks. The above installation procedure should install a default NTP configuration file <code class="docutils literal notranslate"><span class="pre">/etc/ntp.conf</span></code> with the lines:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>restrict -4 default kod notrap nomodify nopeer noquery
+restrict -6 default kod notrap nomodify nopeer noquery
+</pre></div>
+</div>
+<p>Those lines should prevent the NTP daemon from being used in an attack. (The first line is for IPv4, the second for IPv6.)</p>
+<p>There are additional things you can do to make NTP more secure. See the <a class="reference external" href="http://support.ntp.org/bin/view/Support/WebHome">NTP Support Website</a> for more details.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="licenses.html" class="btn btn-neutral float-right" title="Licenses" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="firewall-notes.html" class="btn btn-neutral float-left" title="Notes for Firewall Setup" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

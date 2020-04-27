@@ -1,0 +1,423 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Querying BigchainDB &mdash; BigchainDB  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="How BigchainDB is Good for Asset Registrations &amp; Transfers" href="assets.html" />
+    <link rel="prev" title="BigchainDB and Byzantine Fault Tolerance" href="bft.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> BigchainDB
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">BigchainDB Docs Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="production-ready.html">Production-Ready?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terminology.html">Terminology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decentralized.html">How BigchainDB is Decentralized</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diversity.html">Kinds of Node Diversity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="immutable.html">How BigchainDB is Immutable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bft.html">BigchainDB and Byzantine Fault Tolerance</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Querying BigchainDB</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#blog-post-with-example-queries">Blog Post with Example Queries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-connect-to-mongodb">How to Connect to MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-query">How to Query</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-documents-from-some-collections">Example Documents from Some Collections</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example-documents-from-transactions">Example Documents from transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-document-from-assets">Example Document from assets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-document-from-metadata">Example Document from metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-document-from-blocks">Example Document from blocks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#what-a-node-operator-can-expose-to-external-users">What a Node Operator Can Expose to External Users</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#security-considerations">Security Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#performance-and-cost-considerations">Performance and Cost Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#javascript-query-code-examples">JavaScript Query Code Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="assets.html">How BigchainDB is Good for Asset Registrations &amp; Transfers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="smart-contracts.html">BigchainDB and Smart Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transaction-concepts.html">Transaction Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store-files.html">How to Store Files in BigchainDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="permissions.html">Permissions in BigchainDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="private-data.html">BigchainDB, Privacy and Private Data</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/projects/server/en/latest/data-models/index.html">Data Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="korean/index.html">BigchainDB 문서</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">BigchainDB</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Querying BigchainDB</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/query.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="querying-bigchaindb">
+<h1>Querying BigchainDB<a class="headerlink" href="#querying-bigchaindb" title="Permalink to this headline">¶</a></h1>
+<p>A node operator can use the full power of MongoDB’s query engine to search and query all stored data, including all transactions, assets and metadata.
+The node operator can decide for themselves how much of that query power they expose to external users.</p>
+<div class="section" id="blog-post-with-example-queries">
+<h2>Blog Post with Example Queries<a class="headerlink" href="#blog-post-with-example-queries" title="Permalink to this headline">¶</a></h2>
+<p>We wrote a blog post in The BigchainDB Blog to show
+how to use some MongoDB tools to query a BigchainDB node’s MongoDB database.
+It includes some specific example queries for data
+about custom cars and their ownership histories.
+<a class="reference external" href="https://blog.bigchaindb.com/using-mongodb-to-query-bigchaindb-data-3fc651e0861b">Check it out</a>.</p>
+</div>
+<div class="section" id="how-to-connect-to-mongodb">
+<h2>How to Connect to MongoDB<a class="headerlink" href="#how-to-connect-to-mongodb" title="Permalink to this headline">¶</a></h2>
+<p>Before you can query a MongoDB database, you must connect to it, and to do that, you need to know its hostname and port.</p>
+<p>If you’re running a BigchainDB node on your local machine (e.g. for dev and test), then the hostname should be <code class="docutils literal notranslate"><span class="pre">localhost</span></code> and the port should be <code class="docutils literal notranslate"><span class="pre">27017</span></code>, unless you did something to change those values. If you’re running a BigchainDB node on a remote machine and you can SSH to that machine, then the same is true.</p>
+<p>If you’re running a BigchainDB node on a remote machine and you configured its MongoDB to use auth and to be publicly-accessible (to people with authorization), then you can probably figure out its hostname and port.</p>
+</div>
+<div class="section" id="how-to-query">
+<h2>How to Query<a class="headerlink" href="#how-to-query" title="Permalink to this headline">¶</a></h2>
+<p>A BigchainDB node operator has full access to their local MongoDB instance, so they can use any of MongoDB’s APIs for running queries, including:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.mongodb.com/manual/mongo/">the Mongo Shell</a>,</li>
+<li><a class="reference external" href="https://www.mongodb.com/products/compass">MongoDB Compass</a>,</li>
+<li>one of <a class="reference external" href="https://docs.mongodb.com/ecosystem/drivers/">the MongoDB drivers</a>, such as <a class="reference external" href="https://api.mongodb.com/python/current/">PyMongo</a>, or</li>
+<li>a third-party tool for doing MongoDB queries, such as RazorSQL, Studio 3T, Mongo Management Studio, NoSQLBooster for MongoDB, or Dr. Mongo.</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>It’s possible to do query a MongoDB database using SQL. For example:</p>
+<ul class="last simple">
+<li>Studio 3T: “<a class="reference external" href="https://studio3t.com/whats-new/how-to-query-mongodb-with-sql/">How to Query MongoDB with SQL</a>”</li>
+<li>NoSQLBooster for MongoDB: “<a class="reference external" href="https://mongobooster.com/blog/query-mongodb-with-sql/">How to Query MongoDB with SQL SELECT</a>”</li>
+</ul>
+</div>
+<p>For example, if you’re on a machine that’s running a default BigchainDB node, then you can connect to it using the Mongo Shell (<code class="docutils literal notranslate"><span class="pre">mongo</span></code>) and look around like so:</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span>$ mongo
+MongoDB shell version v3.6.5
+connecting to: mongodb://127.0.0.1:27017
+MongoDB server version: 3.6.4
+...
+&gt; show dbs
+admin     0.000GB
+bigchain  0.000GB
+config    0.000GB
+local     0.000GB
+&gt; use bigchain
+switched to db bigchain
+&gt; show collections
+abci_chains
+assets
+blocks
+elections
+metadata
+pre_commit
+transactions
+utxos
+validators
+</pre></div>
+</div>
+<p>The above example illustrates several things:</p>
+<ul class="simple">
+<li>When you don’t specify the hostname or port, the Mongo Shell assumes they are <code class="docutils literal notranslate"><span class="pre">localhost</span></code> and <code class="docutils literal notranslate"><span class="pre">27017</span></code>, respectively. (<code class="docutils literal notranslate"><span class="pre">localhost</span></code> had IP address 127.0.0.1 on the machine in question, an Ubuntu machine.)</li>
+<li>BigchainDB stores its data in a database named <code class="docutils literal notranslate"><span class="pre">bigchain</span></code>.</li>
+<li>The <code class="docutils literal notranslate"><span class="pre">bigchain</span></code> database contains several <a class="reference external" href="https://docs.mongodb.com/manual/core/databases-and-collections/">collections</a>.</li>
+<li>Votes aren’t stored in any collection, currently. They are all handled and stored by Tendermint in its own (LevelDB) database.</li>
+</ul>
+</div>
+<div class="section" id="example-documents-from-some-collections">
+<h2>Example Documents from Some Collections<a class="headerlink" href="#example-documents-from-some-collections" title="Permalink to this headline">¶</a></h2>
+<p>The most interesting collections in the <code class="docutils literal notranslate"><span class="pre">bigchain</span></code> database are:</p>
+<ul class="simple">
+<li>transactions</li>
+<li>assets</li>
+<li>metadata</li>
+<li>blocks</li>
+</ul>
+<p>You can explore those collections using MongoDB queries such as <code class="docutils literal notranslate"><span class="pre">db.assets.findOne()</span></code>. We now show some example documents from each of those collections.</p>
+<div class="section" id="example-documents-from-transactions">
+<h3>Example Documents from transactions<a class="headerlink" href="#example-documents-from-transactions" title="Permalink to this headline">¶</a></h3>
+<p>A CREATE transaction from the transactions collection includes an extra <code class="docutils literal notranslate"><span class="pre">&quot;_id&quot;</span></code> field (added by MongoDB) and is missing its <code class="docutils literal notranslate"><span class="pre">&quot;asset&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;metadata&quot;</span></code> fields: that data was removed and stored in the assets and metadata collections.</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span>{
+    &quot;_id&quot;:ObjectId(&quot;5b17b9fa6ce88300067b6804&quot;),
+    &quot;inputs&quot;:[…],
+    &quot;outputs&quot;:[…],
+    &quot;operation&quot;:&quot;CREATE&quot;,
+    &quot;version&quot;:&quot;2.0&quot;,
+    &quot;id&quot;:&quot;816c4dd7…851af1629&quot;
+}
+</pre></div>
+</div>
+<p>A TRANSFER transaction from the transactions collection is similar, but it keeps its <code class="docutils literal notranslate"><span class="pre">&quot;asset&quot;</span></code> field.</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span>{
+    &quot;_id&quot;:ObjectId(&quot;5b17b9fa6ce88300067b6807&quot;),
+    &quot;inputs&quot;:[…],
+    &quot;outputs&quot;:[…],
+    &quot;operation&quot;:&quot;TRANSFER&quot;,
+    &quot;asset&quot;:{
+        &quot;id&quot;:&quot;816c4dd7ae…51af1629&quot;
+    },
+    &quot;version&quot;:&quot;2.0&quot;,
+    &quot;id&quot;:&quot;985ee697d…a3296b9&quot;
+}
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-document-from-assets">
+<h3>Example Document from assets<a class="headerlink" href="#example-document-from-assets" title="Permalink to this headline">¶</a></h3>
+<p>A document from the assets collection has three top-level fields: an <code class="docutils literal notranslate"><span class="pre">&quot;_id&quot;</span></code> field added by MongoDB, the <code class="docutils literal notranslate"><span class="pre">asset.data</span></code> from a CREATE transaction, and the <code class="docutils literal notranslate"><span class="pre">&quot;id&quot;</span></code> of the CREATE transaction it came from.</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;_id&quot;</span><span class="p">:</span><span class="n">ObjectId</span><span class="p">(</span><span class="s2">&quot;5b17b9fe6ce88300067b6823&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;data&quot;</span><span class="p">:{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;cow&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;Mildred&quot;</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;96002ef8740…45869959d8&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-document-from-metadata">
+<h3>Example Document from metadata<a class="headerlink" href="#example-document-from-metadata" title="Permalink to this headline">¶</a></h3>
+<p>A document from the metadata collection has three top-level fields: an <code class="docutils literal notranslate"><span class="pre">&quot;_id&quot;</span></code> field added by MongoDB, the <code class="docutils literal notranslate"><span class="pre">metadata</span></code> from a transaction, and the <code class="docutils literal notranslate"><span class="pre">&quot;id&quot;</span></code> of the transaction it came from.</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;_id&quot;</span><span class="p">:</span><span class="n">ObjectId</span><span class="p">(</span><span class="s2">&quot;5b17ba006ce88300067b683d&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;metadata&quot;</span><span class="p">:{</span>
+        <span class="s2">&quot;transfer_time&quot;</span><span class="p">:</span><span class="mi">1058568256</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;id&quot;</span><span class="p">:</span><span class="s2">&quot;53cba620e…ae9fdee0&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-document-from-blocks">
+<h3>Example Document from blocks<a class="headerlink" href="#example-document-from-blocks" title="Permalink to this headline">¶</a></h3>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;_id&quot;</span><span class="p">:</span><span class="n">ObjectId</span><span class="p">(</span><span class="s2">&quot;5b212c1ceaaa420006f41c57&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;app_hash&quot;</span><span class="p">:</span><span class="s2">&quot;2b0b75c2c2…7fb2652ce26c6&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;height&quot;</span><span class="p">:</span><span class="mi">17</span><span class="p">,</span>
+    <span class="s2">&quot;transactions&quot;</span><span class="p">:[</span>
+        <span class="s2">&quot;5f1f2d6b…ed98c1e&quot;</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="what-a-node-operator-can-expose-to-external-users">
+<h2>What a Node Operator Can Expose to External Users<a class="headerlink" href="#what-a-node-operator-can-expose-to-external-users" title="Permalink to this headline">¶</a></h2>
+<p>Each node operator can decide how they let external users get information from their local MongoDB database. They could expose:</p>
+<ul class="simple">
+<li>their local MonogoDB database itself to queries from external users, maybe as a MongoDB user with a role that has limited privileges, e.g. read-only.</li>
+<li>a limited HTTP API, allowing a restricted set of predefined queries, such as <a class="reference external" href="http://bigchaindb.com/http-api">the HTTP API provided by BigchainDB Server</a>, or a custom HTTP API implemented using Django, Express, Ruby on Rails, or ASP.NET.</li>
+<li>some other API, such as a GraphQL API. They could do that using custom code or code from a third party.</li>
+</ul>
+<p>Each node operator can expose a different level or type of access to their local MongoDB database.
+For example, one node operator might decide to specialize in offering optimized <a class="reference external" href="https://docs.mongodb.com/manual/reference/operator/query-geospatial/">geospatial queries</a>.</p>
+</div>
+<div class="section" id="security-considerations">
+<h2>Security Considerations<a class="headerlink" href="#security-considerations" title="Permalink to this headline">¶</a></h2>
+<p>In BigchainDB version 1.3.0 and earlier, there was one logical MongoDB database, so exposing that database to external users was very risky, and was not recommended.
+“Drop database” would delete that one shared MongoDB database.</p>
+<p>In BigchainDB version 2.0.0 and later, each node has its own isolated local MongoDB database.
+Inter-node communications are done using Tendermint protocols, not MongoDB protocols, as illustrated in Figure 1 below.
+If a node’s local MongoDB database gets compromised, none of the other MongoDB databases (in the other nodes) will be affected.</p>
+<div class="figure align-center" id="id1">
+<img alt="Diagram of a four-node BigchainDB 2.0 network" src="_images/schemaDB.png" />
+<p class="caption"><span class="caption-text">Figure 1: A Four-Node BigchainDB 2.0 Network</span></p>
+</div>
+<br>
+<br>
+<br></div>
+<div class="section" id="performance-and-cost-considerations">
+<h2>Performance and Cost Considerations<a class="headerlink" href="#performance-and-cost-considerations" title="Permalink to this headline">¶</a></h2>
+<p>Query processing can be quite resource-intensive, so it’s a good idea to have MongoDB running in a separate machine from those running BigchainDB Server and Tendermint Core.</p>
+<p>A node operator might want to measure the resources used by a query, so they can charge whoever requested the query accordingly.</p>
+<p>Some queries can take too long or use too many resources. A node operator should put upper bounds on the resources that a query can use, and halt (or prevent) any query that goes over.</p>
+<p>To make MongoDB queries more efficient, one can create <a class="reference external" href="https://docs.mongodb.com/manual/indexes/">indexes</a>. Those indexes might be created by the node operator or by some external users (if the node operator allows that). It’s worth noting that indexes aren’t free: whenever new data is appended to a collection, the corresponding indexes must be updated. The node operator might want to pass those costs on to whoever created the index. Moreover, in MongoDB, <a class="reference external" href="https://docs.mongodb.com/manual/reference/limits/#Number-of-Indexes-per-Collection">a single collection can have no more than 64 indexes</a>.</p>
+<p>One can create a follower node: a node with Tendermint voting power 0. It would still have a copy of all the data, so it could be used as read-only node. A follower node could offer specialized queries as a service without affecting the workload on the voting validators (which can also write). There could even be followers of followers.</p>
+</div>
+<div class="section" id="javascript-query-code-examples">
+<h2>JavaScript Query Code Examples<a class="headerlink" href="#javascript-query-code-examples" title="Permalink to this headline">¶</a></h2>
+<p>One can connect to a node’s MongoDB database using any
+of the MongoDB drivers, such as <a class="reference external" href="https://mongodb.github.io/node-mongodb-native/?jmp=docs">the MongoDB Node.js driver</a>.
+Here are some links to example JavaScript code that queries a
+BigchainDB node’s MongoDB database:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/bigchaindb/js-bigchaindb-driver">The BigchainDB JavaScript/Node.js driver source code</a></li>
+<li><a class="reference external" href="https://github.com/manolodewiner/query-mongodb-bigchaindb/blob/master/queryMongo.js">Example code by &#64;manolodewiner</a></li>
+<li><a class="reference external" href="https://github.com/bigchaindb/bigchaindb/issues/2315#issuecomment-392724279">More example code by &#64;manolodewiner</a></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="assets.html" class="btn btn-neutral float-right" title="How BigchainDB is Good for Asset Registrations &amp; Transfers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="bft.html" class="btn btn-neutral float-left" title="BigchainDB and Byzantine Fault Tolerance" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

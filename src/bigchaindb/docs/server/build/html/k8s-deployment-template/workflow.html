@@ -1,0 +1,367 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Overview &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="How to Set Up a Self-Signed Certificate Authority" href="ca-installation.html" />
+    <link rel="prev" title="Kubernetes Deployment Template" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../simple-deployment-template/index.html">Simple Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Kubernetes Deployment Template</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#generate-all-shared-bigchaindb-setup-parameters">Generate All Shared BigchainDB Setup Parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#things-each-node-operator-must-do">Things Each Node Operator Must Do</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ca-installation.html">How to Set Up a Self-Signed Certificate Authority</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server-tls-certificate.html">How to Generate a Server Certificate for MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client-tls-certificate.html">How to Generate a Client Certificate for MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revoke-tls-certificate.html">How to Revoke an SSL/TLS Certificate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="template-kubernetes-azure.html">Template: Deploy a Kubernetes Cluster on Azure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node-on-kubernetes.html">Kubernetes Template: Deploy a Single BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node-config-map-and-secrets.html">How to Configure a BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="log-analytics.html">Log Analytics on Azure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cloud-manager.html">Configure MongoDB Cloud Manager for Monitoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="easy-rsa.html">How to Install &amp; Configure Easy-RSA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upgrade-on-kubernetes.html">Kubernetes Template: Upgrade all Software in a BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bigchaindb-network-on-kubernetes.html">Kubernetes Template: Deploying a BigchainDB network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tectonic-azure.html">Walkthrough: Deploy a Kubernetes Cluster on Azure using Tectonic by CoreOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshoot.html">Cluster Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html">Architecture of a BigchainDB Node Running in a Kubernetes Cluster</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Kubernetes Deployment Template</a> &raquo;</li>
+        
+      <li>Overview</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/k8s-deployment-template/workflow.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="overview">
+<span id="kubernetes-template-overview"></span><h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">A highly-available Kubernetes cluster requires at least five virtual machines
+(three for the master and two for your app’s containers).
+Therefore we don’t recommend using Kubernetes to run a BigchainDB node
+if that’s the only thing the Kubernetes cluster will be running.
+Instead, see our <a class="reference internal" href="../simple-deployment-template/index.html#simple-deployment-template"><span class="std std-ref">Simple Deployment Template</span></a>.
+If your organization already <em>has</em> a big Kubernetes cluster running many containers,
+and your organization has people who know Kubernetes,
+then this Kubernetes deployment template might be helpful.</p>
+</div>
+<p>This page summarizes some steps to go through
+to set up a BigchainDB network.
+You can modify them to suit your needs.</p>
+<div class="section" id="generate-all-shared-bigchaindb-setup-parameters">
+<span id="generate-the-blockchain-id-and-genesis-time"></span><h2>Generate All Shared BigchainDB Setup Parameters<a class="headerlink" href="#generate-all-shared-bigchaindb-setup-parameters" title="Permalink to this headline">¶</a></h2>
+<p>There are some shared BigchainDB setup paramters that every node operator
+in the consortium shares
+because they are properties of the Tendermint network.
+They look like this:</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Tendermint data</span>
+<span class="n">BDB_PERSISTENT_PEERS</span><span class="o">=</span><span class="s1">&#39;bdb-instance-1,bdb-instance-2,bdb-instance-3,bdb-instance-4&#39;</span>
+<span class="n">BDB_VALIDATORS</span><span class="o">=</span><span class="s1">&#39;bdb-instance-1,bdb-instance-2,bdb-instance-3,bdb-instance-4&#39;</span>
+<span class="n">BDB_VALIDATOR_POWERS</span><span class="o">=</span><span class="s1">&#39;10,10,10,10&#39;</span>
+<span class="n">BDB_GENESIS_TIME</span><span class="o">=</span><span class="s1">&#39;0001-01-01T00:00:00Z&#39;</span>
+<span class="n">BDB_CHAIN_ID</span><span class="o">=</span><span class="s1">&#39;test-chain-rwcPML&#39;</span>
+</pre></div>
+</div>
+<p>Those paramters only have to be generated once, by one member of the consortium.
+That person will then share the results (Tendermint setup parameters)
+with all the node operators.</p>
+<p>The above example parameters are for a network of 4 initial (seed) nodes.
+Note how <code class="docutils literal notranslate"><span class="pre">BDB_PERSISTENT_PEERS</span></code>, <code class="docutils literal notranslate"><span class="pre">BDB_VALIDATORS</span></code> and <code class="docutils literal notranslate"><span class="pre">BDB_VALIDATOR_POWERS</span></code> are lists
+with 4 items each.
+<strong>If your consortium has a different number of initial nodes,
+then those lists should have that number or items.</strong>
+Use <code class="docutils literal notranslate"><span class="pre">10</span></code> for all the power values.</p>
+<p>To generate a <code class="docutils literal notranslate"><span class="pre">BDB_GENESIS_TIME</span></code> and a <code class="docutils literal notranslate"><span class="pre">BDB_CHAIN_ID</span></code>,
+you can do this:</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span>$ mkdir $(pwd)/tmdata
+$ docker run --rm -v $(pwd)/tmdata:/tendermint/config tendermint/tendermint:v0.31.5 init
+$ cat $(pwd)/tmdata/genesis.json
+</pre></div>
+</div>
+<p>You should see something that looks like:</p>
+<div class="code json highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;genesis_time&quot;</span><span class="p">:</span> <span class="s2">&quot;0001-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;chain_id&quot;</span><span class="p">:</span> <span class="s2">&quot;test-chain-bGX7PM&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;validators&quot;</span><span class="p">:</span> <span class="p">[</span>
+     <span class="p">{</span><span class="s2">&quot;pub_key&quot;</span><span class="p">:</span>
+         <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ed25519&quot;</span><span class="p">,</span>
+          <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="s2">&quot;4669C4B966EB8B99E45E40982B2716A9D3FA53B54C68088DAB2689935D7AF1A9&quot;</span><span class="p">},</span>
+      <span class="s2">&quot;power&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+      <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
+ <span class="p">],</span>
+ <span class="s2">&quot;app_hash&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The value with <code class="docutils literal notranslate"><span class="pre">&quot;genesis_time&quot;</span></code> is <code class="docutils literal notranslate"><span class="pre">BDB_GENESIS_TIME</span></code> and
+the value with <code class="docutils literal notranslate"><span class="pre">&quot;chain_id&quot;</span></code> is <code class="docutils literal notranslate"><span class="pre">BDB_CHAIN_ID</span></code>.</p>
+<p>Now you have all the BigchainDB setup parameters and can share them
+with all of the node operators. (They will put them in their <code class="docutils literal notranslate"><span class="pre">vars</span></code> file.
+We’ll say more about that file below.)</p>
+</div>
+<div class="section" id="things-each-node-operator-must-do">
+<span id="id1"></span><h2>Things Each Node Operator Must Do<a class="headerlink" href="#things-each-node-operator-must-do" title="Permalink to this headline">¶</a></h2>
+<p>1. Make up an <a class="reference external" href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name">FQDN</a>
+for your BigchainDB node (e.g. <code class="docutils literal notranslate"><span class="pre">mynode.mycorp.com</span></code>).
+This is where external users will access the BigchainDB HTTP API, for example.
+Make sure you’ve registered the associated domain name (e.g. <code class="docutils literal notranslate"><span class="pre">mycorp.com</span></code>).</p>
+<p>Get an SSL certificate for your BigchainDB node’s FQDN.
+Also get the root CA certificate and all intermediate certificates.
+They should all be provided by your SSL certificate provider.
+Put all those certificates together in one certificate chain file in the following order:</p>
+<ul class="simple">
+<li>Domain certificate (i.e. the one you ordered for your FQDN)</li>
+<li>All intermediate certificates</li>
+<li>Root CA certificate</li>
+</ul>
+<p>DigiCert has <a class="reference external" href="https://www.digicert.com/ssl-support/pem-ssl-creation.htm">a web page explaining certificate chains</a>.</p>
+<p>You will put the path to that certificate chain file in the <code class="docutils literal notranslate"><span class="pre">vars</span></code> file,
+when you configure your node later.</p>
+<p>2a. If your BigchainDB node will use 3scale for API authentication, monitoring and billing,
+you will need all relevant 3scale settings and credentials.</p>
+<p>2b. If your BigchainDB node will not use 3scale, then write authorization will be granted
+to all POST requests with a secret token in the HTTP headers.
+(All GET requests are allowed to pass.)
+You can make up that <code class="docutils literal notranslate"><span class="pre">SECRET_TOKEN</span></code> now.
+For example, <code class="docutils literal notranslate"><span class="pre">superSECRET_token4-POST*requests</span></code>.
+You will put it in the <code class="docutils literal notranslate"><span class="pre">vars</span></code> file later.
+Every BigchainDB node in a BigchainDB network can have a different secret token.
+To make an HTTP POST request to your BigchainDB node,
+you must include an HTTP header named <code class="docutils literal notranslate"><span class="pre">X-Secret-Access-Token</span></code>
+and set it equal to your secret token, e.g.</p>
+<p><code class="docutils literal notranslate"><span class="pre">X-Secret-Access-Token:</span> <span class="pre">superSECRET_token4-POST*requests</span></code></p>
+<p>3. Deploy a Kubernetes cluster for your BigchainDB node. We have some instructions for how to
+<a class="reference internal" href="template-kubernetes-azure.html"><span class="doc">Deploy a Kubernetes cluster on Azure</span></a>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">In theory, you can deploy your BigchainDB node to any Kubernetes cluster, but there can be differences
+between different Kubernetes clusters, especially if they are running different versions of Kubernetes.
+We tested this Kubernetes Deployment Template on Azure ACS in February 2018 and at that time
+ACS was deploying a <strong>Kubernetes 1.7.7</strong> cluster. If you can force your cluster to have that version of Kubernetes,
+then you’ll increase the likelihood that everything will work.</p>
+</div>
+<p>4. Deploy your BigchainDB node inside your new Kubernetes cluster.
+You will fill up the <code class="docutils literal notranslate"><span class="pre">vars</span></code> file,
+then you will run a script which reads that file to generate some Kubernetes config files,
+you will send those config files to your Kubernetes cluster,
+and then you will deploy all the stuff that you need to have a BigchainDB node.</p>
+<p>⟶ Proceed to <a class="reference internal" href="node-on-kubernetes.html#kubernetes-template-deploy-a-single-bigchaindb-node"><span class="std std-ref">deploy your BigchainDB node</span></a>.</p>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br></div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ca-installation.html" class="btn btn-neutral float-right" title="How to Set Up a Self-Signed Certificate Authority" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Kubernetes Deployment Template" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

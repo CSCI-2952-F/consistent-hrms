@@ -1,0 +1,447 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Command Line Interface &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Appendices" href="../appendices/index.html" />
+    <link rel="prev" title="Database Backend Interfaces" href="backend.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../simple-deployment-template/index.html">Simple Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../k8s-deployment-template/index.html">Kubernetes Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Code Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="the-bigchaindb-class.html">The BigchainDB Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backend.html">Database Backend Interfaces</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Command Line Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-bigchaindb.commands.bigchaindb"><code class="docutils literal notranslate"><span class="pre">bigchaindb.commands.bigchaindb</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-bigchaindb.commands.utils"><code class="docutils literal notranslate"><span class="pre">bigchaindb.commands.utils</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Code Reference</a> &raquo;</li>
+        
+      <li>Command Line Interface</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/code-reference/commands.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-bigchaindb.commands">
+<span id="command-line-interface"></span><h1>Command Line Interface<a class="headerlink" href="#module-bigchaindb.commands" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-bigchaindb.commands.bigchaindb">
+<span id="bigchaindb-commands-bigchaindb"></span><h2><a class="reference internal" href="#module-bigchaindb.commands.bigchaindb" title="bigchaindb.commands.bigchaindb"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bigchaindb.commands.bigchaindb</span></code></a><a class="headerlink" href="#module-bigchaindb.commands.bigchaindb" title="Permalink to this headline">¶</a></h2>
+<p>Implementation of the <cite>bigchaindb</cite> command,
+the command-line interface (CLI) for BigchainDB Server.</p>
+<dl class="function">
+<dt id="bigchaindb.commands.bigchaindb.run_show_config">
+<code class="descclassname">bigchaindb.commands.bigchaindb.</code><code class="descname">run_show_config</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/commands/bigchaindb.html#run_show_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.commands.bigchaindb.run_show_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the current configuration</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="bigchaindb.commands.bigchaindb.run_configure">
+<code class="descclassname">bigchaindb.commands.bigchaindb.</code><code class="descname">run_configure</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/commands/bigchaindb.html#run_configure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.commands.bigchaindb.run_configure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run a script to configure the current node.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="bigchaindb.commands.bigchaindb.run_election">
+<code class="descclassname">bigchaindb.commands.bigchaindb.</code><code class="descname">run_election</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/commands/bigchaindb.html#run_election"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.commands.bigchaindb.run_election" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initiate and manage elections</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="bigchaindb.commands.bigchaindb.run_election_new_upsert_validator">
+<code class="descclassname">bigchaindb.commands.bigchaindb.</code><code class="descname">run_election_new_upsert_validator</code><span class="sig-paren">(</span><em>args</em>, <em>bigchain</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/commands/bigchaindb.html#run_election_new_upsert_validator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.commands.bigchaindb.run_election_new_upsert_validator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initiates an election to add/update/remove a validator to an existing BigchainDB network</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>args</strong> – dict
+args = {
+‘public_key’: the public key of the proposed peer, (str)
+‘power’: the proposed validator power for the new peer, (str)
+‘node_id’: the node_id of the new peer (str)
+‘sk’: the path to the private key of the node calling the election (str)
+}</li>
+<li><strong>bigchain</strong> – an instance of BigchainDB</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">election_id or <cite>False</cite> in case of failure</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bigchaindb.commands.bigchaindb.run_election_new_chain_migration">
+<code class="descclassname">bigchaindb.commands.bigchaindb.</code><code class="descname">run_election_new_chain_migration</code><span class="sig-paren">(</span><em>args</em>, <em>bigchain</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/commands/bigchaindb.html#run_election_new_chain_migration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.commands.bigchaindb.run_election_new_chain_migration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initiates an election to halt block production</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>args</strong> – dict
+args = {
+‘sk’: the path to the private key of the node calling the election (str)
+}</li>
+<li><strong>bigchain</strong> – an instance of BigchainDB</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">election_id or <cite>False</cite> in case of failure</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bigchaindb.commands.bigchaindb.run_election_approve">
+<code class="descclassname">bigchaindb.commands.bigchaindb.</code><code class="descname">run_election_approve</code><span class="sig-paren">(</span><em>args</em>, <em>bigchain</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/commands/bigchaindb.html#run_election_approve"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.commands.bigchaindb.run_election_approve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Approve an election</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>args</strong> – dict
+args = {
+‘election_id’: the election_id of the election (str)
+‘sk’: the path to the private key of the signer (str)
+}</li>
+<li><strong>bigchain</strong> – an instance of BigchainDB</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">success log message or <cite>False</cite> in case of error</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bigchaindb.commands.bigchaindb.run_election_show">
+<code class="descclassname">bigchaindb.commands.bigchaindb.</code><code class="descname">run_election_show</code><span class="sig-paren">(</span><em>args</em>, <em>bigchain</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/commands/bigchaindb.html#run_election_show"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.commands.bigchaindb.run_election_show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves information about an election</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>args</strong> – dict
+args = {
+‘election_id’: the transaction_id for an election (str)
+}</li>
+<li><strong>bigchain</strong> – an instance of BigchainDB</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bigchaindb.commands.bigchaindb.run_init">
+<code class="descclassname">bigchaindb.commands.bigchaindb.</code><code class="descname">run_init</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/commands/bigchaindb.html#run_init"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.commands.bigchaindb.run_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the database</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="bigchaindb.commands.bigchaindb.run_drop">
+<code class="descclassname">bigchaindb.commands.bigchaindb.</code><code class="descname">run_drop</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/commands/bigchaindb.html#run_drop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.commands.bigchaindb.run_drop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop the database</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="bigchaindb.commands.bigchaindb.run_start">
+<code class="descclassname">bigchaindb.commands.bigchaindb.</code><code class="descname">run_start</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/commands/bigchaindb.html#run_start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.commands.bigchaindb.run_start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Start the processes to run the node</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="bigchaindb.commands.bigchaindb.run_tendermint_version">
+<code class="descclassname">bigchaindb.commands.bigchaindb.</code><code class="descname">run_tendermint_version</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/commands/bigchaindb.html#run_tendermint_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.commands.bigchaindb.run_tendermint_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the supported Tendermint version(s)</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-bigchaindb.commands.utils">
+<span id="bigchaindb-commands-utils"></span><h2><a class="reference internal" href="#module-bigchaindb.commands.utils" title="bigchaindb.commands.utils"><code class="xref py py-mod docutils literal notranslate"><span class="pre">bigchaindb.commands.utils</span></code></a><a class="headerlink" href="#module-bigchaindb.commands.utils" title="Permalink to this headline">¶</a></h2>
+<p>Utility functions and basic common arguments
+for <code class="docutils literal notranslate"><span class="pre">argparse.ArgumentParser</span></code>.</p>
+<dl class="function">
+<dt id="bigchaindb.commands.utils.configure_bigchaindb">
+<code class="descclassname">bigchaindb.commands.utils.</code><code class="descname">configure_bigchaindb</code><span class="sig-paren">(</span><em>command</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/commands/utils.html#configure_bigchaindb"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.commands.utils.configure_bigchaindb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator to be used by command line functions, such that the
+configuration of bigchaindb is performed before the execution of
+the command.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>command</strong> – The command to decorate.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The command wrapper function.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bigchaindb.commands.utils.input_on_stderr">
+<code class="descclassname">bigchaindb.commands.utils.</code><code class="descname">input_on_stderr</code><span class="sig-paren">(</span><em>prompt=''</em>, <em>default=None</em>, <em>convert=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/commands/utils.html#input_on_stderr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.commands.utils.input_on_stderr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output a string to stderr and wait for input.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>prompt</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – the message to display.</li>
+<li><strong>default</strong> – the default value to return if the user
+leaves the field empty</li>
+<li><strong>convert</strong> (<em>callable</em>) – a callable to be used to convert
+the value the user inserted. If None, the type of
+<code class="docutils literal notranslate"><span class="pre">default</span></code> will be used.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="bigchaindb.commands.utils.start">
+<code class="descclassname">bigchaindb.commands.utils.</code><code class="descname">start</code><span class="sig-paren">(</span><em>parser</em>, <em>argv</em>, <em>scope</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/commands/utils.html#start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.commands.utils.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Utility function to execute a subcommand.</p>
+<p>The function will look up in the <code class="docutils literal notranslate"><span class="pre">scope</span></code>
+if there is a function called <code class="docutils literal notranslate"><span class="pre">run_&lt;parser.args.command&gt;</span></code>
+and will run it using <code class="docutils literal notranslate"><span class="pre">parser.args</span></code> as first positional argument.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>parser</strong> – an ArgumentParser instance.</li>
+<li><strong>argv</strong> – the list of command line arguments without the script name.</li>
+<li><strong>scope</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – map containing (eventually) the functions to be called.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#NotImplementedError" title="(in Python v3.8)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">NotImplementedError</span></code></a> – if <code class="docutils literal notranslate"><span class="pre">scope</span></code> doesn’t contain a function called
+<code class="docutils literal notranslate"><span class="pre">run_&lt;parser.args.command&gt;</span></code>.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../appendices/index.html" class="btn btn-neutral float-right" title="Appendices" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="backend.html" class="btn btn-neutral float-left" title="Database Backend Interfaces" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,330 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Transaction Concepts &mdash; BigchainDB  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="How to Store Files in BigchainDB" href="store-files.html" />
+    <link rel="prev" title="BigchainDB and Smart Contracts" href="smart-contracts.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> BigchainDB
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">BigchainDB Docs Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="production-ready.html">Production-Ready?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terminology.html">Terminology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decentralized.html">How BigchainDB is Decentralized</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diversity.html">Kinds of Node Diversity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="immutable.html">How BigchainDB is Immutable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bft.html">BigchainDB and Byzantine Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="query.html">Querying BigchainDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assets.html">How BigchainDB is Good for Asset Registrations &amp; Transfers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="smart-contracts.html">BigchainDB and Smart Contracts</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Transaction Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#create-transactions">CREATE Transactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#transfer-transactions">TRANSFER Transactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#transaction-validity">Transaction Validity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-transactions">Example Transactions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="store-files.html">How to Store Files in BigchainDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="permissions.html">Permissions in BigchainDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="private-data.html">BigchainDB, Privacy and Private Data</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/projects/server/en/latest/data-models/index.html">Data Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="korean/index.html">BigchainDB 문서</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">BigchainDB</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Transaction Concepts</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/transaction-concepts.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <!---
+Copyright © 2020 Interplanetary Database Association e.V.,
+BigchainDB and IPDB software contributors.
+SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
+Code is Apache-2.0 and docs are CC-BY-4.0
+---><div class="section" id="transaction-concepts">
+<h1>Transaction Concepts<a class="headerlink" href="#transaction-concepts" title="Permalink to this headline">¶</a></h1>
+<p>In BigchainDB, <em>transactions</em> are used to register, issue, create or transfer
+things (e.g. assets).</p>
+<p>Transactions are the most basic kind of record stored by BigchainDB. There are
+two kinds: CREATE transactions and TRANSFER transactions.</p>
+<div class="section" id="create-transactions">
+<h2>CREATE Transactions<a class="headerlink" href="#create-transactions" title="Permalink to this headline">¶</a></h2>
+<p>A CREATE transaction can be used to register, issue, create or otherwise
+initiate the history of a single thing (or asset) in BigchainDB. For example,
+one might register an identity or a creative work. The things are often called
+“assets” but they might not be literal assets.</p>
+<p>BigchainDB supports divisible assets as of BigchainDB Server v0.8.0.
+That means you can create/register an asset with an initial number of “shares.”
+For example, A CREATE transaction could register a truckload of 50 oak trees.
+Each share of a divisible asset must be interchangeable with each other share;
+the shares must be fungible.</p>
+<p>A CREATE transaction can have one or more outputs.
+Each output has an associated amount: the number of shares tied to that output.
+For example, if the asset consists of 50 oak trees,
+one output might have 35 oak trees for one set of owners,
+and the other output might have 15 oak trees for another set of owners.</p>
+<p>Each output also has an associated condition: the condition that must be met
+(by a TRANSFER transaction) to transfer/spend the output.
+BigchainDB supports a variety of conditions.
+For details, see
+the section titled <strong>Transaction Components: Conditions</strong>
+in the relevant
+<a class="reference external" href="https://github.com/bigchaindb/BEPs/tree/master/tx-specs/">BigchainDB Transactions Spec</a>.</p>
+<p><img alt="Example BigchainDB CREATE transaction" src="_images/CREATE_example1.png" /></p>
+<p>Above we see a diagram of an example BigchainDB CREATE transaction.
+It has one output: Pam owns/controls three shares of the asset
+and there are no other shares (because there are no other outputs).</p>
+<p>Each output also has a list of all the public keys associated
+with the conditions on that output.
+Loosely speaking, that list might be interpreted as the list of “owners.”
+A more accurate word might be fulfillers, signers, controllers,
+or transfer-enablers.
+See the section titled <strong>A Note about Owners</strong>
+in the relevant <a class="reference external" href="https://github.com/bigchaindb/BEPs/tree/master/tx-specs/">BigchainDB Transactions Spec</a>.</p>
+<p>A CREATE transaction must be signed by all the owners.
+(If you’re looking for that signature,
+it’s in the one “fulfillment” of the one input, albeit encoded.)</p>
+</div>
+<div class="section" id="transfer-transactions">
+<h2>TRANSFER Transactions<a class="headerlink" href="#transfer-transactions" title="Permalink to this headline">¶</a></h2>
+<p>A TRANSFER transaction can transfer/spend one or more outputs
+on other transactions (CREATE transactions or other TRANSFER transactions).
+Those outputs must all be associated with the same asset;
+a TRANSFER transaction can only transfer shares of one asset at a time.</p>
+<p>Each input on a TRANSFER transaction connects to one output
+on another transaction.
+Each input must satisfy the condition on the output it’s trying
+to transfer/spend.</p>
+<p>A TRANSFER transaction can have one or more outputs,
+just like a CREATE transaction (described above).
+The total number of shares coming in on the inputs must equal
+the total number of shares going out on the outputs.</p>
+<p><img alt="Example BigchainDB transactions" src="_images/CREATE_and_TRANSFER_example1.png" /></p>
+<p>Above we see a diagram of two example BigchainDB transactions,
+a CREATE transaction and a TRANSFER transaction.
+The CREATE transaction is the same as in the earlier diagram.
+The TRANSFER transaction spends Pam’s output,
+so the input on that TRANSFER transaction must contain a valid signature
+from Pam (i.e. a valid fulfillment).
+The TRANSFER transaction has two outputs:
+Jim gets one share, and Pam gets the remaining two shares.</p>
+<p>Terminology: The “Pam, 3” output is called a “spent transaction output”
+and the “Jim, 1” and “Pam, 2” outputs are called “unspent transaction outputs”
+(UTXOs).</p>
+<p><strong>Example 1:</strong> Suppose a red car is owned and controlled by Joe.
+Suppose the current transfer condition on the car says
+that any valid transfer must be signed by Joe.
+Joe could build a TRANSFER transaction containing
+an input with Joe’s signature (to fulfill the current output condition)
+plus a new output condition saying that any valid transfer
+must be signed by Rae.</p>
+<p><strong>Example 2:</strong> Someone might construct a TRANSFER transaction
+that fulfills the output conditions on four
+previously-untransferred assets of the same asset type
+e.g. paperclips. The amounts might be 20, 10, 45 and 25, say,
+for a total of 100 paperclips.
+The TRANSFER transaction would also set up new transfer conditions.
+For example, maybe a set of 60 paperclips can only be transferred
+if Gertrude signs, and a separate set of 40 paperclips can only be
+transferred if both Jack and Kelly sign.
+Note how the sum of the incoming paperclips must equal the sum
+of the outgoing paperclips (100).</p>
+</div>
+<div class="section" id="transaction-validity">
+<h2>Transaction Validity<a class="headerlink" href="#transaction-validity" title="Permalink to this headline">¶</a></h2>
+<p>When a node is asked to check if a transaction is valid, it checks several
+things. We documented those things in a post on <em>The BigchainDB Blog</em>:
+<a class="reference external" href="https://blog.bigchaindb.com/what-is-a-valid-transaction-in-bigchaindb-9a1a075a9598">“What is a Valid Transaction in BigchainDB?”</a>
+(Note: That post was about BigchainDB Server v1.0.0.)</p>
+<p>Each <a class="reference external" href="https://github.com/bigchaindb/BEPs/tree/master/tx-specs/">BigchainDB Transactions Spec</a> documents the conditions for a transaction (of that version) to be valid.</p>
+</div>
+<div class="section" id="example-transactions">
+<h2>Example Transactions<a class="headerlink" href="#example-transactions" title="Permalink to this headline">¶</a></h2>
+<p>There are example BigchainDB transactions in
+<a class="reference external" href="https://docs.bigchaindb.com/projects/server/en/latest/http-client-server-api.html">the HTTP API documentation</a>
+and
+<a class="reference external" href="https://docs.bigchaindb.com/projects/py-driver/en/latest/usage.html">the Python Driver documentation</a>.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="store-files.html" class="btn btn-neutral float-right" title="How to Store Files in BigchainDB" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="smart-contracts.html" class="btn btn-neutral float-left" title="BigchainDB and Smart Contracts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

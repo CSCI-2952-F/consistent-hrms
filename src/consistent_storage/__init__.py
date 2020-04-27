@@ -3,6 +3,7 @@ import os
 from nameko.rpc import rpc
 
 from consistent_storage.sagas import SagasBackend
+from consistent_storage.bigchain import BigchaindbBackend
 from lib.consistent_storage import BaseStorageBackend
 
 BACKEND = os.getenv('CONSISTENT_STORAGE_BACKEND', 'sagas')
@@ -30,6 +31,7 @@ class ConsistentStorageProxy:
             self.backend = SagasBackend(grpc_addr)
 
         elif BACKEND == 'bigchain':
+            self.backend = BigchaindbBackend()
             raise NotImplementedError()
 
         else:

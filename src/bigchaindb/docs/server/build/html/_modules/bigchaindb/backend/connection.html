@@ -1,0 +1,376 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bigchaindb.backend.connection &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simple-deployment-template/index.html">Simple Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../k8s-deployment-template/index.html">Kubernetes Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>bigchaindb.backend.connection</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bigchaindb.backend.connection</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright © 2020 Interplanetary Database Association e.V.,</span>
+<span class="c1"># BigchainDB and IPDB software contributors.</span>
+<span class="c1"># SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)</span>
+<span class="c1"># Code is Apache-2.0 and docs are CC-BY-4.0</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">repeat</span>
+
+<span class="kn">import</span> <span class="nn">bigchaindb</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.backend.exceptions</span> <span class="kn">import</span> <span class="ne">ConnectionError</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.backend.utils</span> <span class="kn">import</span> <span class="n">get_bigchaindb_config_value</span><span class="p">,</span> <span class="n">get_bigchaindb_config_value_or_key_error</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.common.exceptions</span> <span class="kn">import</span> <span class="n">ConfigurationError</span>
+
+<span class="n">BACKENDS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;localmongodb&#39;</span><span class="p">:</span> <span class="s1">&#39;bigchaindb.backend.localmongodb.connection.LocalMongoDBConnection&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="connect"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.connection.connect">[docs]</a><span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_tries</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">connection_timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">replicaset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ssl</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">login</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">ca_cert</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">certfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keyfile</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">keyfile_passphrase</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">crlfile</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a new connection to the database backend.</span>
+
+<span class="sd">    All arguments default to the current configuration&#39;s values if not</span>
+<span class="sd">    given.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        backend (str): the name of the backend to use.</span>
+<span class="sd">        host (str): the host to connect to.</span>
+<span class="sd">        port (int): the port to connect to.</span>
+<span class="sd">        name (str): the name of the database to use.</span>
+<span class="sd">        replicaset (str): the name of the replica set (only relevant for</span>
+<span class="sd">                          MongoDB connections).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        An instance of :class:`~bigchaindb.backend.connection.Connection`</span>
+<span class="sd">        based on the given (or defaulted) :attr:`backend`.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        :exc:`~ConnectionError`: If the connection to the database fails.</span>
+<span class="sd">        :exc:`~ConfigurationError`: If the given (or defaulted) :attr:`backend`</span>
+<span class="sd">            is not supported or could not be loaded.</span>
+<span class="sd">        :exc:`~AuthenticationError`: If there is a OperationFailure due to</span>
+<span class="sd">            Authentication failure after connecting to the database.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">backend</span> <span class="ow">or</span> <span class="n">get_bigchaindb_config_value_or_key_error</span><span class="p">(</span><span class="s1">&#39;backend&#39;</span><span class="p">)</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="n">host</span> <span class="ow">or</span> <span class="n">get_bigchaindb_config_value_or_key_error</span><span class="p">(</span><span class="s1">&#39;host&#39;</span><span class="p">)</span>
+    <span class="n">port</span> <span class="o">=</span> <span class="n">port</span> <span class="ow">or</span> <span class="n">get_bigchaindb_config_value_or_key_error</span><span class="p">(</span><span class="s1">&#39;port&#39;</span><span class="p">)</span>
+    <span class="n">dbname</span> <span class="o">=</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">get_bigchaindb_config_value_or_key_error</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+    <span class="c1"># Not sure how to handle this here. This setting is only relevant for</span>
+    <span class="c1"># mongodb.</span>
+    <span class="c1"># I added **kwargs for both RethinkDBConnection and MongoDBConnection</span>
+    <span class="c1"># to handle these these additional args. In case of RethinkDBConnection</span>
+    <span class="c1"># it just does not do anything with it.</span>
+    <span class="c1">#</span>
+    <span class="c1"># UPD: RethinkDBConnection is not here anymore cause we no longer support RethinkDB.</span>
+    <span class="c1"># The problem described above might be reconsidered next time we introduce a backend,</span>
+    <span class="c1"># if it ever happens.</span>
+    <span class="n">replicaset</span> <span class="o">=</span> <span class="n">replicaset</span> <span class="ow">or</span> <span class="n">get_bigchaindb_config_value</span><span class="p">(</span><span class="s1">&#39;replicaset&#39;</span><span class="p">)</span>
+    <span class="n">ssl</span> <span class="o">=</span> <span class="n">ssl</span> <span class="k">if</span> <span class="n">ssl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">get_bigchaindb_config_value</span><span class="p">(</span><span class="s1">&#39;ssl&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">login</span> <span class="o">=</span> <span class="n">login</span> <span class="ow">or</span> <span class="n">get_bigchaindb_config_value</span><span class="p">(</span><span class="s1">&#39;login&#39;</span><span class="p">)</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="n">password</span> <span class="ow">or</span> <span class="n">get_bigchaindb_config_value</span><span class="p">(</span><span class="s1">&#39;password&#39;</span><span class="p">)</span>
+    <span class="n">ca_cert</span> <span class="o">=</span> <span class="n">ca_cert</span> <span class="ow">or</span> <span class="n">get_bigchaindb_config_value</span><span class="p">(</span><span class="s1">&#39;ca_cert&#39;</span><span class="p">)</span>
+    <span class="n">certfile</span> <span class="o">=</span> <span class="n">certfile</span> <span class="ow">or</span> <span class="n">get_bigchaindb_config_value</span><span class="p">(</span><span class="s1">&#39;certfile&#39;</span><span class="p">)</span>
+    <span class="n">keyfile</span> <span class="o">=</span> <span class="n">keyfile</span> <span class="ow">or</span> <span class="n">get_bigchaindb_config_value</span><span class="p">(</span><span class="s1">&#39;keyfile&#39;</span><span class="p">)</span>
+    <span class="n">keyfile_passphrase</span> <span class="o">=</span> <span class="n">keyfile_passphrase</span> <span class="ow">or</span> <span class="n">get_bigchaindb_config_value</span><span class="p">(</span><span class="s1">&#39;keyfile_passphrase&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">crlfile</span> <span class="o">=</span> <span class="n">crlfile</span> <span class="ow">or</span> <span class="n">get_bigchaindb_config_value</span><span class="p">(</span><span class="s1">&#39;crlfile&#39;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">module_name</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">class_name</span> <span class="o">=</span> <span class="n">BACKENDS</span><span class="p">[</span><span class="n">backend</span><span class="p">]</span><span class="o">.</span><span class="n">rpartition</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+        <span class="n">Class</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">import_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">),</span> <span class="n">class_name</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span><span class="s1">&#39;Backend `</span><span class="si">{}</span><span class="s1">` is not supported. &#39;</span>
+                                 <span class="s1">&#39;BigchainDB currently supports </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">BACKENDS</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span><span class="s1">&#39;Error loading backend `</span><span class="si">{}</span><span class="s1">`&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">backend</span><span class="p">))</span> <span class="kn">from</span> <span class="nn">exc</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Connection: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">Class</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">Class</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">dbname</span><span class="o">=</span><span class="n">dbname</span><span class="p">,</span>
+                 <span class="n">max_tries</span><span class="o">=</span><span class="n">max_tries</span><span class="p">,</span> <span class="n">connection_timeout</span><span class="o">=</span><span class="n">connection_timeout</span><span class="p">,</span>
+                 <span class="n">replicaset</span><span class="o">=</span><span class="n">replicaset</span><span class="p">,</span> <span class="n">ssl</span><span class="o">=</span><span class="n">ssl</span><span class="p">,</span> <span class="n">login</span><span class="o">=</span><span class="n">login</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span>
+                 <span class="n">ca_cert</span><span class="o">=</span><span class="n">ca_cert</span><span class="p">,</span> <span class="n">certfile</span><span class="o">=</span><span class="n">certfile</span><span class="p">,</span> <span class="n">keyfile</span><span class="o">=</span><span class="n">keyfile</span><span class="p">,</span>
+                 <span class="n">keyfile_passphrase</span><span class="o">=</span><span class="n">keyfile_passphrase</span><span class="p">,</span> <span class="n">crlfile</span><span class="o">=</span><span class="n">crlfile</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Connection"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.connection.Connection">[docs]</a><span class="k">class</span> <span class="nc">Connection</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Connection class interface.</span>
+
+<span class="sd">    All backend implementations should provide a connection class that inherits</span>
+<span class="sd">    from and implements this class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Connection.__init__"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.connection.Connection.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dbname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">connection_timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_tries</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a new :class:`~.Connection` instance.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            host (str): the host to connect to.</span>
+<span class="sd">            port (int): the port to connect to.</span>
+<span class="sd">            dbname (str): the name of the database to use.</span>
+<span class="sd">            connection_timeout (int, optional): the milliseconds to wait</span>
+<span class="sd">                until timing out the database connection attempt.</span>
+<span class="sd">                Defaults to 5000ms.</span>
+<span class="sd">            max_tries (int, optional): how many tries before giving up,</span>
+<span class="sd">                if 0 then try forever. Defaults to 3.</span>
+<span class="sd">            **kwargs: arbitrary keyword arguments provided by the</span>
+<span class="sd">                configuration&#39;s ``database`` settings</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">dbconf</span> <span class="o">=</span> <span class="n">bigchaindb</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database&#39;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">host</span> <span class="ow">or</span> <span class="n">dbconf</span><span class="p">[</span><span class="s1">&#39;host&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span> <span class="ow">or</span> <span class="n">dbconf</span><span class="p">[</span><span class="s1">&#39;port&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dbname</span> <span class="o">=</span> <span class="n">dbname</span> <span class="ow">or</span> <span class="n">dbconf</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection_timeout</span> <span class="o">=</span> <span class="n">connection_timeout</span> <span class="k">if</span> <span class="n">connection_timeout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> \
+            <span class="k">else</span> <span class="n">dbconf</span><span class="p">[</span><span class="s1">&#39;connection_timeout&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_tries</span> <span class="o">=</span> <span class="n">max_tries</span> <span class="k">if</span> <span class="n">max_tries</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">dbconf</span><span class="p">[</span><span class="s1">&#39;max_tries&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_tries_counter</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_tries</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_tries</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">repeat</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">conn</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span>
+
+<div class="viewcode-block" id="Connection.run"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.connection.Connection.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run a query.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            query: the query to run</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            :exc:`~DuplicateKeyError`: If the query fails because of a</span>
+<span class="sd">                duplicate key constraint.</span>
+<span class="sd">            :exc:`~OperationFailure`: If the query fails for any other</span>
+<span class="sd">                reason.</span>
+<span class="sd">            :exc:`~ConnectionError`: If the connection to the database</span>
+<span class="sd">                fails.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Connection.connect"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.connection.Connection.connect">[docs]</a>    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Try to connect to the database.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            :exc:`~ConnectionError`: If the connection to the database</span>
+<span class="sd">                fails.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">attempt</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_tries_counter</span><span class="p">:</span>
+            <span class="n">attempt</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_conn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connect</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">ConnectionError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Attempt </span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">. Connection to </span><span class="si">%s</span><span class="s1">:</span><span class="si">%s</span><span class="s1"> failed after </span><span class="si">%s</span><span class="s1">ms.&#39;</span><span class="p">,</span>
+                               <span class="n">attempt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_tries</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_tries</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;∞&#39;</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection_timeout</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">attempt</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_tries</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s1">&#39;Cannot connect to the Database. Giving up.&#39;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">ConnectionError</span><span class="p">()</span> <span class="kn">from</span> <span class="nn">exc</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">break</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

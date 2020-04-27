@@ -1,0 +1,334 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bigchaindb.backend.schema &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simple-deployment-template/index.html">Simple Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../k8s-deployment-template/index.html">Kubernetes Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>bigchaindb.backend.schema</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bigchaindb.backend.schema</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright © 2020 Interplanetary Database Association e.V.,</span>
+<span class="c1"># BigchainDB and IPDB software contributors.</span>
+<span class="c1"># SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)</span>
+<span class="c1"># Code is Apache-2.0 and docs are CC-BY-4.0</span>
+
+<span class="sd">&quot;&quot;&quot;Database creation and schema-providing interfaces for backends.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">singledispatch</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">import</span> <span class="nn">bigchaindb</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.backend.connection</span> <span class="kn">import</span> <span class="n">connect</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.common.exceptions</span> <span class="kn">import</span> <span class="n">ValidationError</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.common.utils</span> <span class="kn">import</span> <span class="n">validate_all_values_for_key_in_obj</span><span class="p">,</span> <span class="n">validate_all_values_for_key_in_list</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># Tables/collections that every backend database must create</span>
+<span class="n">TABLES</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;transactions&#39;</span><span class="p">,</span> <span class="s1">&#39;blocks&#39;</span><span class="p">,</span> <span class="s1">&#39;assets&#39;</span><span class="p">,</span> <span class="s1">&#39;metadata&#39;</span><span class="p">,</span>
+          <span class="s1">&#39;validators&#39;</span><span class="p">,</span> <span class="s1">&#39;elections&#39;</span><span class="p">,</span> <span class="s1">&#39;pre_commit&#39;</span><span class="p">,</span> <span class="s1">&#39;utxos&#39;</span><span class="p">,</span> <span class="s1">&#39;abci_chains&#39;</span><span class="p">)</span>
+
+<span class="n">VALID_LANGUAGES</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;danish&#39;</span><span class="p">,</span> <span class="s1">&#39;dutch&#39;</span><span class="p">,</span> <span class="s1">&#39;english&#39;</span><span class="p">,</span> <span class="s1">&#39;finnish&#39;</span><span class="p">,</span> <span class="s1">&#39;french&#39;</span><span class="p">,</span> <span class="s1">&#39;german&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;hungarian&#39;</span><span class="p">,</span> <span class="s1">&#39;italian&#39;</span><span class="p">,</span> <span class="s1">&#39;norwegian&#39;</span><span class="p">,</span> <span class="s1">&#39;portuguese&#39;</span><span class="p">,</span> <span class="s1">&#39;romanian&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;russian&#39;</span><span class="p">,</span> <span class="s1">&#39;spanish&#39;</span><span class="p">,</span> <span class="s1">&#39;swedish&#39;</span><span class="p">,</span> <span class="s1">&#39;turkish&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;da&#39;</span><span class="p">,</span> <span class="s1">&#39;nl&#39;</span><span class="p">,</span> <span class="s1">&#39;en&#39;</span><span class="p">,</span> <span class="s1">&#39;fi&#39;</span><span class="p">,</span> <span class="s1">&#39;fr&#39;</span><span class="p">,</span> <span class="s1">&#39;de&#39;</span><span class="p">,</span> <span class="s1">&#39;hu&#39;</span><span class="p">,</span> <span class="s1">&#39;it&#39;</span><span class="p">,</span> <span class="s1">&#39;nb&#39;</span><span class="p">,</span> <span class="s1">&#39;pt&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;ro&#39;</span><span class="p">,</span> <span class="s1">&#39;ru&#39;</span><span class="p">,</span> <span class="s1">&#39;es&#39;</span><span class="p">,</span> <span class="s1">&#39;sv&#39;</span><span class="p">,</span> <span class="s1">&#39;tr&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="create_database"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.schema.create_database">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">create_database</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">dbname</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create database to be used by BigchainDB.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dbname (str): the name of the database to create.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="create_tables"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.schema.create_tables">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">create_tables</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">dbname</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create the tables to be used by BigchainDB.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dbname (str): the name of the database to create tables for.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="drop_database"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.schema.drop_database">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">drop_database</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">dbname</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Drop the database used by BigchainDB.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        dbname (str): the name of the database to drop.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        :exc:`~DatabaseDoesNotExist`: If the given :attr:`dbname` does not</span>
+<span class="sd">            exist as a database.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="init_database"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.schema.init_database">[docs]</a><span class="k">def</span> <span class="nf">init_database</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dbname</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Initialize the configured backend for use with BigchainDB.</span>
+
+<span class="sd">    Creates a database with :attr:`dbname` with any required tables</span>
+<span class="sd">    and supporting indexes.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        connection (:class:`~bigchaindb.backend.connection.Connection`): an</span>
+<span class="sd">            existing connection to use to initialize the database.</span>
+<span class="sd">            Creates one if not given.</span>
+<span class="sd">        dbname (str): the name of the database to create.</span>
+<span class="sd">            Defaults to the database name given in the BigchainDB</span>
+<span class="sd">            configuration.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">connection</span> <span class="ow">or</span> <span class="n">connect</span><span class="p">()</span>
+    <span class="n">dbname</span> <span class="o">=</span> <span class="n">dbname</span> <span class="ow">or</span> <span class="n">bigchaindb</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+
+    <span class="n">create_database</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">dbname</span><span class="p">)</span>
+    <span class="n">create_tables</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">dbname</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="validate_language_key"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.schema.validate_language_key">[docs]</a><span class="k">def</span> <span class="nf">validate_language_key</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Validate all nested &quot;language&quot; key in `obj`.</span>
+
+<span class="sd">       Args:</span>
+<span class="sd">           obj (dict): dictionary whose &quot;language&quot; key is to be validated.</span>
+
+<span class="sd">       Returns:</span>
+<span class="sd">           None: validation successful</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValidationError: will raise exception in case language is not valid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">bigchaindb</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database&#39;</span><span class="p">][</span><span class="s1">&#39;backend&#39;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">backend</span> <span class="o">==</span> <span class="s1">&#39;localmongodb&#39;</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">validate_all_values_for_key_in_obj</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;language&#39;</span><span class="p">,</span> <span class="n">validate_language</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">validate_all_values_for_key_in_list</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s1">&#39;language&#39;</span><span class="p">,</span> <span class="n">validate_language</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="validate_language"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.schema.validate_language">[docs]</a><span class="k">def</span> <span class="nf">validate_language</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check if `value` is a valid language.</span>
+<span class="sd">       https://docs.mongodb.com/manual/reference/text-search-languages/</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            value (str): language to validated</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None: validation successful</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValidationError: will raise exception in case language is not valid.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">VALID_LANGUAGES</span><span class="p">:</span>
+        <span class="n">error_str</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;MongoDB does not support text search for the &#39;</span>
+                     <span class="s1">&#39;language &quot;</span><span class="si">{}</span><span class="s1">&quot;. If you do not understand this error &#39;</span>
+                     <span class="s1">&#39;message then please rename key/field &quot;language&quot; to &#39;</span>
+                     <span class="s1">&#39;something else like &quot;lang&quot;.&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="n">error_str</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

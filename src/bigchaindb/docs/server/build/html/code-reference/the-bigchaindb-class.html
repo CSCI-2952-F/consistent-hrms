@@ -1,0 +1,510 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>The BigchainDB Class &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Database Backend Interfaces" href="backend.html" />
+    <link rel="prev" title="Code Reference" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../simple-deployment-template/index.html">Simple Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../k8s-deployment-template/index.html">Kubernetes Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Code Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">The BigchainDB Class</a></li>
+<li class="toctree-l2"><a class="reference internal" href="backend.html">Database Backend Interfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="commands.html">Command Line Interface</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Code Reference</a> &raquo;</li>
+        
+      <li>The BigchainDB Class</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/code-reference/the-bigchaindb-class.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="the-bigchaindb-class">
+<h1>The BigchainDB Class<a class="headerlink" href="#the-bigchaindb-class" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="bigchaindb.BigchainDB">
+<em class="property">class </em><code class="descclassname">bigchaindb.</code><code class="descname">BigchainDB</code><span class="sig-paren">(</span><em>connection=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/lib.html#BigchainDB"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.BigchainDB" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bigchain API</p>
+<p>Create, read, sign, write transactions to the database</p>
+<dl class="method">
+<dt id="bigchaindb.BigchainDB.post_transaction">
+<code class="descname">post_transaction</code><span class="sig-paren">(</span><em>transaction</em>, <em>mode</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/lib.html#BigchainDB.post_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.BigchainDB.post_transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Submit a valid transaction to the mempool.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bigchaindb.BigchainDB.write_transaction">
+<code class="descname">write_transaction</code><span class="sig-paren">(</span><em>transaction</em>, <em>mode</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/lib.html#BigchainDB.write_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.BigchainDB.write_transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Submit a valid transaction to the mempool.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bigchaindb.BigchainDB.update_utxoset">
+<code class="descname">update_utxoset</code><span class="sig-paren">(</span><em>transaction</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/lib.html#BigchainDB.update_utxoset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.BigchainDB.update_utxoset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the UTXO set given <code class="docutils literal notranslate"><span class="pre">transaction</span></code>. That is, remove
+the outputs that the given <code class="docutils literal notranslate"><span class="pre">transaction</span></code> spends, and add the
+outputs that the given <code class="docutils literal notranslate"><span class="pre">transaction</span></code> creates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>transaction</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">Transaction</span></code>) – A new
+transaction incoming into the system for which the UTXO
+set needs to be updated.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bigchaindb.BigchainDB.store_unspent_outputs">
+<code class="descname">store_unspent_outputs</code><span class="sig-paren">(</span><em>*unspent_outputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/lib.html#BigchainDB.store_unspent_outputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.BigchainDB.store_unspent_outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store the given <code class="docutils literal notranslate"><span class="pre">unspent_outputs</span></code> (utxos).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*unspent_outputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code></a>) – Variable
+length tuple or list of unspent outputs.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bigchaindb.BigchainDB.get_utxoset_merkle_root">
+<code class="descname">get_utxoset_merkle_root</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/lib.html#BigchainDB.get_utxoset_merkle_root"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.BigchainDB.get_utxoset_merkle_root" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the merkle root of the utxoset. This implies that
+the utxoset is first put into a merkle tree.</p>
+<p>For now, the merkle tree and its root will be computed each
+time. This obviously is not efficient and a better approach
+that limits the repetition of the same computation when
+unnecesary should be sought. For instance, future optimizations
+could simply re-compute the branches of the tree that were
+affected by a change.</p>
+<p>The transaction hash (id) and output index should be sufficient
+to uniquely identify a utxo, and consequently only that
+information from a utxo record is needed to compute the merkle
+root. Hence, each node of the merkle tree should contain the
+tuple (txid, output_index).</p>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">The leaves of the tree will need to be sorted in
+some kind of lexicographical order.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Merkle root in hexadecimal form.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bigchaindb.BigchainDB.get_unspent_outputs">
+<code class="descname">get_unspent_outputs</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/lib.html#BigchainDB.get_unspent_outputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.BigchainDB.get_unspent_outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the utxoset.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">generator of unspent_outputs.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bigchaindb.BigchainDB.delete_unspent_outputs">
+<code class="descname">delete_unspent_outputs</code><span class="sig-paren">(</span><em>*unspent_outputs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/lib.html#BigchainDB.delete_unspent_outputs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.BigchainDB.delete_unspent_outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes the given <code class="docutils literal notranslate"><span class="pre">unspent_outputs</span></code> (utxos).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*unspent_outputs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tuple</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dict</span></code></a>) – Variable
+length tuple or list of unspent outputs.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bigchaindb.BigchainDB.get_transactions_filtered">
+<code class="descname">get_transactions_filtered</code><span class="sig-paren">(</span><em>asset_id</em>, <em>operation=None</em>, <em>last_tx=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/lib.html#BigchainDB.get_transactions_filtered"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.BigchainDB.get_transactions_filtered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of transactions filtered on some criteria</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bigchaindb.BigchainDB.get_outputs_filtered">
+<code class="descname">get_outputs_filtered</code><span class="sig-paren">(</span><em>owner</em>, <em>spent=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/lib.html#BigchainDB.get_outputs_filtered"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.BigchainDB.get_outputs_filtered" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of output links filtered on some criteria</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>owner</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – base58 encoded public_key.</li>
+<li><strong>spent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code> return only the spent outputs. If
+<code class="docutils literal notranslate"><span class="pre">False</span></code> return only unspent outputs. If spent is
+not specified (<code class="docutils literal notranslate"><span class="pre">None</span></code>) return all outputs.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of <code class="docutils literal notranslate"><span class="pre">txid</span></code> s and <code class="docutils literal notranslate"><span class="pre">output</span></code> s
+pointing to another transaction’s condition</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of TransactionLink</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bigchaindb.BigchainDB.store_block">
+<code class="descname">store_block</code><span class="sig-paren">(</span><em>block</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/lib.html#BigchainDB.store_block"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.BigchainDB.store_block" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new block.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bigchaindb.BigchainDB.get_latest_block">
+<code class="descname">get_latest_block</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/lib.html#BigchainDB.get_latest_block"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.BigchainDB.get_latest_block" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the block with largest height.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bigchaindb.BigchainDB.get_block">
+<code class="descname">get_block</code><span class="sig-paren">(</span><em>block_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/lib.html#BigchainDB.get_block"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.BigchainDB.get_block" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the block with the specified <cite>block_id</cite>.</p>
+<p>Returns the block corresponding to <cite>block_id</cite> or None if no match is
+found.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>block_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – block id of the block to get.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bigchaindb.BigchainDB.get_block_containing_tx">
+<code class="descname">get_block_containing_tx</code><span class="sig-paren">(</span><em>txid</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/lib.html#BigchainDB.get_block_containing_tx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.BigchainDB.get_block_containing_tx" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Retrieve the list of blocks (block ids) containing a</dt>
+<dd>transaction with transaction id <cite>txid</cite></dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>txid</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – transaction id of the transaction to query</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Block id list (list(int))</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bigchaindb.BigchainDB.validate_transaction">
+<code class="descname">validate_transaction</code><span class="sig-paren">(</span><em>tx</em>, <em>current_transactions=[]</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/lib.html#BigchainDB.validate_transaction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.BigchainDB.validate_transaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate a transaction against the current status of the database.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bigchaindb.BigchainDB.text_search">
+<code class="descname">text_search</code><span class="sig-paren">(</span><em>search</em>, <em>*</em>, <em>limit=0</em>, <em>table='assets'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/lib.html#BigchainDB.text_search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.BigchainDB.text_search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an iterator of assets that match the text search</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>search</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Text search string to query the text index</li>
+<li><strong>limit</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><em>optional</em>) – Limit the number of returned documents.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">An iterator of assets that match the text search.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">iter</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bigchaindb.BigchainDB.get_assets">
+<code class="descname">get_assets</code><span class="sig-paren">(</span><em>asset_ids</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/lib.html#BigchainDB.get_assets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.BigchainDB.get_assets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of assets that match the asset_ids</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>asset_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>) – A list of asset_ids to
+retrieve from the database.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of assets returned from the database.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bigchaindb.BigchainDB.get_metadata">
+<code class="descname">get_metadata</code><span class="sig-paren">(</span><em>txn_ids</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/lib.html#BigchainDB.get_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.BigchainDB.get_metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of metadata that match the transaction ids (txn_ids)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>txn_ids</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">list</span></code></a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a>) – A list of txn_ids to
+retrieve from the database.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The list of metadata returned from the database.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="bigchaindb.BigchainDB.store_validator_set">
+<code class="descname">store_validator_set</code><span class="sig-paren">(</span><em>height</em>, <em>validators</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/lib.html#BigchainDB.store_validator_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.BigchainDB.store_validator_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store validator set at a given <cite>height</cite>.
+NOTE: If the validator set already exists at that <cite>height</cite> then an
+exception will be raised.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="bigchaindb.BigchainDB.migrate_abci_chain">
+<code class="descname">migrate_abci_chain</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigchaindb/lib.html#BigchainDB.migrate_abci_chain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigchaindb.BigchainDB.migrate_abci_chain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate and record a new ABCI chain ID. New blocks are not
+accepted until we receive an InitChain ABCI request with
+the matching chain ID and validator set.</p>
+<p>Chain ID is generated based on the current chain and height.
+<cite>chain-X</cite> =&gt; <cite>chain-X-migrated-at-height-5</cite>.
+<cite>chain-X-migrated-at-height-5</cite> =&gt; <cite>chain-X-migrated-at-height-21</cite>.</p>
+<p>If there is no known chain (we are at genesis), the function returns.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="backend.html" class="btn btn-neutral float-right" title="Database Backend Interfaces" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Code Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,316 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>BigchainDB, Privacy and Private Data &mdash; BigchainDB  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="BigchainDB 문서" href="korean/index.html" />
+    <link rel="prev" title="Permissions in BigchainDB" href="permissions.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> BigchainDB
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">BigchainDB Docs Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="production-ready.html">Production-Ready?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terminology.html">Terminology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decentralized.html">How BigchainDB is Decentralized</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diversity.html">Kinds of Node Diversity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="immutable.html">How BigchainDB is Immutable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bft.html">BigchainDB and Byzantine Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="query.html">Querying BigchainDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assets.html">How BigchainDB is Good for Asset Registrations &amp; Transfers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="smart-contracts.html">BigchainDB and Smart Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transaction-concepts.html">Transaction Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store-files.html">How to Store Files in BigchainDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="permissions.html">Permissions in BigchainDB</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">BigchainDB, Privacy and Private Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#basic-facts">Basic Facts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#storing-private-data-off-chain">Storing Private Data Off-Chain</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#storing-private-data-on-chain-encrypted">Storing Private Data On-Chain, Encrypted</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#system-example-1">System Example 1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#system-example-2">System Example 2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#system-example-3">System Example 3</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#system-example-4">System Example 4</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/projects/server/en/latest/data-models/index.html">Data Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="korean/index.html">BigchainDB 문서</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">BigchainDB</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>BigchainDB, Privacy and Private Data</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/private-data.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="bigchaindb-privacy-and-private-data">
+<h1>BigchainDB, Privacy and Private Data<a class="headerlink" href="#bigchaindb-privacy-and-private-data" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="basic-facts">
+<h2>Basic Facts<a class="headerlink" href="#basic-facts" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>One can store arbitrary data (including encrypted data) in a BigchainDB network, within limits: there’s a maximum transaction size. Every transaction has a <code class="docutils literal notranslate"><span class="pre">metadata</span></code> section which can store almost any Unicode string (up to some maximum length). Similarly, every CREATE transaction has an <code class="docutils literal notranslate"><span class="pre">asset.data</span></code> section which can store almost any Unicode string.</li>
+<li>The data stored in certain BigchainDB transaction fields must not be encrypted, e.g. public keys and amounts. BigchainDB doesn’t offer private transactions akin to Zcoin.</li>
+<li>Once data has been stored in a BigchainDB network, it’s best to assume it can’t be change or deleted.</li>
+<li>Every node in a BigchainDB network has a full copy of all the stored data.</li>
+<li>Every node in a BigchainDB network can read all the stored data.</li>
+<li>Everyone with full access to a BigchainDB node (e.g. the sysadmin of a node) can read all the data stored on that node.</li>
+<li>Everyone given access to a node via the BigchainDB HTTP API can find and read all the data stored by BigchainDB. The list of people with access might be quite short.</li>
+<li>If the connection between an external user and a BigchainDB node isn’t encrypted (using HTTPS, for example), then a wiretapper can read all HTTP requests and responses in transit.</li>
+<li>If someone gets access to plaintext (regardless of where they got it), then they can (in principle) share it with the whole world. One can make it difficult for them to do that, e.g. if it is a lot of data and they only get access inside a secure room where they are searched as they leave the room.</li>
+</ol>
+</div>
+<div class="section" id="storing-private-data-off-chain">
+<h2>Storing Private Data Off-Chain<a class="headerlink" href="#storing-private-data-off-chain" title="Permalink to this headline">¶</a></h2>
+<p>A system could store data off-chain, e.g. in a third-party database, document store, or content management system (CMS) and it could use BigchainDB to:</p>
+<ul class="simple">
+<li>Keep track of who has read permissions (or other permissions) in a third-party system. An example of how this could be done is described below.</li>
+<li>Keep a permanent record of all requests made to the third-party system.</li>
+<li>Store hashes of documents-stored-elsewhere, so that a change in any document can be detected.</li>
+<li>Record all handshake-establishing requests and responses between two off-chain parties (e.g. a Diffie-Hellman key exchange), so as to prove that they established an encrypted tunnel (without giving readers access to that tunnel). There are more details about this idea in <a class="reference external" href="https://github.com/bigchaindb/privacy-protocols">the BigchainDB Privacy Protocols repository</a>.</li>
+</ul>
+<p>A simple way to record who has read permission on a particular document would be for the third-party system (“DocPile”) to store a CREATE transaction in a BigchainDB network for every document+user pair, to indicate that that user has read permissions for that document. The transaction could be signed by DocPile (or maybe by a document owner, as a variation). The asset data field would contain 1) the unique ID of the user and 2) the unique ID of the document. The one output on the CREATE transaction would only be transferable/spendable by DocPile (or, again, a document owner).</p>
+<p>To revoke the read permission, DocPile could create a TRANSFER transaction, to spend the one output on the original CREATE transaction, with a metadata field to say that the user in question no longer has read permission on that document.</p>
+<p>This can be carried on indefinitely, i.e. another TRANSFER transaction could be created by DocPile to indicate that the user now has read permissions again.</p>
+<p>DocPile can figure out if a given user has read permissions on a given document by reading the last transaction in the CREATE → TRANSFER → TRANSFER → etc. chain for that user+document pair.</p>
+<p>There are other ways to accomplish the same thing. The above is just one example.</p>
+<p>You might have noticed that the above example didn’t treat the “read permission” as an asset owned (controlled) by a user because if the permission asset is given to (transferred to or created by) the user then it cannot be controlled any further (by DocPile) until the user transfers it back to DocPile. Moreover, the user could transfer the asset to someone else, which might be problematic.</p>
+</div>
+<div class="section" id="storing-private-data-on-chain-encrypted">
+<h2>Storing Private Data On-Chain, Encrypted<a class="headerlink" href="#storing-private-data-on-chain-encrypted" title="Permalink to this headline">¶</a></h2>
+<p>There are many ways to store private data on-chain, encrypted. Every use case has its own objectives and constraints, and the best solution depends on the use case. <a class="reference external" href="https://www.bigchaindb.com/services/">The BigchainDB consulting team</a>, along with our partners, can help you design the best solution for your use case.</p>
+<p>Below we describe some example system setups, using various crypto primitives, to give a sense of what’s possible.</p>
+<p>Please note:</p>
+<ul class="simple">
+<li>Ed25519 keypairs are designed for signing and verifying cryptographic signatures, <a class="reference external" href="https://crypto.stackexchange.com/questions/27866/why-curve25519-for-encryption-but-ed25519-for-signatures">not for encrypting and decrypting messages</a>. For encryption, you should use keypairs designed for encryption, such as X25519.</li>
+<li>If someone (or some group) publishes how to decrypt some encrypted data on-chain, then anyone with access to that encrypted data will be able to get the plaintext. The data can’t be deleted.</li>
+<li>Encrypted data can’t be indexed or searched by MongoDB. (It can index and search the ciphertext, but that’s not very useful.) One might use homomorphic encryption to index and search encrypted data, but MongoDB doesn’t have any plans to support that any time soon. If there is indexing or keyword search needed, then some fields of the <code class="docutils literal notranslate"><span class="pre">asset.data</span></code> or <code class="docutils literal notranslate"><span class="pre">metadata</span></code> objects can be left as plain text and the sensitive information can be stored in an encrypted child-object.</li>
+</ul>
+<div class="section" id="system-example-1">
+<h3>System Example 1<a class="headerlink" href="#system-example-1" title="Permalink to this headline">¶</a></h3>
+<p>Encrypt the data with a symmetric key and store the ciphertext on-chain (in <code class="docutils literal notranslate"><span class="pre">metadata</span></code> or <code class="docutils literal notranslate"><span class="pre">asset.data</span></code>). To communicate the key to a third party, use their public key to encrypt the symmetric key and send them that. They can decrypt the symmetric key with their private key, and then use that symmetric key to decrypt the on-chain ciphertext.</p>
+<p>The reason for using a symmetric key along with public/private keypairs is so the ciphertext only has to be stored once.</p>
+</div>
+<div class="section" id="system-example-2">
+<h3>System Example 2<a class="headerlink" href="#system-example-2" title="Permalink to this headline">¶</a></h3>
+<p>This example uses <a class="reference external" href="https://en.wikipedia.org/wiki/Proxy_re-encryption">proxy re-encryption</a>:</p>
+<ol class="arabic simple">
+<li>MegaCorp encrypts some data using its own public key, then stores that encrypted data (ciphertext 1) in a BigchainDB network.</li>
+<li>MegaCorp wants to let others read that encrypted data, but without ever sharing their private key and without having to re-encrypt themselves for every new recipient. Instead, they find a “proxy” named Moxie, to provide proxy re-encryption services.</li>
+<li>Zorban contacts MegaCorp and asks for permission to read the data.</li>
+<li>MegaCorp asks Zorban for his public key.</li>
+<li>MegaCorp generates a “re-encryption key” and sends it to their proxy, Moxie.</li>
+<li>Moxie (the proxy) uses the re-encryption key to encrypt ciphertext 1, creating ciphertext 2.</li>
+<li>Moxie sends ciphertext 2 to Zorban (or to MegaCorp who forwards it to Zorban).</li>
+<li>Zorban uses his private key to decrypt ciphertext 2, getting the original un-encrypted data.</li>
+</ol>
+<p>Note:</p>
+<ul class="simple">
+<li>The proxy only ever sees ciphertext. They never see any un-encrypted data.</li>
+<li>Zorban never got the ability to decrypt ciphertext 1, i.e. the on-chain data.</li>
+<li>There are variations on the above flow.</li>
+</ul>
+</div>
+<div class="section" id="system-example-3">
+<h3>System Example 3<a class="headerlink" href="#system-example-3" title="Permalink to this headline">¶</a></h3>
+<p>This example uses <a class="reference external" href="https://en.wikipedia.org/wiki/Erasure_code">erasure coding</a>:</p>
+<ol class="arabic simple">
+<li>Erasure-code the data into n pieces.</li>
+<li>Encrypt each of the n pieces with a different encryption key.</li>
+<li>Store the n encrypted pieces on-chain, e.g. in n separate transactions.</li>
+<li>Share each of the the n decryption keys with a different party.</li>
+</ol>
+<p>If k &lt; N of the key-holders gets and decrypts k of the pieces, they can reconstruct the original plaintext. Less than k would not be enough.</p>
+</div>
+<div class="section" id="system-example-4">
+<h3>System Example 4<a class="headerlink" href="#system-example-4" title="Permalink to this headline">¶</a></h3>
+<p>This setup could be used in an enterprise blockchain scenario where a special node should be able to see parts of the data, but the others should not.</p>
+<ul class="simple">
+<li>The special node generates an X25519 keypair (or similar asymmetric <em>encryption</em> keypair).</li>
+<li>A BigchainDB end user finds out the X25519 public key (encryption key) of the special node.</li>
+<li>The end user creates a valid BigchainDB transaction, with either the asset.data or the metadata (or both) encrypted using the above-mentioned public key.</li>
+<li>This is only done for transactions where the contents of asset.data or metadata don’t matter for validation, so all node operators can validate the transaction.</li>
+<li>The special node is able to decrypt the encrypted data, but the other node operators can’t, and nor can any other end user.</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="korean/index.html" class="btn btn-neutral float-right" title="BigchainDB 문서" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="permissions.html" class="btn btn-neutral float-left" title="Permissions in BigchainDB" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

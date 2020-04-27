@@ -1,0 +1,1428 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>The HTTP Client-Server API &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="The Events API" href="events/index.html" />
+    <link rel="prev" title="Command Line Interface (CLI)" href="server-reference/bigchaindb-cli.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simple-deployment-template/index.html">Simple Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">The HTTP Client-Server API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#bigchaindb-root-url">BigchainDB Root URL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api-root-endpoint">API Root Endpoint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#transactions">Transactions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#transaction-outputs">Transaction Outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#assets">Assets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#transaction-metadata">Transaction Metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#validators">Validators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#blocks">Blocks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#determining-the-api-root-url">Determining the API Root URL</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data-models/index.html">Data Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="k8s-deployment-template/index.html">Kubernetes Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>The HTTP Client-Server API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/http-client-server-api.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="the-http-client-server-api">
+<span id="id1"></span><h1>The HTTP Client-Server API<a class="headerlink" href="#the-http-client-server-api" title="Permalink to this headline">¶</a></h1>
+<p>This page assumes you already know an API Root URL
+for a BigchainDB node or reverse proxy.
+It should be something like <code class="docutils literal notranslate"><span class="pre">https://example.com:9984</span></code>
+or <code class="docutils literal notranslate"><span class="pre">https://12.34.56.78:9984</span></code>.</p>
+<p>If you set up a BigchainDB node or reverse proxy yourself,
+and you’re not sure what the API Root URL is,
+then see the last section of this page for help.</p>
+<div class="section" id="bigchaindb-root-url">
+<span id="id2"></span><h2>BigchainDB Root URL<a class="headerlink" href="#bigchaindb-root-url" title="Permalink to this headline">¶</a></h2>
+<p>If you send an HTTP GET request to the BigchainDB Root URL
+e.g. <code class="docutils literal notranslate"><span class="pre">http://localhost:9984</span></code>
+or <code class="docutils literal notranslate"><span class="pre">https://example.com:9984</span></code>
+(with no <code class="docutils literal notranslate"><span class="pre">/api/v1/</span></code> on the end),
+then you should get an HTTP response
+with something like the following in the body:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;api&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;v1&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;assets&quot;</span><span class="p">:</span> <span class="s2">&quot;/api/v1/assets/&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;blocks&quot;</span><span class="p">:</span> <span class="s2">&quot;/api/v1/blocks/&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;docs&quot;</span><span class="p">:</span> <span class="s2">&quot;https://docs.bigchaindb.com/projects/server/en/v2.2.1/http-client-server-api.html&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="s2">&quot;/api/v1/metadata/&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;outputs&quot;</span><span class="p">:</span> <span class="s2">&quot;/api/v1/outputs/&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;streams&quot;</span><span class="p">:</span> <span class="s2">&quot;ws://localhost:9985/api/v1/streams/valid_transactions&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;transactions&quot;</span><span class="p">:</span> <span class="s2">&quot;/api/v1/transactions/&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;validators&quot;</span><span class="p">:</span> <span class="s2">&quot;/api/v1/validators&quot;</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;docs&quot;</span><span class="p">:</span> <span class="s2">&quot;https://docs.bigchaindb.com/projects/server/en/v2.2.1/&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;software&quot;</span><span class="p">:</span> <span class="s2">&quot;BigchainDB&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;2.2.1&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="api-root-endpoint">
+<span id="id3"></span><h2>API Root Endpoint<a class="headerlink" href="#api-root-endpoint" title="Permalink to this headline">¶</a></h2>
+<p>If you send an HTTP GET request to the API Root Endpoint
+e.g. <code class="docutils literal notranslate"><span class="pre">http://localhost:9984/api/v1/</span></code>
+or <code class="docutils literal notranslate"><span class="pre">https://example.com:9984/api/v1/</span></code>,
+then you should get an HTTP response
+that allows you to discover the BigchainDB API endpoints:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;assets&quot;</span><span class="p">:</span> <span class="s2">&quot;/assets/&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;blocks&quot;</span><span class="p">:</span> <span class="s2">&quot;/blocks/&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;docs&quot;</span><span class="p">:</span> <span class="s2">&quot;https://docs.bigchaindb.com/projects/server/en/v2.2.1/http-client-server-api.html&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="s2">&quot;/metadata/&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;outputs&quot;</span><span class="p">:</span> <span class="s2">&quot;/outputs/&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;streams&quot;</span><span class="p">:</span> <span class="s2">&quot;ws://localhost:9985/api/v1/streams/valid_transactions&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;transactions&quot;</span><span class="p">:</span> <span class="s2">&quot;/transactions/&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;validators&quot;</span><span class="p">:</span> <span class="s2">&quot;/validators&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="transactions">
+<h2>Transactions<a class="headerlink" href="#transactions" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you want to do more sophisticated queries
+than those provided by the BigchainDB HTTP API,
+then one option is to connect to MongoDB directly (if possible)
+and do whatever queries MongoDB allows.
+For more about that option, see
+<a class="reference external" href="https://docs.bigchaindb.com/en/latest/query.html">the page about querying BigchainDB</a>.</p>
+</div>
+<dl class="get">
+<dt id="get--api-v1-transactions-transaction_id">
+<code class="descname">GET </code><code class="descname">/api/v1/transactions/{transaction_id}</code><a class="headerlink" href="#get--api-v1-transactions-transaction_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the transaction with the ID <code class="docutils literal notranslate"><span class="pre">transaction_id</span></code>.</p>
+<p>If a transaction with ID <code class="docutils literal notranslate"><span class="pre">transaction_id</span></code> has been included
+in a committed block, then this endpoint returns that transaction,
+otherwise the response will be <code class="docutils literal notranslate"><span class="pre">404</span> <span class="pre">Not</span> <span class="pre">Found</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>transaction_id</strong> (<em>hex string</em>) – transaction ID</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/v1/transactions/4957744b3ac54434b8270f2c854cc1040228c82ea4e72d66d2887a4d3e30b317</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;asset&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello BigchainDB!&quot;</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;4957744b3ac54434b8270f2c854cc1040228c82ea4e72d66d2887a4d3e30b317&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;inputs&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;fulfillment&quot;</span><span class="p">:</span> <span class="s2">&quot;pGSAIDE5i63cn4X8T8N1sZ2mGkJD5lNRnBM4PZgI_zvzbr-cgUCy4BR6gKaYT-tdyAGPPpknIqI4JYQQ-p2nCg3_9BfOI-15vzldhyz-j_LZVpqAlRmbTzKS-Q5gs7ZIFaZCA_UD&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;fulfills&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nt">&quot;owners_before&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;4K9sWUMFwTgaDGPfdynrbxWqWS6sWmKbZoTjxLtVUibD&quot;</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">0</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;CREATE&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;outputs&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;amount&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;condition&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;details&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;public_key&quot;</span><span class="p">:</span> <span class="s2">&quot;4K9sWUMFwTgaDGPfdynrbxWqWS6sWmKbZoTjxLtVUibD&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ed25519-sha-256&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;uri&quot;</span><span class="p">:</span> <span class="s2">&quot;ni:///sha-256;PNYwdxaRaNw60N6LDFzOWO97b8tJeragczakL8PrAPc?fpt=ed25519-sha-256&amp;cost=131072&quot;</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;public_keys&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;4K9sWUMFwTgaDGPfdynrbxWqWS6sWmKbZoTjxLtVUibD&quot;</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;2.0&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Response Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – <code class="docutils literal notranslate"><span class="pre">application/json</span></code></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – A transaction with that ID was found.</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – A transaction with that ID was not found.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--api-v1-transactions">
+<code class="descname">GET </code><code class="descname">/api/v1/transactions</code><a class="headerlink" href="#get--api-v1-transactions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requests to the <code class="docutils literal notranslate"><span class="pre">/api/v1/transactions</span></code> endpoint
+without any query parameters will get a response status code <code class="docutils literal notranslate"><span class="pre">400</span> <span class="pre">Bad</span> <span class="pre">Request</span></code>.</p>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--api-v1-transactions?asset_id=asset_id&amp;operation=CREATE|TRANSFER&amp;last_tx=true|false">
+<code class="descname">GET </code><code class="descname">/api/v1/transactions?asset_id={asset_id}&amp;operation={CREATE|TRANSFER}&amp;last_tx={true|false}</code><a class="headerlink" href="#get--api-v1-transactions?asset_id=asset_id&operation=CREATE|TRANSFER&last_tx=true|false" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a list of transactions that use an asset with the ID <code class="docutils literal notranslate"><span class="pre">asset_id</span></code>.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">operation</span></code> is <code class="docutils literal notranslate"><span class="pre">CREATE</span></code>, then the CREATE transaction which created
+the asset with ID <code class="docutils literal notranslate"><span class="pre">asset_id</span></code> will be returned.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">operation</span></code> is <code class="docutils literal notranslate"><span class="pre">TRANSFER</span></code>, then every TRANSFER transaction involving
+the asset with ID <code class="docutils literal notranslate"><span class="pre">asset_id</span></code> will be returned.
+This allows users to query the entire history or
+provenance of an asset.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">operation</span></code> is not included, then <em>every</em> transaction involving
+the asset with ID <code class="docutils literal notranslate"><span class="pre">asset_id</span></code> will be returned.</p>
+<p>if <code class="docutils literal notranslate"><span class="pre">last_tx</span></code> is set to <code class="docutils literal notranslate"><span class="pre">true</span></code>, only the last transaction is returned
+instead of all transactions with the given <code class="docutils literal notranslate"><span class="pre">asset_id</span></code>.</p>
+<p>This endpoint returns transactions only if they are in committed blocks.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>operation</strong> (<em>string</em>) – (Optional) <code class="docutils literal notranslate"><span class="pre">CREATE</span></code> or <code class="docutils literal notranslate"><span class="pre">TRANSFER</span></code>.</li>
+<li><strong>asset_id</strong> (<em>string</em>) – asset ID.</li>
+<li><strong>last_tx</strong> (<em>string</em>) – (Optional) <code class="docutils literal notranslate"><span class="pre">true</span></code> or <code class="docutils literal notranslate"><span class="pre">false</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/v1/transactions?operation=TRANSFER&amp;asset_id=4957744b3ac54434b8270f2c854cc1040228c82ea4e72d66d2887a4d3e30b317</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">[{</span>
+  <span class="nt">&quot;asset&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;4957744b3ac54434b8270f2c854cc1040228c82ea4e72d66d2887a4d3e30b317&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;79ef6803210c941903d63d08b40fa17f0a5a04f11ac0ff04451553a187d97a30&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;inputs&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;fulfillment&quot;</span><span class="p">:</span> <span class="s2">&quot;pGSAIDE5i63cn4X8T8N1sZ2mGkJD5lNRnBM4PZgI_zvzbr-cgUAYRI8kzKaZcrW-_avQrAIk5q-7o_7U6biBvoHk1ioBLqHSBcE_PAdNEaeWesAAW_HeCqNUWKaJ5Lzo5Nfz7QgN&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;fulfills&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;output_index&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nt">&quot;transaction_id&quot;</span><span class="p">:</span> <span class="s2">&quot;4957744b3ac54434b8270f2c854cc1040228c82ea4e72d66d2887a4d3e30b317&quot;</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;owners_before&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;4K9sWUMFwTgaDGPfdynrbxWqWS6sWmKbZoTjxLtVUibD&quot;</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">1</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;TRANSFER&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;outputs&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;amount&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;condition&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;details&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;public_key&quot;</span><span class="p">:</span> <span class="s2">&quot;3yfQPHeWAa1MxTX9Zf9176QqcpcnWcanVZZbaHb8B3h9&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ed25519-sha-256&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;uri&quot;</span><span class="p">:</span> <span class="s2">&quot;ni:///sha-256;lu6ov4AKkee6KWGnyjOVLBeyuP0bz4-O6_dPi15eYUc?fpt=ed25519-sha-256&amp;cost=131072&quot;</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;public_keys&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;3yfQPHeWAa1MxTX9Zf9176QqcpcnWcanVZZbaHb8B3h9&quot;</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;2.0&quot;</span>
+<span class="p">},</span>
+<span class="p">{</span>
+  <span class="nt">&quot;asset&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;4957744b3ac54434b8270f2c854cc1040228c82ea4e72d66d2887a4d3e30b317&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;1fec726a3b426498147f1a1f19a92c187d551a7f66db4b88d666d7dcc10e86a4&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;inputs&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;fulfillment&quot;</span><span class="p">:</span> <span class="s2">&quot;pGSAICw7Ul-c2lG6NFbHp3FbKRC7fivQcNGO7GS4wV3A-1QggUARCMty2JBK_OyPJntWEFxDG4-VbKMy853NtqwnPib5QUJIuwPQa1Y4aN2iIBuoqGE85Pmjcc1ScG9FCPSQHacK&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;fulfills&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;output_index&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nt">&quot;transaction_id&quot;</span><span class="p">:</span> <span class="s2">&quot;79ef6803210c941903d63d08b40fa17f0a5a04f11ac0ff04451553a187d97a30&quot;</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;owners_before&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;3yfQPHeWAa1MxTX9Zf9176QqcpcnWcanVZZbaHb8B3h9&quot;</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">2</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;TRANSFER&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;outputs&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;amount&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;condition&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;details&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;public_key&quot;</span><span class="p">:</span> <span class="s2">&quot;3Af3fhhjU6d9WecEM9Uw5hfom9kNEwE7YuDWdqAUssqm&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ed25519-sha-256&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;uri&quot;</span><span class="p">:</span> <span class="s2">&quot;ni:///sha-256;Ll1r0LzgHUvWB87yIrNFYo731MMUEypqvrbPATTbuD4?fpt=ed25519-sha-256&amp;cost=131072&quot;</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;public_keys&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;3Af3fhhjU6d9WecEM9Uw5hfom9kNEwE7YuDWdqAUssqm&quot;</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;2.0&quot;</span>
+<span class="p">}]</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Response Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – <code class="docutils literal notranslate"><span class="pre">application/json</span></code></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – A list of transactions containing an asset with ID <code class="docutils literal notranslate"><span class="pre">asset_id</span></code> was found and returned.</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – The request wasn’t understood by the server, e.g. the <code class="docutils literal notranslate"><span class="pre">asset_id</span></code> querystring was not included in the request.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="post">
+<dt id="post--api-v1-transactions?mode=mode">
+<code class="descname">POST </code><code class="descname">/api/v1/transactions?mode={mode}</code><a class="headerlink" href="#post--api-v1-transactions?mode=mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>This endpoint is used to send a transaction to a BigchainDB network.
+The transaction is put in the body of the request.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>mode</strong> (<em>string</em>) – (Optional) One of the three supported modes to send a transaction: <code class="docutils literal notranslate"><span class="pre">async</span></code>, <code class="docutils literal notranslate"><span class="pre">sync</span></code>, <code class="docutils literal notranslate"><span class="pre">commit</span></code>. The default is <code class="docutils literal notranslate"><span class="pre">async</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Once the posted transaction arrives at a BigchainDB node,
+that node will check to see if the transaction is valid.
+If it’s invalid, the node will return an HTTP 400 (error).
+Otherwise, the node will send the transaction to Tendermint (in the same node) using the
+<a class="reference external" href="https://tendermint.com/docs/tendermint-core/using-tendermint.html#broadcast-api">Tendermint broadcast API</a>.</p>
+<p>The meaning of the <code class="docutils literal notranslate"><span class="pre">mode</span></code> query parameter is inherited from the mode parameter in
+<a class="reference external" href="https://tendermint.com/docs/tendermint-core/using-tendermint.html#broadcast-api">Tendermint’s broadcast API</a>.
+<code class="docutils literal notranslate"><span class="pre">mode=async</span></code> means the HTTP response will come back immediately,
+before Tendermint asks BigchainDB Server to check the validity of the transaction (a second time).
+<code class="docutils literal notranslate"><span class="pre">mode=sync</span></code> means the HTTP response will come back
+after Tendermint gets a response from BigchainDB Server
+regarding the validity of the transaction.
+<code class="docutils literal notranslate"><span class="pre">mode=commit</span></code> means the HTTP response will come back once the transaction
+is in a committed block.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>In the async and sync modes, after a successful HTTP response is returned, the transaction may still be rejected later on. All the transactions are recorded internally by Tendermint in WAL (Write-Ahead Log) before the HTTP response is returned. Nevertheless, the following should be noted:</p>
+<ul class="last simple">
+<li>Transactions in WAL including the failed ones are not exposed in any of the BigchainDB or Tendermint APIs.</li>
+<li>Transactions are never fetched from WAL. WAL is never replayed.</li>
+<li>A critical failure (e.g. the system is out of disk space) may occur preventing transactions from being stored in WAL, even when the HTTP response indicates a success.</li>
+<li>If a transaction fails the validation because it conflicts with the other transactions of the same block, Tendermint includes it into its block, but BigchainDB does not store these transactions and does not offer any information about them in the APIs.</li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The posted transaction should be valid.
+The relevant
+<a class="reference external" href="https://github.com/bigchaindb/BEPs/tree/master/tx-specs/">BigchainDB Transactions Spec</a>
+explains how to build a valid transaction
+and how to check if a transaction is valid.
+One would normally use a driver such as the <a class="reference external" href="https://docs.bigchaindb.com/projects/py-driver/en/latest/index.html">BigchainDB Python Driver</a>
+to build a valid transaction.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">A client can subscribe to the
+WebSocket Event Stream API
+to listen for committed transactions.</p>
+</div>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">POST</span> <span class="nn">/api/v1/transactions?mode=async</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;asset&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello BigchainDB!&quot;</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;4957744b3ac54434b8270f2c854cc1040228c82ea4e72d66d2887a4d3e30b317&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;inputs&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;fulfillment&quot;</span><span class="p">:</span> <span class="s2">&quot;pGSAIDE5i63cn4X8T8N1sZ2mGkJD5lNRnBM4PZgI_zvzbr-cgUCy4BR6gKaYT-tdyAGPPpknIqI4JYQQ-p2nCg3_9BfOI-15vzldhyz-j_LZVpqAlRmbTzKS-Q5gs7ZIFaZCA_UD&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;fulfills&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nt">&quot;owners_before&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;4K9sWUMFwTgaDGPfdynrbxWqWS6sWmKbZoTjxLtVUibD&quot;</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">0</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;CREATE&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;outputs&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;amount&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;condition&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;details&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;public_key&quot;</span><span class="p">:</span> <span class="s2">&quot;4K9sWUMFwTgaDGPfdynrbxWqWS6sWmKbZoTjxLtVUibD&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ed25519-sha-256&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;uri&quot;</span><span class="p">:</span> <span class="s2">&quot;ni:///sha-256;PNYwdxaRaNw60N6LDFzOWO97b8tJeragczakL8PrAPc?fpt=ed25519-sha-256&amp;cost=131072&quot;</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;public_keys&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;4K9sWUMFwTgaDGPfdynrbxWqWS6sWmKbZoTjxLtVUibD&quot;</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;2.0&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">202</span> <span class="ne">Accepted</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;asset&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello BigchainDB!&quot;</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;4957744b3ac54434b8270f2c854cc1040228c82ea4e72d66d2887a4d3e30b317&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;inputs&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;fulfillment&quot;</span><span class="p">:</span> <span class="s2">&quot;pGSAIDE5i63cn4X8T8N1sZ2mGkJD5lNRnBM4PZgI_zvzbr-cgUCy4BR6gKaYT-tdyAGPPpknIqI4JYQQ-p2nCg3_9BfOI-15vzldhyz-j_LZVpqAlRmbTzKS-Q5gs7ZIFaZCA_UD&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;fulfills&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+      <span class="nt">&quot;owners_before&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;4K9sWUMFwTgaDGPfdynrbxWqWS6sWmKbZoTjxLtVUibD&quot;</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">0</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;CREATE&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;outputs&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;amount&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;condition&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;details&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;public_key&quot;</span><span class="p">:</span> <span class="s2">&quot;4K9sWUMFwTgaDGPfdynrbxWqWS6sWmKbZoTjxLtVUibD&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ed25519-sha-256&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;uri&quot;</span><span class="p">:</span> <span class="s2">&quot;ni:///sha-256;PNYwdxaRaNw60N6LDFzOWO97b8tJeragczakL8PrAPc?fpt=ed25519-sha-256&amp;cost=131072&quot;</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;public_keys&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;4K9sWUMFwTgaDGPfdynrbxWqWS6sWmKbZoTjxLtVUibD&quot;</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;2.0&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Response Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – <code class="docutils literal notranslate"><span class="pre">application/json</span></code></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.3">202 Accepted</a> – The meaning of this response depends on the value
+of the <code class="docutils literal notranslate"><span class="pre">mode</span></code> parameter. See above.</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – The posted transaction was invalid.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="post">
+<dt id="post--api-v1-transactions">
+<code class="descname">POST </code><code class="descname">/api/v1/transactions</code><a class="headerlink" href="#post--api-v1-transactions" title="Permalink to this definition">¶</a></dt>
+<dd><p>This endpoint (without any parameters) will push a new transaction.
+Since no <code class="docutils literal notranslate"><span class="pre">mode</span></code> parameter is included, the default mode is assumed: <code class="docutils literal notranslate"><span class="pre">async</span></code>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="transaction-outputs">
+<h2>Transaction Outputs<a class="headerlink" href="#transaction-outputs" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">/api/v1/outputs</span></code> endpoint returns transactions outputs filtered by a
+given public key, and optionally filtered to only include either spent or
+unspent outputs.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you want to do more sophisticated queries
+than those provided by the BigchainDB HTTP API,
+then one option is to connect to MongoDB directly (if possible)
+and do whatever queries MongoDB allows.
+For more about that option, see
+<a class="reference external" href="https://docs.bigchaindb.com/en/latest/query.html">the page about querying BigchainDB</a>.</p>
+</div>
+<dl class="get">
+<dt id="get--api-v1-outputs">
+<code class="descname">GET </code><code class="descname">/api/v1/outputs</code><a class="headerlink" href="#get--api-v1-outputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get transaction outputs by public key. The <code class="docutils literal notranslate"><span class="pre">public_key</span></code> parameter must be
+a base58 encoded ed25519 public key associated with transaction output
+ownership.</p>
+<p>Returns a list of transaction outputs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>public_key</strong> – Base58 encoded public key associated with output
+ownership. This parameter is mandatory and without it
+the endpoint will return a <code class="docutils literal notranslate"><span class="pre">400</span></code> response code.</li>
+<li><strong>spent</strong> – (Optional) Boolean value (<code class="docutils literal notranslate"><span class="pre">true</span></code> or <code class="docutils literal notranslate"><span class="pre">false</span></code>)
+indicating if the result set
+should include only spent or only unspent outputs. If not
+specified, the result includes all the outputs (both spent
+and unspent) associated with the <code class="docutils literal notranslate"><span class="pre">public_key</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--api-v1-outputs?public_key=public_key">
+<code class="descname">GET </code><code class="descname">/api/v1/outputs?public_key={public_key}</code><a class="headerlink" href="#get--api-v1-outputs?public_key=public_key" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Return all outputs, both spent and unspent, for the <code class="docutils literal notranslate"><span class="pre">public_key</span></code>.</div></blockquote>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/v1/outputs?public_key=1AAAbbb...ccc</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">[</span>
+  <span class="p">{</span>
+    <span class="nt">&quot;output_index&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nt">&quot;transaction_id&quot;</span><span class="p">:</span> <span class="s2">&quot;2d431073e1477f3073a4693ac7ff9be5634751de1b8abaa1f4e19548ef0b4b0e&quot;</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="nt">&quot;output_index&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nt">&quot;transaction_id&quot;</span><span class="p">:</span> <span class="s2">&quot;2d431073e1477f3073a4693ac7ff9be5634751de1b8abaa1f4e19548ef0b4b0e&quot;</span>
+  <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – A list of outputs was found and returned in the body of the response.</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – The request wasn’t understood by the server, e.g. the <code class="docutils literal notranslate"><span class="pre">public_key</span></code> querystring was not included in the request.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--api-v1-outputs?public_key=public_key&amp;spent=true">
+<code class="descname">GET </code><code class="descname">/api/v1/outputs?public_key={public_key}&amp;spent=true</code><a class="headerlink" href="#get--api-v1-outputs?public_key=public_key&spent=true" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Return all <strong>spent</strong> outputs for <code class="docutils literal notranslate"><span class="pre">public_key</span></code>.</div></blockquote>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/v1/outputs?public_key=1AAAbbb...ccc&amp;spent=true</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">[</span>
+  <span class="p">{</span>
+    <span class="nt">&quot;output_index&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nt">&quot;transaction_id&quot;</span><span class="p">:</span> <span class="s2">&quot;2d431073e1477f3073a4693ac7ff9be5634751de1b8abaa1f4e19548ef0b4b0e&quot;</span>
+  <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – A list of outputs were found and returned in the body of the response.</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – The request wasn’t understood by the server, e.g. the <code class="docutils literal notranslate"><span class="pre">public_key</span></code> querystring was not included in the request.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--api-v1-outputs?public_key=public_key&amp;spent=false">
+<code class="descname">GET </code><code class="descname">/api/v1/outputs?public_key={public_key}&amp;spent=false</code><a class="headerlink" href="#get--api-v1-outputs?public_key=public_key&spent=false" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Return all <strong>unspent</strong> outputs for <code class="docutils literal notranslate"><span class="pre">public_key</span></code>.</div></blockquote>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/v1/outputs?public_key=1AAAbbb...ccc&amp;spent=false</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">[</span>
+  <span class="p">{</span>
+    <span class="nt">&quot;output_index&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nt">&quot;transaction_id&quot;</span><span class="p">:</span> <span class="s2">&quot;2d431073e1477f3073a4693ac7ff9be5634751de1b8abaa1f4e19548ef0b4b0e&quot;</span>
+  <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – A list of outputs were found and returned in the body of the response.</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – The request wasn’t understood by the server, e.g. the <code class="docutils literal notranslate"><span class="pre">public_key</span></code> querystring was not included in the request.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="assets">
+<h2>Assets<a class="headerlink" href="#assets" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you want to do more sophisticated queries
+than those provided by the BigchainDB HTTP API,
+then one option is to connect to MongoDB directly (if possible)
+and do whatever queries MongoDB allows.
+For more about that option, see
+<a class="reference external" href="https://docs.bigchaindb.com/en/latest/query.html">the page about querying BigchainDB</a>.</p>
+</div>
+<dl class="get">
+<dt id="get--api-v1-assets">
+<code class="descname">GET </code><code class="descname">/api/v1/assets</code><a class="headerlink" href="#get--api-v1-assets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all the assets that match a given text search.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>search</strong> (<em>string</em>) – Text search string to query.</li>
+<li><strong>limit</strong> (<em>int</em>) – (Optional) Limit the number of returned assets. Defaults
+to <code class="docutils literal notranslate"><span class="pre">0</span></code> meaning return all matching assets.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--api-v1-assets-?search=search">
+<code class="descname">GET </code><code class="descname">/api/v1/assets/?search={search}</code><a class="headerlink" href="#get--api-v1-assets-?search=search" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Return all assets that match a given text search.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The <code class="docutils literal notranslate"><span class="pre">id</span></code> of the asset
+is the same <code class="docutils literal notranslate"><span class="pre">id</span></code> of the CREATE transaction that created the asset.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You can use <code class="docutils literal notranslate"><span class="pre">assets/?search</span></code> or <code class="docutils literal notranslate"><span class="pre">assets?search</span></code>.</p>
+</div>
+<p>If no assets match the text search it returns an empty list.</p>
+<p>If the text string is empty or the server does not support text search,
+a <code class="docutils literal notranslate"><span class="pre">400</span> <span class="pre">Bad</span> <span class="pre">Request</span></code> is returned.</p>
+<p>The results are sorted by text score.
+For more information about the behavior of text search, see <a class="reference external" href="https://docs.mongodb.com/manual/reference/operator/query/text/#behavior">MongoDB text
+search behavior</a>.</p>
+</div></blockquote>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/v1/assets/?search=bigchaindb</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">[</span>
+    <span class="p">{</span>
+        <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello BigchainDB 1!&quot;</span><span class="p">},</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;51ce82a14ca274d43e4992bbce41f6fdeb755f846e48e710a3bbb3b0cf8e4204&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello BigchainDB 2!&quot;</span><span class="p">},</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;b4e9005fa494d20e503d916fa87b74fe61c079afccd6e084260674159795ee31&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello BigchainDB 3!&quot;</span><span class="p">},</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;fa6bcb6a8fdea3dc2a860fcdc0e0c63c9cf5b25da8b02a4db4fb6a2d36d27791&quot;</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Response Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – <code class="docutils literal notranslate"><span class="pre">application/json</span></code></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – The query was executed successfully.</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – The query was not executed successfully. Returned if the
+text string is empty or the server does not support
+text search.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--api-v1-assets?search=search&amp;limit=n_documents">
+<code class="descname">GET </code><code class="descname">/api/v1/assets?search={search}&amp;limit={n_documents}</code><a class="headerlink" href="#get--api-v1-assets?search=search&limit=n_documents" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Return at most <code class="docutils literal notranslate"><span class="pre">n_documents</span></code> assets that match a given text search.</p>
+<p>If no assets match the text search it returns an empty list.</p>
+<p>If the text string is empty or the server does not support text search,
+a <code class="docutils literal notranslate"><span class="pre">400</span> <span class="pre">Bad</span> <span class="pre">Request</span></code> is returned.</p>
+<p>The results are sorted by text score.
+For more information about the behavior of text search, see <a class="reference external" href="https://docs.mongodb.com/manual/reference/operator/query/text/#behavior">MongoDB text
+search behavior</a>.</p>
+</div></blockquote>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/v1/assets?search=bigchaindb&amp;limit=2</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">[</span>
+    <span class="p">{</span>
+        <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello BigchainDB 1!&quot;</span><span class="p">},</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;51ce82a14ca274d43e4992bbce41f6fdeb755f846e48e710a3bbb3b0cf8e4204&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello BigchainDB 2!&quot;</span><span class="p">},</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;b4e9005fa494d20e503d916fa87b74fe61c079afccd6e084260674159795ee31&quot;</span>
+    <span class="p">},</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Response Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – <code class="docutils literal notranslate"><span class="pre">application/json</span></code></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – The query was executed successfully.</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – The query was not executed successfully. Returned if the
+text string is empty or the server does not support
+text search.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="transaction-metadata">
+<h2>Transaction Metadata<a class="headerlink" href="#transaction-metadata" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">If you want to do more sophisticated queries
+than those provided by the BigchainDB HTTP API,
+then one option is to connect to MongoDB directly (if possible)
+and do whatever queries MongoDB allows.
+For more about that option, see
+<a class="reference external" href="https://docs.bigchaindb.com/en/latest/query.html">the page about querying BigchainDB</a>.</p>
+</div>
+<dl class="get">
+<dt id="get--api-v1-metadata">
+<code class="descname">GET </code><code class="descname">/api/v1/metadata</code><a class="headerlink" href="#get--api-v1-metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all the metadata objects that match a given text search.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>search</strong> (<em>string</em>) – Text search string to query.</li>
+<li><strong>limit</strong> (<em>int</em>) – (Optional) Limit the number of returned metadata objects. Defaults
+to <code class="docutils literal notranslate"><span class="pre">0</span></code> meaning return all matching objects.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--api-v1-metadata-?search=search">
+<code class="descname">GET </code><code class="descname">/api/v1/metadata/?search={search}</code><a class="headerlink" href="#get--api-v1-metadata-?search=search" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Return all metadata objects that match a given text search.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The <code class="docutils literal notranslate"><span class="pre">id</span></code> of the metadata
+is the same <code class="docutils literal notranslate"><span class="pre">id</span></code> of the transaction where it was defined.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You can use <code class="docutils literal notranslate"><span class="pre">metadata/?search</span></code> or <code class="docutils literal notranslate"><span class="pre">metadata?search</span></code>.</p>
+</div>
+<p>If no metadata objects match the text search it returns an empty list.</p>
+<p>If the text string is empty or the server does not support text search,
+a <code class="docutils literal notranslate"><span class="pre">400</span> <span class="pre">Bad</span> <span class="pre">Request</span></code> is returned.</p>
+<p>The results are sorted by text score.
+For more information about the behavior of text search, see <a class="reference external" href="https://docs.mongodb.com/manual/reference/operator/query/text/#behavior">MongoDB text
+search behavior</a>.</p>
+</div></blockquote>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/v1/metadata/?search=bigchaindb</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">[</span>
+    <span class="p">{</span>
+        <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;metakey1&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello BigchainDB 1!&quot;</span><span class="p">},</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;51ce82a14ca274d43e4992bbce41f6fdeb755f846e48e710a3bbb3b0cf8e4204&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;metakey2&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello BigchainDB 2!&quot;</span><span class="p">},</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;b4e9005fa494d20e503d916fa87b74fe61c079afccd6e084260674159795ee31&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;metakey3&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello BigchainDB 3!&quot;</span><span class="p">},</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;fa6bcb6a8fdea3dc2a860fcdc0e0c63c9cf5b25da8b02a4db4fb6a2d36d27791&quot;</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Response Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – <code class="docutils literal notranslate"><span class="pre">application/json</span></code></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – The query was executed successfully.</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – The query was not executed successfully. Returned if the
+text string is empty or the server does not support
+text search.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--api-v1-metadata-?search=search&amp;limit=n_documents">
+<code class="descname">GET </code><code class="descname">/api/v1/metadata/?search={search}&amp;limit={n_documents}</code><a class="headerlink" href="#get--api-v1-metadata-?search=search&limit=n_documents" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Return at most <code class="docutils literal notranslate"><span class="pre">n_documents</span></code> metadata objects that match a given text search.</p>
+<p>If no metadata objects match the text search it returns an empty list.</p>
+<p>If the text string is empty or the server does not support text search,
+a <code class="docutils literal notranslate"><span class="pre">400</span> <span class="pre">Bad</span> <span class="pre">Request</span></code> is returned.</p>
+<p>The results are sorted by text score.
+For more information about the behavior of text search, see <a class="reference external" href="https://docs.mongodb.com/manual/reference/operator/query/text/#behavior">MongoDB text
+search behavior</a>.</p>
+</div></blockquote>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/v1/metadata?search=bigchaindb&amp;limit=2</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">[</span>
+    <span class="p">{</span>
+        <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello BigchainDB 1!&quot;</span><span class="p">},</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;51ce82a14ca274d43e4992bbce41f6fdeb755f846e48e710a3bbb3b0cf8e4204&quot;</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello BigchainDB 2!&quot;</span><span class="p">},</span>
+        <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;b4e9005fa494d20e503d916fa87b74fe61c079afccd6e084260674159795ee31&quot;</span>
+    <span class="p">},</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Response Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – <code class="docutils literal notranslate"><span class="pre">application/json</span></code></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – The query was executed successfully.</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – The query was not executed successfully. Returned if the
+text string is empty or the server does not support
+text search.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="validators">
+<h2>Validators<a class="headerlink" href="#validators" title="Permalink to this headline">¶</a></h2>
+<dl class="get">
+<dt id="get--api-v1-validators">
+<code class="descname">GET </code><code class="descname">/api/v1/validators</code><a class="headerlink" href="#get--api-v1-validators" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>Return the local validators set of a given node.</div></blockquote>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/v1/validators</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">[</span>
+    <span class="p">{</span>
+        <span class="nt">&quot;pub_key&quot;</span><span class="p">:</span> <span class="p">{</span>
+               <span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="s2">&quot;4E2685D9016126864733225BE00F005515200727FBAB1312FC78C8B76831255A&quot;</span><span class="p">,</span>
+               <span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;ed25519&quot;</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;power&quot;</span><span class="p">:</span> <span class="mi">10</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+         <span class="nt">&quot;pub_key&quot;</span><span class="p">:</span> <span class="p">{</span>
+               <span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="s2">&quot;608D839D7100466D6BA6BE79C320F8B81DE93CFAA58CF9768CF921C6371F2553&quot;</span><span class="p">,</span>
+               <span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;ed25519&quot;</span>
+         <span class="p">},</span>
+         <span class="nt">&quot;power&quot;</span><span class="p">:</span> <span class="mi">5</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Response Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – <code class="docutils literal notranslate"><span class="pre">application/json</span></code></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – The query was executed successfully and validators set was returned.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="blocks">
+<h2>Blocks<a class="headerlink" href="#blocks" title="Permalink to this headline">¶</a></h2>
+<dl class="get">
+<dt id="get--api-v1-blocks-block_height">
+<code class="descname">GET </code><code class="descname">/api/v1/blocks/{block_height}</code><a class="headerlink" href="#get--api-v1-blocks-block_height" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the block with the height <code class="docutils literal notranslate"><span class="pre">block_height</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>block_height</strong> (<em>integer</em>) – block height</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/v1/blocks/1</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">{</span>
+  <span class="nt">&quot;height&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nt">&quot;transactions&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;asset&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;msg&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello BigchainDB!&quot;</span>
+        <span class="p">}</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;4957744b3ac54434b8270f2c854cc1040228c82ea4e72d66d2887a4d3e30b317&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;inputs&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="nt">&quot;fulfillment&quot;</span><span class="p">:</span> <span class="s2">&quot;pGSAIDE5i63cn4X8T8N1sZ2mGkJD5lNRnBM4PZgI_zvzbr-cgUCy4BR6gKaYT-tdyAGPPpknIqI4JYQQ-p2nCg3_9BfOI-15vzldhyz-j_LZVpqAlRmbTzKS-Q5gs7ZIFaZCA_UD&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;fulfills&quot;</span><span class="p">:</span> <span class="kc">null</span><span class="p">,</span>
+          <span class="nt">&quot;owners_before&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;4K9sWUMFwTgaDGPfdynrbxWqWS6sWmKbZoTjxLtVUibD&quot;</span>
+          <span class="p">]</span>
+        <span class="p">}</span>
+      <span class="p">],</span>
+      <span class="nt">&quot;metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;sequence&quot;</span><span class="p">:</span> <span class="mi">0</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;operation&quot;</span><span class="p">:</span> <span class="s2">&quot;CREATE&quot;</span><span class="p">,</span>
+      <span class="nt">&quot;outputs&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="nt">&quot;amount&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+          <span class="nt">&quot;condition&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;details&quot;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="nt">&quot;public_key&quot;</span><span class="p">:</span> <span class="s2">&quot;4K9sWUMFwTgaDGPfdynrbxWqWS6sWmKbZoTjxLtVUibD&quot;</span><span class="p">,</span>
+              <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;ed25519-sha-256&quot;</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;uri&quot;</span><span class="p">:</span> <span class="s2">&quot;ni:///sha-256;PNYwdxaRaNw60N6LDFzOWO97b8tJeragczakL8PrAPc?fpt=ed25519-sha-256&amp;cost=131072&quot;</span>
+          <span class="p">},</span>
+          <span class="nt">&quot;public_keys&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;4K9sWUMFwTgaDGPfdynrbxWqWS6sWmKbZoTjxLtVUibD&quot;</span>
+          <span class="p">]</span>
+        <span class="p">}</span>
+      <span class="p">],</span>
+      <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;2.0&quot;</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Response Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – <code class="docutils literal notranslate"><span class="pre">application/json</span></code></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – A block with that block height was found.</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – The request wasn’t understood by the server, e.g. just requesting <code class="docutils literal notranslate"><span class="pre">/blocks</span></code> without the <code class="docutils literal notranslate"><span class="pre">block_height</span></code>.</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.5">404 Not Found</a> – A block with that block height was not found.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--api-v1-blocks">
+<code class="descname">GET </code><code class="descname">/api/v1/blocks</code><a class="headerlink" href="#get--api-v1-blocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>The unfiltered <code class="docutils literal notranslate"><span class="pre">/blocks</span></code> endpoint without any query parameters
+returns a <code class="docutils literal notranslate"><span class="pre">400</span> <span class="pre">Bad</span> <span class="pre">Request</span></code> status code.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/v1/blocks</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">400</span> <span class="ne">Bad Request</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – The request wasn’t understood by the server, e.g. just requesting <code class="docutils literal notranslate"><span class="pre">/blocks</span></code> without the <code class="docutils literal notranslate"><span class="pre">block_height</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="get">
+<dt id="get--api-v1-blocks?transaction_id=transaction_id">
+<code class="descname">GET </code><code class="descname">/api/v1/blocks?transaction_id={transaction_id}</code><a class="headerlink" href="#get--api-v1-blocks?transaction_id=transaction_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a list of block IDs (block heights), such that the blocks with those IDs contain a transaction with the ID <code class="docutils literal notranslate"><span class="pre">transaction_id</span></code>. A correct response may consist of an empty list or a list with one block ID.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In case no block was found, an empty list and an HTTP status code
+<code class="docutils literal notranslate"><span class="pre">200</span> <span class="pre">OK</span></code> is returned, as the request was still successful.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Query Parameters:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first last simple">
+<li><strong>transaction_id</strong> (<em>string</em>) – (Required) transaction ID</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="nf">GET</span> <span class="nn">/api/v1/blocks?transaction_id=4957744b3ac54434b8270f2c854cc1040228c82ea4e72d66d2887a4d3e30b317</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http notranslate"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+
+<span class="p">[</span>
+  <span class="mi">1</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">Response Headers:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><ul class="first simple">
+<li><a class="reference external" href="https://tools.ietf.org/html/rfc7231#section-3.1.1.5">Content-Type</a> – <code class="docutils literal notranslate"><span class="pre">application/json</span></code></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> – The request was properly formed and zero or more blocks were found containing the specified <code class="docutils literal notranslate"><span class="pre">transaction_id</span></code>.</li>
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4.1">400 Bad Request</a> – The request wasn’t understood by the server, e.g. just requesting <code class="docutils literal notranslate"><span class="pre">/blocks</span></code>, without defining <code class="docutils literal notranslate"><span class="pre">transaction_id</span></code>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="determining-the-api-root-url">
+<span id="id10"></span><h2>Determining the API Root URL<a class="headerlink" href="#determining-the-api-root-url" title="Permalink to this headline">¶</a></h2>
+<p>When you start BigchainDB Server using <code class="docutils literal notranslate"><span class="pre">bigchaindb</span> <span class="pre">start</span></code>,
+an HTTP API is exposed at some address. The default is:</p>
+<p><code class="docutils literal notranslate"><span class="pre">http://localhost:9984/api/v1/</span></code></p>
+<p>It’s bound to <code class="docutils literal notranslate"><span class="pre">localhost</span></code>,
+so you can access it from the same machine,
+but it won’t be directly accessible from the outside world.
+(The outside world could connect via a SOCKS proxy or whatnot.)</p>
+<p>The documentation about BigchainDB Server <a class="reference internal" href="server-reference/configuration.html"><span class="doc">Configuration Settings</span></a>
+has a section about how to set <code class="docutils literal notranslate"><span class="pre">server.bind</span></code> so as to make
+the HTTP API publicly accessible.</p>
+<p>If the API endpoint is publicly accessible,
+then the public API Root URL is determined as follows:</p>
+<ul class="simple">
+<li>The public IP address (like 12.34.56.78)
+is the public IP address of the machine exposing
+the HTTP API to the public internet (e.g. either the machine hosting
+Gunicorn or the machine running the reverse proxy such as NGINX).
+It’s determined by AWS, Azure, Rackspace, or whoever is hosting the machine.</li>
+<li>The DNS hostname (like example.com) is determined by DNS records,
+such as an “A Record” associating example.com with 12.34.56.78</li>
+<li>The port (like 9984) is determined by the <code class="docutils literal notranslate"><span class="pre">server.bind</span></code> setting
+if Gunicorn is exposed directly to the public Internet.
+If a reverse proxy (like NGINX) is exposed directly to the public Internet
+instead, then it could expose the HTTP API on whatever port it wants to.
+(It should expose the HTTP API on port 9984, but it’s not bound to do
+that by anything other than convention.)</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="events/index.html" class="btn btn-neutral float-right" title="The Events API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="server-reference/bigchaindb-cli.html" class="btn btn-neutral float-left" title="Command Line Interface (CLI)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

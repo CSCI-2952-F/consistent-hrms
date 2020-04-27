@@ -1,0 +1,535 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Log Analytics on Azure &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Configure MongoDB Cloud Manager for Monitoring" href="cloud-manager.html" />
+    <link rel="prev" title="How to Configure a BigchainDB Node" href="node-config-map-and-secrets.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../simple-deployment-template/index.html">Simple Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Kubernetes Deployment Template</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="workflow.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ca-installation.html">How to Set Up a Self-Signed Certificate Authority</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server-tls-certificate.html">How to Generate a Server Certificate for MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client-tls-certificate.html">How to Generate a Client Certificate for MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revoke-tls-certificate.html">How to Revoke an SSL/TLS Certificate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="template-kubernetes-azure.html">Template: Deploy a Kubernetes Cluster on Azure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node-on-kubernetes.html">Kubernetes Template: Deploy a Single BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node-config-map-and-secrets.html">How to Configure a BigchainDB Node</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Log Analytics on Azure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#step-1-setup">Step 1: Setup</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#the-web-browser-way">The Web Browser Way</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#the-command-line-way">The Command-Line Way</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#step-2-deploy-the-oms-agents">Step 2: Deploy the OMS Agents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search-the-oms-logs">Search the OMS Logs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-an-email-alert">Create an Email Alert</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#some-useful-management-tasks">Some Useful Management Tasks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cloud-manager.html">Configure MongoDB Cloud Manager for Monitoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="easy-rsa.html">How to Install &amp; Configure Easy-RSA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upgrade-on-kubernetes.html">Kubernetes Template: Upgrade all Software in a BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bigchaindb-network-on-kubernetes.html">Kubernetes Template: Deploying a BigchainDB network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tectonic-azure.html">Walkthrough: Deploy a Kubernetes Cluster on Azure using Tectonic by CoreOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshoot.html">Cluster Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html">Architecture of a BigchainDB Node Running in a Kubernetes Cluster</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Kubernetes Deployment Template</a> &raquo;</li>
+        
+      <li>Log Analytics on Azure</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/k8s-deployment-template/log-analytics.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="log-analytics-on-azure">
+<h1>Log Analytics on Azure<a class="headerlink" href="#log-analytics-on-azure" title="Permalink to this headline">¶</a></h1>
+<p>This page describes how we use Microsoft Operations Management Suite (OMS)
+to collect all logs from a Kubernetes cluster,
+to search those logs,
+and to set up email alerts based on log messages.
+The <a class="reference internal" href="#oms-k8s-references"><span class="std std-ref">References</span></a> section (below) contains links
+to more detailed documentation.</p>
+<p>There are two steps:</p>
+<ol class="arabic simple">
+<li>Setup: Create a log analytics OMS workspace
+and a Containers solution under that workspace.</li>
+<li>Deploy OMS agents to your Kubernetes cluster.</li>
+</ol>
+<div class="section" id="step-1-setup">
+<h2>Step 1: Setup<a class="headerlink" href="#step-1-setup" title="Permalink to this headline">¶</a></h2>
+<p>Step 1 can be done the web browser way or the command-line way.</p>
+<div class="section" id="the-web-browser-way">
+<h3>The Web Browser Way<a class="headerlink" href="#the-web-browser-way" title="Permalink to this headline">¶</a></h3>
+<p>To create a new log analytics OMS workspace:</p>
+<ol class="arabic simple">
+<li>Go to the Azure Portal in your web browser.</li>
+<li>Click on <strong>More services &gt;</strong> in the lower left corner of the Azure Portal.</li>
+<li>Type “log analytics” or similar.</li>
+<li>Select <strong>Log Analytics</strong> from the list of options.</li>
+<li>Click on <strong>+ Add</strong> to add a new log analytics OMS workspace.</li>
+<li>Give answers to the questions. You can call the OMS workspace anything,
+but use the same resource group and location as your Kubernetes cluster.
+The free option will suffice, but of course you can also use a paid one.</li>
+</ol>
+<p>To add a “Containers solution” to that new workspace:</p>
+<ol class="arabic simple">
+<li>In Azure Portal, in the Log Analytics section, click the name of the new workspace</li>
+<li>Click <strong>OMS Workspace</strong>.</li>
+<li>Click <strong>OMS Portal</strong>. It should launch the OMS Portal in a new tab.</li>
+<li>Click the <strong>Solutions Gallery</strong> tile.</li>
+<li>Click the <strong>Containers</strong> tile.</li>
+<li>Click <strong>Add</strong>.</li>
+</ol>
+</div>
+<div class="section" id="the-command-line-way">
+<h3>The Command-Line Way<a class="headerlink" href="#the-command-line-way" title="Permalink to this headline">¶</a></h3>
+<p>We’ll assume your Kubernetes cluster has a resource
+group named:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">resource_group</span></code></li>
+</ul>
+<p>and the workspace we’ll create will be named:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">work_space</span></code></li>
+</ul>
+<p>If you feel creative you may replace these names by more interesting ones.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ az group deployment create --debug <span class="se">\</span>
+    --resource-group resource_group <span class="se">\</span>
+    --name <span class="s2">&quot;Microsoft.LogAnalyticsOMS&quot;</span> <span class="se">\</span>
+    --template-file log_analytics_oms.json <span class="se">\</span>
+    --parameters @log_analytics_oms.parameters.json
+</pre></div>
+</div>
+<p>An example of a simple template file (<code class="docutils literal notranslate"><span class="pre">--template-file</span></code>):</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;contentVersion&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0.0&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;sku&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;String&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;workspaceName&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;String&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;solutionType&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;String&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;resources&quot;</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="nt">&quot;apiVersion&quot;</span><span class="p">:</span> <span class="s2">&quot;2015-03-20&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Microsoft.OperationalInsights/workspaces&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;[parameters(&#39;workspaceName&#39;)]&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="s2">&quot;[resourceGroup().location]&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+          <span class="nt">&quot;sku&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;[parameters(&#39;sku&#39;)]&quot;</span>
+          <span class="p">}</span>
+        <span class="p">},</span>
+        <span class="nt">&quot;resources&quot;</span><span class="p">:</span> <span class="p">[</span>
+          <span class="p">{</span>
+            <span class="nt">&quot;apiVersion&quot;</span><span class="p">:</span> <span class="s2">&quot;2015-11-01-preview&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;location&quot;</span><span class="p">:</span> <span class="s2">&quot;[resourceGroup().location]&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;[Concat(parameters(&#39;solutionType&#39;), &#39;(&#39;, parameters(&#39;workspaceName&#39;), &#39;)&#39;)]&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Microsoft.OperationsManagement/solutions&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;[Concat(resourceGroup().id, &#39;/providers/Microsoft.OperationsManagement/solutions/&#39;, parameters(&#39;solutionType&#39;), &#39;(&#39;, parameters(&#39;workspaceName&#39;), &#39;)&#39;)]&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;dependsOn&quot;</span><span class="p">:</span> <span class="p">[</span>
+              <span class="s2">&quot;[concat(&#39;Microsoft.OperationalInsights/workspaces/&#39;, parameters(&#39;workspaceName&#39;))]&quot;</span>
+            <span class="p">],</span>
+            <span class="nt">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="nt">&quot;workspaceResourceId&quot;</span><span class="p">:</span> <span class="s2">&quot;[resourceId(&#39;Microsoft.OperationalInsights/workspaces/&#39;, parameters(&#39;workspaceName&#39;))]&quot;</span>
+            <span class="p">},</span>
+            <span class="nt">&quot;plan&quot;</span><span class="p">:</span> <span class="p">{</span>
+              <span class="nt">&quot;publisher&quot;</span><span class="p">:</span> <span class="s2">&quot;Microsoft&quot;</span><span class="p">,</span>
+              <span class="nt">&quot;product&quot;</span><span class="p">:</span> <span class="s2">&quot;[Concat(&#39;OMSGallery/&#39;, parameters(&#39;solutionType&#39;))]&quot;</span><span class="p">,</span>
+              <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;[Concat(parameters(&#39;solutionType&#39;), &#39;(&#39;, parameters(&#39;workspaceName&#39;), &#39;)&#39;)]&quot;</span><span class="p">,</span>
+              <span class="nt">&quot;promotionCode&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span>
+            <span class="p">}</span>
+          <span class="p">}</span>
+        <span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>An example of the associated parameter file (<code class="docutils literal notranslate"><span class="pre">--parameters</span></code>):</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;$schema&quot;</span><span class="p">:</span> <span class="s2">&quot;https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;contentVersion&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0.0.0&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;sku&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;Free&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;workspaceName&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;work_space&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;solutionType&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;Containers&quot;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="step-2-deploy-the-oms-agents">
+<h2>Step 2: Deploy the OMS Agents<a class="headerlink" href="#step-2-deploy-the-oms-agents" title="Permalink to this headline">¶</a></h2>
+<p>To deploy an OMS agent, two important pieces of information are needed:</p>
+<ol class="arabic simple">
+<li>workspace id</li>
+<li>workspace key</li>
+</ol>
+<p>You can obtain the workspace id using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ az resource show <span class="se">\</span>
+    --resource-group resource_group
+    --resource-type Microsoft.OperationalInsights/workspaces
+    --name work_space <span class="se">\</span>
+    <span class="p">|</span> grep customerId
+<span class="s2">&quot;customerId&quot;</span>: <span class="s2">&quot;12345678-1234-1234-1234-123456789012&quot;</span>,
+</pre></div>
+</div>
+<p>Until we figure out a way to obtain the <em>workspace key</em> via the command line,
+you can get it via the OMS Portal.
+To get to the OMS Portal, go to the Azure Portal and click on:</p>
+<p>Resource Groups &gt; (Your Kubernetes cluster’s resource group) &gt; Log analytics (OMS) &gt; (Name of the only item listed) &gt; OMS Workspace &gt; OMS Portal</p>
+<p>(Let us know if you find a faster way.)
+Then see <a class="reference external" href="https://docs.microsoft.com/en-us/azure/container-service/container-service-kubernetes-oms#obtain-your-workspace-id-and-key">Microsoft’s instructions to obtain your workspace ID and key</a> (via the OMS Portal).</p>
+<p>Once you have the workspace id and key, you can include them in the following
+YAML file (<a class="reference download internal" download="" href="../_downloads/c83fc2d3d6de83301eb9f3bfb84ce1c3/oms-daemonset.yaml"><code class="xref download docutils literal notranslate"><span class="pre">oms-daemonset.yaml</span></code></a>):</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># oms-daemonset.yaml</span>
+<span class="nt">apiVersion</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">extensions/v1beta1</span>
+<span class="nt">kind</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">DaemonSet</span>
+<span class="nt">metadata</span><span class="p">:</span>
+  <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">omsagent</span>
+<span class="nt">spec</span><span class="p">:</span>
+  <span class="nt">template</span><span class="p">:</span>
+    <span class="nt">metadata</span><span class="p">:</span>
+      <span class="nt">labels</span><span class="p">:</span>
+        <span class="nt">app</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">omsagent</span>
+    <span class="nt">spec</span><span class="p">:</span>
+      <span class="nt">containers</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">env</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">WSID</span>
+          <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;workspace_id&gt;</span>
+        <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">KEY</span>
+          <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">&lt;workspace_key&gt;</span>
+        <span class="nt">image</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">microsoft/oms</span>
+        <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">omsagent</span>
+        <span class="nt">ports</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="nt">containerPort</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">25225</span>
+          <span class="nt">protocol</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">TCP</span>
+        <span class="nt">securityContext</span><span class="p">:</span>
+          <span class="nt">privileged</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="nt">volumeMounts</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="nt">mountPath</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/var/run/docker.sock</span>
+          <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker-sock</span>
+      <span class="nt">volumes</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">docker-sock</span>
+        <span class="nt">hostPath</span><span class="p">:</span>
+          <span class="nt">path</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">/var/run/docker.sock</span>
+</pre></div>
+</div>
+<p>To deploy the OMS agents (one per Kubernetes node, i.e. one per computer),
+simply run the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ kubectl create -f oms-daemonset.yaml
+</pre></div>
+</div>
+</div>
+<div class="section" id="search-the-oms-logs">
+<h2>Search the OMS Logs<a class="headerlink" href="#search-the-oms-logs" title="Permalink to this headline">¶</a></h2>
+<p>OMS should now be getting, storing and indexing all the logs
+from all the containers in your Kubernetes cluster.
+You can search the OMS logs from the Azure Portal
+or the OMS Portal, but at the time of writing,
+there was more functionality in the OMS Portal
+(e.g. the ability to create an Alert based on a search).</p>
+<p>There are instructions to get to the OMS Portal above.
+Once you’re in the OMS Portal, click on <strong>Log Search</strong>
+and enter a query.
+Here are some example queries:</p>
+<p>All logging messages containing the strings “critical” or “error” (not case-sensitive):</p>
+<p><code class="docutils literal notranslate"><span class="pre">Type=ContainerLog</span> <span class="pre">(critical</span> <span class="pre">OR</span> <span class="pre">error)</span></code></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You can filter the results even more by clicking on things in the left sidebar.
+For OMS Log Search syntax help, see the
+<a class="reference external" href="https://docs.microsoft.com/en-us/azure/log-analytics/log-analytics-search-reference">Log Analytics search reference</a>.</p>
+</div>
+<p>All logging messages containing the string “error” but not “404”:</p>
+<p><code class="docutils literal notranslate"><span class="pre">Type=ContainerLog</span> <span class="pre">error</span> <span class="pre">NOT(404)</span></code></p>
+<p>All logging messages containing the string “critical” but not “CriticalAddonsOnly”:</p>
+<p><code class="docutils literal notranslate"><span class="pre">Type=ContainerLog</span> <span class="pre">critical</span> <span class="pre">NOT(CriticalAddonsOnly)</span></code></p>
+<p>All logging messages from containers running the Docker image bigchaindb/nginx_3scale:1.3, containing the string “GET” but not the strings “Go-http-client” or “runscope” (where those exclusions filter out tests by Kubernetes and Runscope):</p>
+<p><code class="docutils literal notranslate"><span class="pre">Type=ContainerLog</span> <span class="pre">Image=&quot;bigchaindb/nginx_3scale:1.3&quot;</span> <span class="pre">GET</span> <span class="pre">NOT(&quot;Go-http-client&quot;)</span> <span class="pre">NOT(runscope)</span></code></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">We wrote a small Python 3 script to analyze the logs found by the above NGINX search.
+It’s in <code class="docutils literal notranslate"><span class="pre">k8s/logging-and-monitoring/analyze.py</span></code>. The docsting at the top
+of the script explains how to use it.</p>
+</div>
+</div>
+<div class="section" id="create-an-email-alert">
+<h2>Create an Email Alert<a class="headerlink" href="#create-an-email-alert" title="Permalink to this headline">¶</a></h2>
+<p>Once you’re satisfied with an OMS Log Search query string,
+click the <strong>🔔 Alert</strong> icon in the top menu,
+fill in the form,
+and click <strong>Save</strong> when you’re done.</p>
+</div>
+<div class="section" id="some-useful-management-tasks">
+<h2>Some Useful Management Tasks<a class="headerlink" href="#some-useful-management-tasks" title="Permalink to this headline">¶</a></h2>
+<p>List workspaces:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ az resource list <span class="se">\</span>
+    --resource-group resource_group <span class="se">\</span>
+    --resource-type Microsoft.OperationalInsights/workspaces
+</pre></div>
+</div>
+<p>List solutions:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ az resource list <span class="se">\</span>
+    --resource-group resource_group <span class="se">\</span>
+    --resource-type Microsoft.OperationsManagement/solutions
+</pre></div>
+</div>
+<p>Delete the containers solution:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ az group deployment delete --debug <span class="se">\</span>
+    --resource-group resource_group <span class="se">\</span>
+    --name Microsoft.ContainersOMS
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ az resource delete <span class="se">\</span>
+    --resource-group resource_group <span class="se">\</span>
+    --resource-type Microsoft.OperationsManagement/solutions <span class="se">\</span>
+    --name <span class="s2">&quot;Containers(work_space)&quot;</span>
+</pre></div>
+</div>
+<p>Delete the workspace:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ az group deployment delete --debug <span class="se">\</span>
+    --resource-group resource_group <span class="se">\</span>
+    --name Microsoft.LogAnalyticsOMS
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ az resource delete <span class="se">\</span>
+    --resource-group resource_group <span class="se">\</span>
+    --resource-type Microsoft.OperationalInsights/workspaces <span class="se">\</span>
+    --name work_space
+</pre></div>
+</div>
+</div>
+<div class="section" id="references">
+<span id="oms-k8s-references"></span><h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/container-service/container-service-kubernetes-oms">Monitor an Azure Container Service cluster with Microsoft Operations Management Suite (OMS)</a></li>
+<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/log-analytics/log-analytics-template-workspace-configuration">Manage Log Analytics using Azure Resource Manager templates</a></li>
+<li><a class="reference external" href="https://docs.microsoft.com/en-us/cli/azure/group/deployment">azure commands for deployments</a>
+(<code class="docutils literal notranslate"><span class="pre">az</span> <span class="pre">group</span> <span class="pre">deployment</span></code>)</li>
+<li><a class="reference external" href="https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-authoring-templates">Understand the structure and syntax of Azure Resource Manager templates</a></li>
+<li><a class="reference external" href="https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/">Kubernetes DaemonSet</a></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="cloud-manager.html" class="btn btn-neutral float-right" title="Configure MongoDB Cloud Manager for Monitoring" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="node-config-map-and-secrets.html" class="btn btn-neutral float-left" title="How to Configure a BigchainDB Node" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

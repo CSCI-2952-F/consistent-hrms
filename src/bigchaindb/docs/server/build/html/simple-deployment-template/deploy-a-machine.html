@@ -1,0 +1,304 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Deploy a Machine for Your BigchainDB Node &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Set Up NGINX" href="set-up-nginx.html" />
+    <link rel="prev" title="Simple Deployment Template" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Simple Deployment Template</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Deploy a Machine for Your BigchainDB Node</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ip-addresses">IP Addresses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#operating-system">Operating System</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#network-security-group">Network Security Group</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#update-your-system">Update Your System</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#node-security">Node Security</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dns-setup">DNS Setup</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="set-up-nginx.html">Set Up NGINX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="set-up-node-software.html">Set Up BigchainDB, MongoDB and Tendermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network-setup.html">How to Set Up a BigchainDB Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tips.html">Tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../k8s-deployment-template/index.html">Kubernetes Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Simple Deployment Template</a> &raquo;</li>
+        
+      <li>Deploy a Machine for Your BigchainDB Node</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/simple-deployment-template/deploy-a-machine.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <!---
+Copyright © 2020 Interplanetary Database Association e.V.,
+BigchainDB and IPDB software contributors.
+SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
+Code is Apache-2.0 and docs are CC-BY-4.0
+---><div class="section" id="deploy-a-machine-for-your-bigchaindb-node">
+<h1>Deploy a Machine for Your BigchainDB Node<a class="headerlink" href="#deploy-a-machine-for-your-bigchaindb-node" title="Permalink to this headline">¶</a></h1>
+<p>The first step is to deploy a machine for your BigchainDB node.
+It might be a virtual machine (VM) or a real machine.
+If you follow this simple deployment template, all your node’s
+software will run on that one machine.</p>
+<p>We don’t make any assumptions about <em>where</em> you run the machine.
+It might be in Azure, AWS, your data center or a Raspberry Pi.</p>
+<div class="section" id="ip-addresses">
+<h2>IP Addresses<a class="headerlink" href="#ip-addresses" title="Permalink to this headline">¶</a></h2>
+<p>The following instructions assume all the nodes
+in the network (including yours) have public IP addresses.
+(A BigchainDB network <em>can</em> be run inside a private network,
+using private IP addresses, but we don’t cover that here.)</p>
+</div>
+<div class="section" id="operating-system">
+<h2>Operating System<a class="headerlink" href="#operating-system" title="Permalink to this headline">¶</a></h2>
+<p><strong>Use Ubuntu 18.04 or Ubuntu Server 18.04 as the operating system.</strong></p>
+<p>Similar instructions will work on other versions of Ubuntu,
+and other recent Debian-like Linux distros,
+but you may have to change the names of the packages,
+or install more packages.</p>
+</div>
+<div class="section" id="network-security-group">
+<h2>Network Security Group<a class="headerlink" href="#network-security-group" title="Permalink to this headline">¶</a></h2>
+<p>If your machine is in AWS or Azure, for example, <em>and</em>
+you want users to connect to BigchainDB via HTTPS,
+then you should configure its network security group
+to allow all incoming and outgoing traffic for:</p>
+<ul class="simple">
+<li>TCP on port 22 (SSH)</li>
+<li>TCP on port 80 (HTTP)</li>
+<li>TCP on port 443 (HTTPS)</li>
+<li>Any protocol on port 26656 (Tendermint P2P)</li>
+</ul>
+<p>If you don’t care about HTTPS, then forget about port 443,
+and replace port 80 with port 9984 (the default BigchainDB HTTP port).</p>
+</div>
+<div class="section" id="update-your-system">
+<h2>Update Your System<a class="headerlink" href="#update-your-system" title="Permalink to this headline">¶</a></h2>
+<p>SSH into your machine and update all its OS-level packages:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">update</span>
+<span class="n">sudo</span> <span class="n">apt</span> <span class="n">full</span><span class="o">-</span><span class="n">upgrade</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="node-security">
+<h2>Node Security<a class="headerlink" href="#node-security" title="Permalink to this headline">¶</a></h2>
+<p>If you’re going to use your node in production,
+then you should take additional steps to secure it.
+We don’t cover that here; there are many books and websites
+about securing Linux machines.</p>
+</div>
+<div class="section" id="dns-setup">
+<h2>DNS Setup<a class="headerlink" href="#dns-setup" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Register a domain name for your BigchainDB node, such as <code class="docutils literal notranslate"><span class="pre">example.com</span></code></li>
+<li>Pick a subdomain of that domain for your BigchainDB node, such as <code class="docutils literal notranslate"><span class="pre">bnode.example.com</span></code></li>
+<li>Create a DNS “A Record” pointing your chosen subdomain (such as <code class="docutils literal notranslate"><span class="pre">bnode.example.com</span></code>)
+at your machine’s IP address.</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="set-up-nginx.html" class="btn btn-neutral float-right" title="Set Up NGINX" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Simple Deployment Template" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

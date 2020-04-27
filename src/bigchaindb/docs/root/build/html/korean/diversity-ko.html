@@ -1,0 +1,252 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>노드 다양성의 종류 &mdash; BigchainDB  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="어떻게 BigchainDB는 불변성을 갖는가" href="immutable-ko.html" />
+    <link rel="prev" title="BigchainDB 분산 방식" href="decentralized_kor.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BigchainDB
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">BigchainDB Docs Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../production-ready.html">Production-Ready?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../terminology.html">Terminology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decentralized.html">How BigchainDB is Decentralized</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../diversity.html">Kinds of Node Diversity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../immutable.html">How BigchainDB is Immutable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bft.html">BigchainDB and Byzantine Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../query.html">Querying BigchainDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assets.html">How BigchainDB is Good for Asset Registrations &amp; Transfers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../smart-contracts.html">BigchainDB and Smart Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../transaction-concepts.html">Transaction Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../store-files.html">How to Store Files in BigchainDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../permissions.html">Permissions in BigchainDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../private-data.html">BigchainDB, Privacy and Private Data</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/projects/server/en/latest/data-models/index.html">Data Models</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">BigchainDB 문서</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#id4">BigchainDB에 대한 추가 정보</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html">BigchainDB Docs Home</a></li>
+<li class="toctree-l3"><a class="reference internal" href="production-ready_kor.html">배포 - 준비</a></li>
+<li class="toctree-l3"><a class="reference internal" href="terminology_kor.html">용어</a></li>
+<li class="toctree-l3"><a class="reference internal" href="decentralized_kor.html">BigchainDB 분산 방식</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">노드 다양성의 종류</a></li>
+<li class="toctree-l3"><a class="reference internal" href="immutable-ko.html">어떻게 BigchainDB는 불변성을 갖는가</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bft-ko.html">BigchainDB와 Byzantine Fault Tolerance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="query-ko.html">BigchainDB 쿼리</a></li>
+<li class="toctree-l3"><a class="reference internal" href="assets_ko.html">BigchainDB가 자산 등록 및 전송에 적합한 방법</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smart-contracts_ko.html">BigchainDB 및 스마트계약</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transaction-concepts_ko.html">트랜잭션 개념</a></li>
+<li class="toctree-l3"><a class="reference internal" href="store-files_ko.html">BigchainDB에 파일을 저장하는 방법</a></li>
+<li class="toctree-l3"><a class="reference internal" href="permissions-ko.html">BigchainDB 사용 권한</a></li>
+<li class="toctree-l3"><a class="reference internal" href="private-data-ko.html">BigchainDB, 개인정보 및 개인 데이터</a></li>
+<li class="toctree-l3"><a class="reference external" href="https://docs.bigchaindb.com/projects/server/en/latest/data-models/index.html">Data Models</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BigchainDB</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">BigchainDB 문서</a> &raquo;</li>
+        
+      <li>노드 다양성의 종류</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/korean/diversity-ko.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <!---
+Copyright © 2020 Interplanetary Database Association e.V.,
+BigchainDB and IPDB software contributors.
+SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
+Code is Apache-2.0 and docs are CC-BY-4.0
+---><div class="section" id="id1">
+<h1>노드 다양성의 종류<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>한 명의 유저나 이벤트가 노드의 “상당수” 부분을 제어하거나 손상시키는 것을 어렵게 만드는 절차가 수행되어야 합니다.(BigchainDB 서버는 Tendermint를 사용하기 때문에 여기서 “상당수”는 노드의 1/3을 말합니다.) 아래에 쓰여진 여러 가지의 다양성을 고려해야 합니다. 모든 종류에 있어서 높은 다양성을 갖는 것은 꽤 어려운 일입니다.</p>
+<ol class="simple">
+<li><strong>관할권 다양성.</strong> 노드는 여러 합법적 관할권 내의 참여자들이 제어합니다. 이는 어떤 일을 수행하기에 이 수단들을 사용하기 어렵게 할 수 있습니다.</li>
+<li><strong>지리적 다양성.</strong> 서버는 지리적으로 여러 곳에 물리적으로 위치합니다. 이는 자연 재해(홍수 또는 지진 등)가 문제를 야기할 만큼 손상되기 어렵게 합니다.</li>
+<li><strong>호스팅 다양성.</strong> 서버는 여러 호스팅 공급자(ex. Amazon Web Services, Microsoft Azure, Digital Oceure, Rackspace)가 호스팅해야 합니다. 이는 하나의 호스팅 공급자가 ‘상당 수’의 노드에 영향을 미치기가 어려워집니다.</li>
+<li><strong>일반적인 의미의 다양성.</strong> 일반적으로 멤버십 다양성은 컨소시엄에 많은 이점을 줍니다. 예를 들어, 그것은 문제 해결에 필요한 다양한 아이디어 소스를 컨소시엄에 제공합니다.</li>
+</ol>
+<p>참고: 모든 노드가 동일한 코드(ex. BigchainDB의 동일한 구현)를 실행하고 있는 경우, 해당 코드의 버그를 사용하여 모든 노드를 손상시킬 수 있습니다. 이상적으로는 BigchainDB 서버(예: Python, Go 등)에서 운영되고 있는 다양한 구현이 있어, 컨소시엄은 다양한 서버 구현을 할 수 있을 것입니다. 운영 체제에 대해서도 이는 유사하게 적용됩니다.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="immutable-ko.html" class="btn btn-neutral float-right" title="어떻게 BigchainDB는 불변성을 갖는가" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="decentralized_kor.html" class="btn btn-neutral float-left" title="BigchainDB 분산 방식" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
