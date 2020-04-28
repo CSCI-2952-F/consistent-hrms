@@ -106,9 +106,11 @@ services:
       - default
       - rabbitmq
       - hospital-bigchain
+      - hospital-centraldb
     environment:
       - CONSISTENT_STORAGE_BACKEND=${CONSISTENT_STORAGE_BACKEND:-sagas}
       - SAGAS_GRPC_ADDR=sagas:8080
+      - CENTRALDB_GRPC_ADDR=centraldb:8080
     depends_on:
       - sagas
 
@@ -156,3 +158,6 @@ networks:
   hospital-bigchain:
     external:
       name: hrms-hospital-bigchain
+  hospital-centraldb:
+    external:
+      name: hrms-hospital-centraldb

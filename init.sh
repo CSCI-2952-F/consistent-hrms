@@ -25,8 +25,10 @@ ensure_up() {
 mkdnet hrms-interhospital
 mkdnet hrms-hospital-sagas
 mkdnet hrms-hospital-bigchain
+mkdnet hrms-hospital-centraldb
 mkdnet hrms-hospital-discovery
 
 # Start common infra with Docker Compose
 ensure_up docker-compose.discovery.yml
 ensure_up docker-compose.sagas.yml
+ensure_up docker-compose.centraldb.yml
