@@ -17,8 +17,8 @@ from lib.medical_record import MedicalRecord
 
 
 class Unauthorized(Exception):
-    def __init__(self):
-        super().__init__(f'Unauthorized operation; missing or invalid token')
+    def __init__(self, description):
+        super().__init__(f'Unauthorized operation: {description}')
 
 
 class PatientRegistrationExists(Exception):
@@ -93,7 +93,7 @@ class PatientService:
             raise PatientRegistrationViolation(uid, res['owner'])
 
         # Store medical record in local storage
-        record = MedicalRecord(self.hospital_name, uid, None)
+        record = MedicalRecord(self.hospital_name, uid, notes=f'New registration at {self.hospital_name}')
         self.local_storage.insert_item(hash_uid, pub_key, record)
 
         # Return patient unique identifier
@@ -135,7 +135,7 @@ class PatientService:
         # Verify the token against the patient's public key
         pub_key = res['value']
         if not self._verify_auth_token(pub_key, auth_token):
-            raise Unauthorized()
+            raise Unauthorized('missing or invalid token')
 
         # If not, all good! Remove patient from consistent storage.
         res = self.consistent_storage.remove(hash_uid)
@@ -166,7 +166,7 @@ class PatientService:
         # Verify the token against the patient's public key
         pub_key = res['value']
         if not self._verify_auth_token(pub_key, auth_token):
-            raise Unauthorized()
+            raise Unauthorized('missing or invalid token')
 
         # Look up destination hospital in discovery service
         dest_hospital_info = self.discovery_svc.find_hospital(dest_hospital)
@@ -180,6 +180,11 @@ class PatientService:
 
         # Now we actually transfer the encrypted patient data to the target hospital.
         # TODO: Maybe make this part of the request asynchronous? (i.e. push onto a work queue)
+
+        # Add a new record for patient to signify the transfer to a new hospital
+        dest_hospital_name = dest_hospital_info['name']
+        transfer_record = MedicalRecord(self.hospital_name, patient_uid, notes=f'Transferred to {dest_hospital_name}')
+        self.local_storage.insert_item(hash_uid, pub_key, transfer_record)
 
         # Retrieve private key from discovery service
         hospital_id = self.discovery_svc.get_id()
@@ -250,7 +255,7 @@ class PatientService:
         # If the patient already has data in our local storage, abort.
         items = self.local_storage.get_items(hash_uid)
         if items:
-            raise Unauthorized()
+            raise Unauthorized('patient data exists')
 
         # Look up hospital in discovery service
         hospital_info = self.discovery_svc.find_hospital(hospital_id)
@@ -260,7 +265,7 @@ class PatientService:
         # Get public key of hospital and verify signature
         pub_key = hospital_info['public_key']
         if not crypto.verify(patient_data, signature, crypto.load_pubkey(pub_key)):
-            raise Unauthorized()
+            raise Unauthorized('cannot verify transfer request')
 
         # Load patient data into local storage.
         decoded = base64.b64decode(patient_data).decode('utf-8')
