@@ -21,8 +21,6 @@ services:
       dockerfile: ./build/nameko/Dockerfile
       args:
         module: api_gateway
-    environment:
-      - DISCOVERY_GRPC_ADDR=discovery_service:8080
     ports:
       - '127.0.0.1:${API_GATEWAY_PORT:-8100}:80'
     healthcheck:
@@ -31,8 +29,12 @@ services:
       timeout: 5s
       retries: 3
     networks:
-      - default
-      - rabbitmq
+      default: {}
+      rabbitmq: {}
+      interhospital:
+        aliases:
+          - ${HOSPITAL_NAME_SLUG}
+
     depends_on:
       - rabbitmq
       - patient_service
@@ -67,6 +69,7 @@ services:
     networks:
       - default
       - rabbitmq
+      - interhospital
     depends_on:
       - rabbitmq
       - consistent_storage
@@ -141,6 +144,9 @@ volumes:
 
 networks:
   rabbitmq: {}
+  interhospital:
+    external:
+      name: hrms-interhospital
   hospital-discovery:
     external:
       name: hrms-hospital-discovery

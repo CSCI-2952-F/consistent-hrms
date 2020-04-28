@@ -22,6 +22,7 @@ ensure_up() {
 }
 
 # Create Docker networks for inter-hospital communication
+mkdnet hrms-interhospital
 mkdnet hrms-hospital-sagas
 mkdnet hrms-hospital-bigchain
 mkdnet hrms-hospital-discovery

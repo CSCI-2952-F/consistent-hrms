@@ -5,11 +5,25 @@ import grpc
 from lib.discovery_svc.pb.discovery_pb2 import *
 from lib.discovery_svc.pb.discovery_pb2_grpc import HospitalDiscoveryStub
 
+GRPC_ADDR = 'discovery_service:8080'
+
 
 class DiscoveryService:
-    def __init__(self, grpc_addr):
-        channel = grpc.insecure_channel(grpc_addr)
+    def __init__(self):
+        channel = grpc.insecure_channel(GRPC_ADDR)
         self.client = HospitalDiscoveryStub(channel)
+
+    def get_id(self):
+        req = InfoRequest()
+        res = self.client.GetInfo(req)
+
+        return res.id
+
+    def get_private_key(self):
+        req = InfoRequest()
+        res = self.client.GetInfo(req)
+
+        return res.privateKey.decode('utf-8')
 
     def list_hospitals(self):
         req = ListRequest()
@@ -22,6 +36,15 @@ class DiscoveryService:
                 'name': hospital.name,
                 'registered_time': datetime.fromtimestamp(hospital.registeredTime).isoformat(),
                 'public_key': hospital.publicKey.decode('utf-8'),
+                'gateway_addr': hospital.gatewayAddr,
             })
 
         return hospitals
+
+    def find_hospital(self, hospital_id):
+        hospitals = self.list_hospitals()
+        for hospital in hospitals:
+            if hospital['id'] == hospital_id:
+                return hospital
+
+        return None

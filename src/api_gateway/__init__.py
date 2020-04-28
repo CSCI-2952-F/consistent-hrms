@@ -22,17 +22,13 @@ class HttpEntrypoint(CorsHttpRequestHandler):
 
 http = HttpEntrypoint.decorator
 
-DISCOVERY_GRPC_ADDR = os.getenv('DISCOVERY_GRPC_ADDR')
-if not DISCOVERY_GRPC_ADDR:
-    raise Exception('DISCOVERY_GRPC_ADDR not set')
-
 
 class ApiGatewayService:
     name = 'api_gateway'
 
     patient_rpc = RpcProxy('patient_service')
     physician_rpc = RpcProxy('physician_service')
-    discovery_svc = DiscoveryService(DISCOVERY_GRPC_ADDR)
+    discovery_svc = DiscoveryService()
 
     @http('GET', '/healthy')
     def healthy(self, _):
@@ -84,3 +80,14 @@ class ApiGatewayService:
     def list_hospitals(self, _):
         hospitals = self.discovery_svc.list_hospitals()
         return json.dumps(hospitals)
+
+    @http('POST', '/transfer_request')
+    def transfer_request(self, request):
+        data = json.loads(request.get_data(as_text=True))
+        success = self.patient_rpc.transfer_request(
+            hospital_id=data['hospital_id'],
+            patient_uid=data['uid'],
+            patient_data=data['data'],
+            signature=data['signature'],
+        )
+        return json.dumps({'success': success})

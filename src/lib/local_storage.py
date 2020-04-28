@@ -30,6 +30,13 @@ class LocalStorage():
         value = crypto.encrypt(str(value), public_key)
         self.redis.lpush(uid, value)
 
+    def load_items(self, uid, items):
+        """
+        Loads items directly into local storage.
+        """
+
+        self.redis.lpush(uid, *items)
+
     def get_items(self, uid, offset=0, length=None):
         """
         Retrieves encrypted items from a list in local storage,
