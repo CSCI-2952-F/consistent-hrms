@@ -173,6 +173,10 @@ class PatientService:
         if dest_hospital_info is None:
             raise PatientTransferInvalidHospital(dest_hospital)
 
+        # Make sure we are not transferring to ourselves.
+        if dest_hospital_info['id'] == self.discovery_svc.get_id():
+            raise PatientTransferInvalidHospital(dest_hospital)
+
         # If not, all good! Transfer patient in consistent storage.
         res = self.consistent_storage.transfer(hash_uid, dest_hospital)
         if not res['transferred']:
