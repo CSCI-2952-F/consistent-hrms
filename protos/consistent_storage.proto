@@ -2,6 +2,10 @@ syntax = "proto3";
 
 option go_package = "main";
 
+// Protobuf service that wraps a ConsistentStorage API
+// to include fields and functionality for multiplexing
+// requests from multiple clients. Adds identification
+// and authorization fields.
 service CentralConsistentStorage {
   rpc Request(WrappedRequest) returns (WrappedResponse) {}
 }
@@ -28,6 +32,7 @@ message WrappedResponse {
   }
 }
 
+// Perform DB operations on a consistent storage.
 service ConsistentStorage {
   rpc Get(GetRequest) returns (GetResponse) {}
   rpc Put(PutRequest) returns (PutResponse) {}

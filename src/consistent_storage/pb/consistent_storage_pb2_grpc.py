@@ -5,7 +5,11 @@ from . import consistent_storage_pb2 as consistent__storage__pb2
 
 
 class CentralConsistentStorageStub(object):
-    """Missing associated documentation comment in .proto file"""
+    """Protobuf service that wraps a ConsistentStorage API
+    to include fields and functionality for multiplexing
+    requests from multiple clients. Adds identification
+    and authorization fields.
+    """
 
     def __init__(self, channel):
         """Constructor.
@@ -21,7 +25,11 @@ class CentralConsistentStorageStub(object):
 
 
 class CentralConsistentStorageServicer(object):
-    """Missing associated documentation comment in .proto file"""
+    """Protobuf service that wraps a ConsistentStorage API
+    to include fields and functionality for multiplexing
+    requests from multiple clients. Adds identification
+    and authorization fields.
+    """
 
     def Request(self, request, context):
         """Missing associated documentation comment in .proto file"""
@@ -45,7 +53,11 @@ def add_CentralConsistentStorageServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class CentralConsistentStorage(object):
-    """Missing associated documentation comment in .proto file"""
+    """Protobuf service that wraps a ConsistentStorage API
+    to include fields and functionality for multiplexing
+    requests from multiple clients. Adds identification
+    and authorization fields.
+    """
 
     @staticmethod
     def Request(request,
@@ -65,7 +77,8 @@ class CentralConsistentStorage(object):
 
 
 class ConsistentStorageStub(object):
-    """Missing associated documentation comment in .proto file"""
+    """Perform DB operations on a consistent storage.
+    """
 
     def __init__(self, channel):
         """Constructor.
@@ -96,7 +109,8 @@ class ConsistentStorageStub(object):
 
 
 class ConsistentStorageServicer(object):
-    """Missing associated documentation comment in .proto file"""
+    """Perform DB operations on a consistent storage.
+    """
 
     def Get(self, request, context):
         """Missing associated documentation comment in .proto file"""
@@ -153,7 +167,8 @@ def add_ConsistentStorageServicer_to_server(servicer, server):
 
  # This class is part of an EXPERIMENTAL API.
 class ConsistentStorage(object):
-    """Missing associated documentation comment in .proto file"""
+    """Perform DB operations on a consistent storage.
+    """
 
     @staticmethod
     def Get(request,
