@@ -17,11 +17,10 @@ func main() {
 
 	// Parse environment variables
 	grpcListenAddr := os.Getenv("GRPC_LISTEN_ADDR")
-	discoveryGrpcAddr := os.Getenv("DISCOVERY_GRPC_ADDR")
 	dsn := os.Getenv("SQL_DSN")
 
 	// Create discovery service client
-	discoveryClient, err = NewDiscoverySvcClient(discoveryGrpcAddr)
+	discoveryClient, err = NewDiscoverySvcClient()
 	if err != nil {
 		log.Fatal(err)
 	}
