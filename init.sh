@@ -8,15 +8,23 @@ mkdnet() {
 }
 
 ensure_up() {
-  project_name=cs2952f-`echo "$1" | sed 's/docker-compose.\(.*\).yml/\1/'`
+  yaml_name=`echo "$1" | sed 's/docker-compose.\(.*\).yml/\1/'`
+  project_name="cs2952f-$yaml_name"
   echo Starting "$project_name"...
 
-  docker-compose -p "$project_name" -f "$1" up -d --build
-  stopped=$(docker-compose -p "$project_name" -f "$1" ps --services --filter status=stopped)
+  files="-f docker-compose.$yaml_name.yml"
+  if [[ -f "docker-compose.$yaml_name.override.yml" ]]; then
+    files="$files -f docker-compose.$yaml_name.override.yml"
+  fi
+
+  dco="docker-compose -p "$project_name" $files"
+
+  $dco up -d --build
+  stopped=$($dco ps --services --filter status=stopped)
   if [[ "$stopped" ]]
   then
     echo "ERROR: One or more services could not be started: $(echo $stopped | tr '\n' ',' | sed 's/,$/\n/')"
-    echo $stopped | xargs docker-compose -f "$1" logs --tail=50
+    echo $stopped | xargs $dco logs --tail=50
     exit 1
   fi
 }

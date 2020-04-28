@@ -55,7 +55,7 @@ services:
       - KEY_PREFIX=/hrms/hospitals/
       - GRPC_LISTEN_ADDR=:8080
     expose:
-      - 8080
+      - '8080'
 
   patient_service:
     build:

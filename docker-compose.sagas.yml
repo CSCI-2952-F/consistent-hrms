@@ -3,12 +3,12 @@ version: '3'
 services:
   zookeeper:
     image: wurstmeister/zookeeper
-    ports:
+    expose:
       - '2181'
 
   kafka:
     image: wurstmeister/kafka
-    ports:
+    expose:
       - '9092'
     environment:
       # Create topic on startup with 1 partition and 1 replica
