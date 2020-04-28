@@ -66,7 +66,7 @@ func (r *rsaPrivateKey) GetUnsigner() Unsigner {
 func (r *rsaPublicKey) MarshalBinary() (data []byte, err error) {
 	pemdata := pem.EncodeToMemory(
 		&pem.Block{
-			Type:  "PUBLIC KEY",
+			Type:  "RSA PUBLIC KEY",
 			Bytes: x509.MarshalPKCS1PublicKey(r.PublicKey),
 		},
 	)
