@@ -1,23 +1,20 @@
-import base64
-import os
-
 import grpc
 
-from consistent_storage.sagas.pb.sagas_pb2 import *
-from consistent_storage.sagas.pb.sagas_pb2_grpc import SagasConsistentStorageStub
+from consistent_storage.pb.consistent_storage_pb2 import *
+from consistent_storage.pb.consistent_storage_pb2_grpc import ConsistentStorageStub
 from lib.consistent_storage import BaseStorageBackend
 
 
-class SagasBackend(BaseStorageBackend):
+class GrpcStorageBackend(BaseStorageBackend):
     """
     Basic client to proxy requests from the consistent_storage Nameko server
-    to the underlying sagas gRPC server.
+    to the underlying gRPC server that fulfils consistent storage guarantees.
 
     Implements the BaseStorageBackend interface.
     """
     def __init__(self, grpc_addr):
         channel = grpc.insecure_channel(grpc_addr)
-        self.client = SagasConsistentStorageStub(channel)
+        self.client = ConsistentStorageStub(channel)
 
     def get(self, key: str) -> dict:
         req = GetRequest(key=key)

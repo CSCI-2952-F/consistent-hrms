@@ -2,7 +2,7 @@ syntax = "proto3";
 
 option go_package = "main";
 
-service SagasConsistentStorage {
+service ConsistentStorage {
   rpc Get(GetRequest) returns (GetResponse) {}
   rpc Put(PutRequest) returns (PutResponse) {}
   rpc Remove(RemoveRequest) returns (RemoveResponse) {}

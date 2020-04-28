@@ -125,7 +125,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	grpcServer := grpc.NewServer()
-	RegisterSagasConsistentStorageServer(grpcServer, &sagasConsistentStorageServer{})
+	RegisterConsistentStorageServer(grpcServer, &sagasConsistentStorageServer{})
 
 	// Register signal handlers
 	done := make(chan bool)
