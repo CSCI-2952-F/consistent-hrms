@@ -12,6 +12,7 @@ services:
     networks:
       - default
       - hospital-centraldb
+      - hospital-discovery
     depends_on:
       - mysql
 
@@ -27,3 +28,6 @@ networks:
   hospital-centraldb:
     external:
       name: hrms-hospital-centraldb
+  hospital-discovery:
+    external:
+      name: hrms-hospital-discovery

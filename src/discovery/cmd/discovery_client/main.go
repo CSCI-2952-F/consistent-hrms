@@ -10,10 +10,12 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
+
+	"discovery"
 )
 
 var (
-	serviceDiscovery ServiceDiscovery
+	serviceDiscovery discovery.ServiceDiscovery
 	keyPrefix        string
 
 	hospitalId         string
@@ -22,23 +24,10 @@ var (
 	hospitalPrivateKey []byte
 	registeredTime     time.Time
 
-	keyStorage *KeyStorage
+	keyStorage *discovery.KeyStorage
 )
 
-type ServiceDiscovery interface {
-	Register(ctx context.Context, value RegisterValue) error
-	Renew(ctx context.Context, duration time.Duration)
-	Revoke(ctx context.Context) error
-	ListValues(ctx context.Context) ([]RegisterValue, error)
-}
-
-type RegisterValue struct {
-	Id             string `json:"id"`
-	Name           string `json:"name"`
-	GatewayAddr    string `json:"gateway_addr"`
-	PublicKey      []byte `json:"public_key"`
-	RegisteredTime int64  `json:"registered_time"`
-}
+const keyPath = "/etc/discovery/key.pem"
 
 func main() {
 	ctx, cancelFunc := context.WithCancel(context.Background())
@@ -72,14 +61,14 @@ func main() {
 	}
 
 	// Initialize key storage
-	storage, err := NewKeyStorage(keyPath)
+	storage, err := discovery.NewKeyStorage(keyPath)
 	if err != nil {
 		log.Fatalf("could not initialize key storage: %s", err)
 	}
 	keyStorage = storage
 
 	// Load or generate private key
-	signer, err := loadPrivateKey()
+	signer, err := discovery.LoadPrivateKey(keyStorage)
 	if err != nil {
 		log.Fatalf("could not load private key from storage: %s", err)
 	}
@@ -99,15 +88,18 @@ func main() {
 
 	// Create service discovery backed by ZooKeeper
 	zkAddr := os.Getenv("ZK_ADDR")
-	sd, err := NewZkServiceDiscovery(zkAddr, keyPrefix, leaseExpiry)
+	sd, err := discovery.NewZkServiceDiscovery(zkAddr, keyPrefix, leaseExpiry)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("cannot start ZooKeeper ServiceDiscovery: %s", err)
 	}
+
+	// Set our hospital ID
+	sd.SetID(hospitalId)
 	serviceDiscovery = sd
 
 	// Prepare register value
 	registeredTime = time.Now()
-	value := RegisterValue{
+	value := discovery.RegisterValue{
 		Id:             hospitalId,
 		Name:           hospitalName,
 		GatewayAddr:    hospitalGatewayAddr,
@@ -120,13 +112,16 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// Create server
+	server := NewServer(sd)
+
 	// Create gRPC server
 	lis, err := net.Listen("tcp", grpcListenAddr)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	grpcServer := grpc.NewServer()
-	RegisterHospitalDiscoveryServer(grpcServer, NewServer(sd))
+	discovery.RegisterHospitalDiscoveryServer(grpcServer, server)
 
 	// Register signal handlers
 	done := make(chan bool)

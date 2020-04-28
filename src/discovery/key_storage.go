@@ -1,4 +1,4 @@
-package main
+package discovery
 
 import (
 	"fmt"
@@ -9,6 +9,11 @@ import (
 
 type KeyStorage struct {
 	filepath string
+}
+
+type CryptoKeyStorage interface {
+	Get() ([]byte, error)
+	Put(data []byte) error
 }
 
 func NewKeyStorage(filepath string) (*KeyStorage, error) {

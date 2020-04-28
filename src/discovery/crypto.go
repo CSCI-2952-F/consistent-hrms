@@ -1,4 +1,4 @@
-package main
+package discovery
 
 // See: https://play.golang.org/p/bzpD7Pa9mr
 
@@ -14,8 +14,6 @@ import (
 	"fmt"
 	"log"
 )
-
-const keyPath = "/etc/discovery/key.pem"
 
 // A Signer can create signatures that verify against a public key.
 type Signer interface {
@@ -85,11 +83,11 @@ func newSignerFromKey(k *rsa.PrivateKey) (Signer, error) {
 	return &rsaPrivateKey{k}, nil
 }
 
-func loadPrivateKey() (Signer, error) {
+func LoadPrivateKey(storage CryptoKeyStorage) (Signer, error) {
 	// Try to load private key, otherwise regenerate it
-	bytes, err := keyStorage.Get()
+	bytes, err := storage.Get()
 	if err != nil || bytes == nil {
-		return generatePrivateKey()
+		return generatePrivateKey(storage)
 	}
 
 	// Parse private key, otherwise regenerate it
@@ -100,10 +98,10 @@ func loadPrivateKey() (Signer, error) {
 
 	log.Printf("warning: private key stored is corrupt, regenerating")
 
-	return generatePrivateKey()
+	return generatePrivateKey(storage)
 }
 
-func generatePrivateKey() (Signer, error) {
+func generatePrivateKey(storage CryptoKeyStorage) (Signer, error) {
 	key, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
 		return nil, err
@@ -116,7 +114,7 @@ func generatePrivateKey() (Signer, error) {
 		},
 	)
 
-	if err := keyStorage.Put(pemdata); err != nil {
+	if err := storage.Put(pemdata); err != nil {
 		return nil, err
 	}
 

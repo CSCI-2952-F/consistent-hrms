@@ -2,18 +2,20 @@ package main
 
 import (
 	"context"
+
+	"discovery"
 )
 
 type Server struct {
-	sd ServiceDiscovery
+	sd discovery.ServiceDiscovery
 }
 
-func NewServer(sd ServiceDiscovery) *Server {
+func NewServer(sd discovery.ServiceDiscovery) *Server {
 	return &Server{sd: sd}
 }
 
-func (s *Server) GetInfo(context.Context, *InfoRequest) (*InfoResponse, error) {
-	res := InfoResponse{
+func (s *Server) GetInfo(context.Context, *discovery.InfoRequest) (*discovery.InfoResponse, error) {
+	res := discovery.InfoResponse{
 		Id:             hospitalId,
 		Name:           hospitalName,
 		PrivateKey:     hospitalPrivateKey,
@@ -23,16 +25,16 @@ func (s *Server) GetInfo(context.Context, *InfoRequest) (*InfoResponse, error) {
 	return &res, nil
 }
 
-func (s *Server) ListHospitals(ctx context.Context, _ *ListRequest) (*ListResponse, error) {
+func (s *Server) ListHospitals(ctx context.Context, _ *discovery.ListRequest) (*discovery.ListResponse, error) {
 	values, err := s.sd.ListValues(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	var hospitals []*Hospital
+	var hospitals []*discovery.Hospital
 
 	for _, value := range values {
-		hospital := Hospital{
+		hospital := discovery.Hospital{
 			Id:             value.Id,
 			Name:           value.Name,
 			GatewayAddr:    value.GatewayAddr,
@@ -43,7 +45,7 @@ func (s *Server) ListHospitals(ctx context.Context, _ *ListRequest) (*ListRespon
 		hospitals = append(hospitals, &hospital)
 	}
 
-	res := ListResponse{
+	res := discovery.ListResponse{
 		Hospitals: hospitals,
 	}
 

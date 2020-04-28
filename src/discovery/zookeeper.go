@@ -1,4 +1,4 @@
-package main
+package discovery
 
 import (
 	"context"
@@ -15,6 +15,7 @@ import (
 
 type ZkServiceDiscovery struct {
 	client    *zk.Conn
+	id        string
 	keyPrefix string
 	eventChan <-chan zk.Event
 
@@ -41,9 +42,13 @@ func NewZkServiceDiscovery(zkAddr string, keyPrefix string, leaseExpiry time.Dur
 	}, nil
 }
 
+func (z *ZkServiceDiscovery) SetID(id string) {
+	z.id = id
+}
+
 func (z *ZkServiceDiscovery) Register(ctx context.Context, value RegisterValue) error {
 	// Path is prefix + ID
-	zkPath := path.Join(z.keyPrefix, hospitalId)
+	zkPath := path.Join(z.keyPrefix, z.id)
 
 	// Marshal JSON
 	bytes, err := json.Marshal(value)
@@ -65,7 +70,7 @@ func (z *ZkServiceDiscovery) Register(ctx context.Context, value RegisterValue) 
 
 	// Create ACLs for our Znode: Read-only to world, all permissions to owner
 	worldACL := zk.WorldACL(zk.PermRead)
-	digestACL := zk.DigestACL(zk.PermAll, hospitalId, z.authPassword)
+	digestACL := zk.DigestACL(zk.PermAll, z.id, z.authPassword)
 	acl := []zk.ACL{
 		worldACL[0],
 		digestACL[0],
