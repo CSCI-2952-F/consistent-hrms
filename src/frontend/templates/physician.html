@@ -106,7 +106,7 @@
             <div class="card-subtitle mb-2 text-muted">Private Key: <span class="card-text" id="patient_card_private_key"></span></div>
           </div>
         </div>
-      </div>      
+      </div>
     </div>
   </div>
 </div>
@@ -143,9 +143,9 @@
     // Grab the uid from the card.
     card_patient_uid_div = $('#patient_card_uid');
     let patient_uid = card_patient_uid_div.text();
-    if (patient_uid == "") {
+    if (patient_uid == '') {
       read_output_div.innerHTML = 'Please upload your patient card.';
-      return
+      return;
     }
     data = { uid: patient_uid };
 
@@ -159,7 +159,7 @@
       },
       success: function (response) {
         for (let i = 0; i < response.data.length; i++) {
-          var elem = document.createElement("div");
+          var elem = document.createElement('div');
           elem.innerHTML = decrypt(response.data[i]);
           read_output_div.append(elem);
         }
@@ -170,20 +170,20 @@
   function phys_write() {
     let card_patient_uid_div = document.getElementById('patient_card_uid');
     patient_uid = card_patient_uid_div.innerHTML;
-    let card_physician_uid_div =  document.getElementById('physician_card_uid');
+    let card_physician_uid_div = document.getElementById('physician_card_uid');
     let physician_uid = card_physician_uid_div.innerHTML;
     note_div = $('#note');
     let note = note_div.val();
     let write_output_div = document.getElementById('write-output');
 
-    if (patient_uid == "") {
+    if (patient_uid == '') {
       write_output_div.innerHTML = 'Please upload a patient card.';
-      return
+      return;
     }
 
-    if (physician_uid == "") {
+    if (physician_uid == '') {
       write_output_div.innerHTML = 'Please upload your physician card.';
-      return
+      return;
     }
 
     data = { phys_uid: physician_uid, patient_uid: patient_uid, data: note };
@@ -194,10 +194,10 @@
       dataType: 'json',
       data: JSON.stringify(data),
       error: function (request, status, error) {
-        write_output_div.innerHTML = "Write Unsuccessful.";
+        write_output_div.innerHTML = 'Write Unsuccessful.';
       },
       success: function (response) {
-        write_output_div.innerHTML = "Write Successful.";
+        write_output_div.innerHTML = 'Write Successful.';
       },
     });
     note_div.val('');
@@ -208,70 +208,67 @@
   /*************/
 
   function removePatientCard() {
-    var fileInput = document.getElementById("patient_files");
-    fileInput.value = "";
+    var fileInput = document.getElementById('patient_files');
+    fileInput.value = '';
 
     let card_patient_uid_div = document.getElementById('patient_card_uid');
-    card_patient_uid_div.innerHTML = "";
+    card_patient_uid_div.innerHTML = '';
 
     let card_private_key_div = document.getElementById('patient_card_private_key');
-    card_private_key_div.innerHTML = "";
+    card_private_key_div.innerHTML = '';
 
     let read_output_div = document.getElementById('read-output');
-    read_output_div.innerHTML = "";
+    read_output_div.innerHTML = '';
   }
 
   function removePhysCard() {
-    var fileInput = document.getElementById("phys_files");
-    fileInput.value = "";
+    var fileInput = document.getElementById('phys_files');
+    fileInput.value = '';
 
     let card_physician_uid = document.getElementById('physician_card_uid');
-    card_physician_uid.innerHTML = "";
-
+    card_physician_uid.innerHTML = '';
   }
 
   /* Upload/Download Helper Functions */
 
   // Patient
-  var patientFileInput = document.getElementById("patient_files"),
-
-  readPatientFile = function () {
+  var patientFileInput = document.getElementById('patient_files'),
+    readPatientFile = function () {
       var reader = new FileReader();
-      var uid = "";
-      var result = "";
+      var uid = '';
+      var result = '';
       reader.onload = function () {
-          // Ugly code to get params from file.
-          result = reader.result.split(",");
-          uid = reader.result.split(",")[1].split("\n")[1];
+        // Ugly code to get params from file.
+        result = reader.result.split(',');
+        uid = reader.result.split(',')[1].split('\n')[1];
 
-          let card_patient_uid_div = document.getElementById('patient_card_uid');
-          card_patient_uid_div.innerHTML = uid;
+        let card_patient_uid_div = document.getElementById('patient_card_uid');
+        card_patient_uid_div.innerHTML = uid;
 
-          let card_private_key_div = document.getElementById('patient_card_private_key');
-          card_private_key_div.innerHTML = result[2];
+        let card_private_key_div = document.getElementById('patient_card_private_key');
+        card_private_key_div.innerHTML = result[2];
       };
       // Read the file.
       reader.readAsBinaryString(patientFileInput.files[0]);
-  };
+    };
 
   patientFileInput.addEventListener('change', readPatientFile);
 
   // Phys
-  var physFileInput = document.getElementById("phys_files"),
-
-  readPhysFile = function () {
+  var physFileInput = document.getElementById('phys_files'),
+    readPhysFile = function () {
       var reader = new FileReader();
-      var uid = "";
-      var result = "";
+      var uid = '';
+      var result = '';
       reader.onload = function () {
-        uid = reader.result.split(",")[1].split("\n")[1];
+        uid = reader.result.split(',')[1].split('\n')[1];
 
         let card_physician_uid = document.getElementById('physician_card_uid');
         card_physician_uid.innerHTML = uid;
       };
       // Read the file.
       reader.readAsBinaryString(physFileInput.files[0]);
-  };
+    };
 
   physFileInput.addEventListener('change', readPhysFile);
 
@@ -280,11 +277,11 @@
     let card_physician_uid = document.getElementById('physician_card_uid');
 
     data[0][0] = card_physician_uid.innerHTML;
- 
+
     var csv = 'UID,PRIV_KEY\n';
-    data.forEach(function(row) {
-            csv += row.join(',');
-            csv += "\n";
+    data.forEach(function (row) {
+      csv += row.join(',');
+      csv += '\n';
     });
     var hiddenElement = document.createElement('a');
     hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
@@ -302,6 +299,5 @@
     const plainText = decrypt.decrypt(data) || 'DECRYPTION FAILED';
     return plainText;
   }
-
 </script>
 {% endblock %}
