@@ -4,6 +4,66 @@ import grpc
 from . import consistent_storage_pb2 as consistent__storage__pb2
 
 
+class CentralConsistentStorageStub(object):
+    """Missing associated documentation comment in .proto file"""
+
+    def __init__(self, channel):
+        """Constructor.
+
+        Args:
+            channel: A grpc.Channel.
+        """
+        self.Request = channel.unary_unary(
+                '/CentralConsistentStorage/Request',
+                request_serializer=consistent__storage__pb2.WrappedRequest.SerializeToString,
+                response_deserializer=consistent__storage__pb2.WrappedResponse.FromString,
+                )
+
+
+class CentralConsistentStorageServicer(object):
+    """Missing associated documentation comment in .proto file"""
+
+    def Request(self, request, context):
+        """Missing associated documentation comment in .proto file"""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+
+def add_CentralConsistentStorageServicer_to_server(servicer, server):
+    rpc_method_handlers = {
+            'Request': grpc.unary_unary_rpc_method_handler(
+                    servicer.Request,
+                    request_deserializer=consistent__storage__pb2.WrappedRequest.FromString,
+                    response_serializer=consistent__storage__pb2.WrappedResponse.SerializeToString,
+            ),
+    }
+    generic_handler = grpc.method_handlers_generic_handler(
+            'CentralConsistentStorage', rpc_method_handlers)
+    server.add_generic_rpc_handlers((generic_handler,))
+
+
+ # This class is part of an EXPERIMENTAL API.
+class CentralConsistentStorage(object):
+    """Missing associated documentation comment in .proto file"""
+
+    @staticmethod
+    def Request(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/CentralConsistentStorage/Request',
+            consistent__storage__pb2.WrappedRequest.SerializeToString,
+            consistent__storage__pb2.WrappedResponse.FromString,
+            options, channel_credentials,
+            call_credentials, compression, wait_for_ready, timeout, metadata)
+
+
 class ConsistentStorageStub(object):
     """Missing associated documentation comment in .proto file"""
 

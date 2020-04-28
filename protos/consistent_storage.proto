@@ -2,6 +2,32 @@ syntax = "proto3";
 
 option go_package = "main";
 
+service CentralConsistentStorage {
+  rpc Request(WrappedRequest) returns (WrappedResponse) {}
+}
+
+message WrappedRequest {
+  string id = 1;       // Unique ID of the requestor
+  bytes signature = 2; // Signature of the request, signed by the requestor's
+                       // private key
+
+  oneof request { // Exactly one type of request can be specified
+    GetRequest get = 10;
+    PutRequest put = 11;
+    RemoveRequest remove = 12;
+    TransferRequest transfer = 13;
+  }
+}
+
+message WrappedResponse {
+  oneof response { // Exactly one response is returned
+    GetResponse get = 10;
+    PutResponse put = 11;
+    RemoveResponse remove = 12;
+    TransferResponse transfer = 13;
+  }
+}
+
 service ConsistentStorage {
   rpc Get(GetRequest) returns (GetResponse) {}
   rpc Put(PutRequest) returns (PutResponse) {}

@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=b'Z\004main',
-  serialized_pb=b'\n\x18\x63onsistent_storage.proto\"\x19\n\nGetRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\"L\n\x0bGetResponse\x12\x0e\n\x06\x65xists\x18\x01 \x01(\x08\x12\r\n\x05value\x18\x02 \x01(\x0c\x12\x0f\n\x07isOwner\x18\x03 \x01(\x08\x12\r\n\x05owner\x18\x04 \x01(\t\"(\n\nPutRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x0c\"(\n\x0bPutResponse\x12\n\n\x02ok\x18\x01 \x01(\x08\x12\r\n\x05owner\x18\x02 \x01(\t\"\x1c\n\rRemoveRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\"B\n\x0eRemoveResponse\x12\x0f\n\x07removed\x18\x01 \x01(\x08\x12\x1f\n\terrorType\x18\x02 \x01(\x0e\x32\x0c.RemoveError\"0\n\x0fTransferRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x10\n\x08newOwner\x18\x02 \x01(\t\"J\n\x10TransferResponse\x12\x13\n\x0btransferred\x18\x01 \x01(\x08\x12!\n\terrorType\x18\x02 \x01(\x0e\x32\x0e.TransferError*9\n\x0bRemoveError\x12\x14\n\x10REMOVE_KEY_ERROR\x10\x00\x12\x14\n\x10REMOVE_NOT_OWNER\x10\x01*?\n\rTransferError\x12\x16\n\x12TRANSFER_KEY_ERROR\x10\x00\x12\x16\n\x12TRANSFER_NOT_OWNER\x10\x01\x32\xbb\x01\n\x11\x43onsistentStorage\x12\"\n\x03Get\x12\x0b.GetRequest\x1a\x0c.GetResponse\"\x00\x12\"\n\x03Put\x12\x0b.PutRequest\x1a\x0c.PutResponse\"\x00\x12+\n\x06Remove\x12\x0e.RemoveRequest\x1a\x0f.RemoveResponse\"\x00\x12\x31\n\x08Transfer\x12\x10.TransferRequest\x1a\x11.TransferResponse\"\x00\x42\x06Z\x04mainb\x06proto3'
+  serialized_pb=b'\n\x18\x63onsistent_storage.proto\"\xba\x01\n\x0eWrappedRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x11\n\tsignature\x18\x02 \x01(\x0c\x12\x1a\n\x03get\x18\n \x01(\x0b\x32\x0b.GetRequestH\x00\x12\x1a\n\x03put\x18\x0b \x01(\x0b\x32\x0b.PutRequestH\x00\x12 \n\x06remove\x18\x0c \x01(\x0b\x32\x0e.RemoveRequestH\x00\x12$\n\x08transfer\x18\r \x01(\x0b\x32\x10.TransferRequestH\x00\x42\t\n\x07request\"\xa1\x01\n\x0fWrappedResponse\x12\x1b\n\x03get\x18\n \x01(\x0b\x32\x0c.GetResponseH\x00\x12\x1b\n\x03put\x18\x0b \x01(\x0b\x32\x0c.PutResponseH\x00\x12!\n\x06remove\x18\x0c \x01(\x0b\x32\x0f.RemoveResponseH\x00\x12%\n\x08transfer\x18\r \x01(\x0b\x32\x11.TransferResponseH\x00\x42\n\n\x08response\"\x19\n\nGetRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\"L\n\x0bGetResponse\x12\x0e\n\x06\x65xists\x18\x01 \x01(\x08\x12\r\n\x05value\x18\x02 \x01(\x0c\x12\x0f\n\x07isOwner\x18\x03 \x01(\x08\x12\r\n\x05owner\x18\x04 \x01(\t\"(\n\nPutRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x0c\"(\n\x0bPutResponse\x12\n\n\x02ok\x18\x01 \x01(\x08\x12\r\n\x05owner\x18\x02 \x01(\t\"\x1c\n\rRemoveRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\"B\n\x0eRemoveResponse\x12\x0f\n\x07removed\x18\x01 \x01(\x08\x12\x1f\n\terrorType\x18\x02 \x01(\x0e\x32\x0c.RemoveError\"0\n\x0fTransferRequest\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\x10\n\x08newOwner\x18\x02 \x01(\t\"J\n\x10TransferResponse\x12\x13\n\x0btransferred\x18\x01 \x01(\x08\x12!\n\terrorType\x18\x02 \x01(\x0e\x32\x0e.TransferError*9\n\x0bRemoveError\x12\x14\n\x10REMOVE_KEY_ERROR\x10\x00\x12\x14\n\x10REMOVE_NOT_OWNER\x10\x01*?\n\rTransferError\x12\x16\n\x12TRANSFER_KEY_ERROR\x10\x00\x12\x16\n\x12TRANSFER_NOT_OWNER\x10\x01\x32J\n\x18\x43\x65ntralConsistentStorage\x12.\n\x07Request\x12\x0f.WrappedRequest\x1a\x10.WrappedResponse\"\x00\x32\xbb\x01\n\x11\x43onsistentStorage\x12\"\n\x03Get\x12\x0b.GetRequest\x1a\x0c.GetResponse\"\x00\x12\"\n\x03Put\x12\x0b.PutRequest\x1a\x0c.PutResponse\"\x00\x12+\n\x06Remove\x12\x0e.RemoveRequest\x1a\x0f.RemoveResponse\"\x00\x12\x31\n\x08Transfer\x12\x10.TransferRequest\x1a\x11.TransferResponse\"\x00\x42\x06Z\x04mainb\x06proto3'
 )
 
 _REMOVEERROR = _descriptor.EnumDescriptor(
@@ -39,8 +39,8 @@ _REMOVEERROR = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=441,
-  serialized_end=498,
+  serialized_start=794,
+  serialized_end=851,
 )
 _sym_db.RegisterEnumDescriptor(_REMOVEERROR)
 
@@ -62,8 +62,8 @@ _TRANSFERERROR = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=500,
-  serialized_end=563,
+  serialized_start=853,
+  serialized_end=916,
 )
 _sym_db.RegisterEnumDescriptor(_TRANSFERERROR)
 
@@ -73,6 +73,130 @@ REMOVE_NOT_OWNER = 1
 TRANSFER_KEY_ERROR = 0
 TRANSFER_NOT_OWNER = 1
 
+
+
+_WRAPPEDREQUEST = _descriptor.Descriptor(
+  name='WrappedRequest',
+  full_name='WrappedRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='id', full_name='WrappedRequest.id', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='signature', full_name='WrappedRequest.signature', index=1,
+      number=2, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"",
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='get', full_name='WrappedRequest.get', index=2,
+      number=10, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='put', full_name='WrappedRequest.put', index=3,
+      number=11, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='remove', full_name='WrappedRequest.remove', index=4,
+      number=12, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='transfer', full_name='WrappedRequest.transfer', index=5,
+      number=13, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+    _descriptor.OneofDescriptor(
+      name='request', full_name='WrappedRequest.request',
+      index=0, containing_type=None, fields=[]),
+  ],
+  serialized_start=29,
+  serialized_end=215,
+)
+
+
+_WRAPPEDRESPONSE = _descriptor.Descriptor(
+  name='WrappedResponse',
+  full_name='WrappedResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='get', full_name='WrappedResponse.get', index=0,
+      number=10, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='put', full_name='WrappedResponse.put', index=1,
+      number=11, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='remove', full_name='WrappedResponse.remove', index=2,
+      number=12, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='transfer', full_name='WrappedResponse.transfer', index=3,
+      number=13, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+    _descriptor.OneofDescriptor(
+      name='response', full_name='WrappedResponse.response',
+      index=0, containing_type=None, fields=[]),
+  ],
+  serialized_start=218,
+  serialized_end=379,
+)
 
 
 _GETREQUEST = _descriptor.Descriptor(
@@ -101,8 +225,8 @@ _GETREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=28,
-  serialized_end=53,
+  serialized_start=381,
+  serialized_end=406,
 )
 
 
@@ -153,8 +277,8 @@ _GETRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=55,
-  serialized_end=131,
+  serialized_start=408,
+  serialized_end=484,
 )
 
 
@@ -191,8 +315,8 @@ _PUTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=133,
-  serialized_end=173,
+  serialized_start=486,
+  serialized_end=526,
 )
 
 
@@ -229,8 +353,8 @@ _PUTRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=175,
-  serialized_end=215,
+  serialized_start=528,
+  serialized_end=568,
 )
 
 
@@ -260,8 +384,8 @@ _REMOVEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=217,
-  serialized_end=245,
+  serialized_start=570,
+  serialized_end=598,
 )
 
 
@@ -298,8 +422,8 @@ _REMOVERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=247,
-  serialized_end=313,
+  serialized_start=600,
+  serialized_end=666,
 )
 
 
@@ -336,8 +460,8 @@ _TRANSFERREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=315,
-  serialized_end=363,
+  serialized_start=668,
+  serialized_end=716,
 )
 
 
@@ -374,12 +498,46 @@ _TRANSFERRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=365,
-  serialized_end=439,
+  serialized_start=718,
+  serialized_end=792,
 )
 
+_WRAPPEDREQUEST.fields_by_name['get'].message_type = _GETREQUEST
+_WRAPPEDREQUEST.fields_by_name['put'].message_type = _PUTREQUEST
+_WRAPPEDREQUEST.fields_by_name['remove'].message_type = _REMOVEREQUEST
+_WRAPPEDREQUEST.fields_by_name['transfer'].message_type = _TRANSFERREQUEST
+_WRAPPEDREQUEST.oneofs_by_name['request'].fields.append(
+  _WRAPPEDREQUEST.fields_by_name['get'])
+_WRAPPEDREQUEST.fields_by_name['get'].containing_oneof = _WRAPPEDREQUEST.oneofs_by_name['request']
+_WRAPPEDREQUEST.oneofs_by_name['request'].fields.append(
+  _WRAPPEDREQUEST.fields_by_name['put'])
+_WRAPPEDREQUEST.fields_by_name['put'].containing_oneof = _WRAPPEDREQUEST.oneofs_by_name['request']
+_WRAPPEDREQUEST.oneofs_by_name['request'].fields.append(
+  _WRAPPEDREQUEST.fields_by_name['remove'])
+_WRAPPEDREQUEST.fields_by_name['remove'].containing_oneof = _WRAPPEDREQUEST.oneofs_by_name['request']
+_WRAPPEDREQUEST.oneofs_by_name['request'].fields.append(
+  _WRAPPEDREQUEST.fields_by_name['transfer'])
+_WRAPPEDREQUEST.fields_by_name['transfer'].containing_oneof = _WRAPPEDREQUEST.oneofs_by_name['request']
+_WRAPPEDRESPONSE.fields_by_name['get'].message_type = _GETRESPONSE
+_WRAPPEDRESPONSE.fields_by_name['put'].message_type = _PUTRESPONSE
+_WRAPPEDRESPONSE.fields_by_name['remove'].message_type = _REMOVERESPONSE
+_WRAPPEDRESPONSE.fields_by_name['transfer'].message_type = _TRANSFERRESPONSE
+_WRAPPEDRESPONSE.oneofs_by_name['response'].fields.append(
+  _WRAPPEDRESPONSE.fields_by_name['get'])
+_WRAPPEDRESPONSE.fields_by_name['get'].containing_oneof = _WRAPPEDRESPONSE.oneofs_by_name['response']
+_WRAPPEDRESPONSE.oneofs_by_name['response'].fields.append(
+  _WRAPPEDRESPONSE.fields_by_name['put'])
+_WRAPPEDRESPONSE.fields_by_name['put'].containing_oneof = _WRAPPEDRESPONSE.oneofs_by_name['response']
+_WRAPPEDRESPONSE.oneofs_by_name['response'].fields.append(
+  _WRAPPEDRESPONSE.fields_by_name['remove'])
+_WRAPPEDRESPONSE.fields_by_name['remove'].containing_oneof = _WRAPPEDRESPONSE.oneofs_by_name['response']
+_WRAPPEDRESPONSE.oneofs_by_name['response'].fields.append(
+  _WRAPPEDRESPONSE.fields_by_name['transfer'])
+_WRAPPEDRESPONSE.fields_by_name['transfer'].containing_oneof = _WRAPPEDRESPONSE.oneofs_by_name['response']
 _REMOVERESPONSE.fields_by_name['errorType'].enum_type = _REMOVEERROR
 _TRANSFERRESPONSE.fields_by_name['errorType'].enum_type = _TRANSFERERROR
+DESCRIPTOR.message_types_by_name['WrappedRequest'] = _WRAPPEDREQUEST
+DESCRIPTOR.message_types_by_name['WrappedResponse'] = _WRAPPEDRESPONSE
 DESCRIPTOR.message_types_by_name['GetRequest'] = _GETREQUEST
 DESCRIPTOR.message_types_by_name['GetResponse'] = _GETRESPONSE
 DESCRIPTOR.message_types_by_name['PutRequest'] = _PUTREQUEST
@@ -391,6 +549,20 @@ DESCRIPTOR.message_types_by_name['TransferResponse'] = _TRANSFERRESPONSE
 DESCRIPTOR.enum_types_by_name['RemoveError'] = _REMOVEERROR
 DESCRIPTOR.enum_types_by_name['TransferError'] = _TRANSFERERROR
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
+
+WrappedRequest = _reflection.GeneratedProtocolMessageType('WrappedRequest', (_message.Message,), {
+  'DESCRIPTOR' : _WRAPPEDREQUEST,
+  '__module__' : 'consistent_storage_pb2'
+  # @@protoc_insertion_point(class_scope:WrappedRequest)
+  })
+_sym_db.RegisterMessage(WrappedRequest)
+
+WrappedResponse = _reflection.GeneratedProtocolMessageType('WrappedResponse', (_message.Message,), {
+  'DESCRIPTOR' : _WRAPPEDRESPONSE,
+  '__module__' : 'consistent_storage_pb2'
+  # @@protoc_insertion_point(class_scope:WrappedResponse)
+  })
+_sym_db.RegisterMessage(WrappedResponse)
 
 GetRequest = _reflection.GeneratedProtocolMessageType('GetRequest', (_message.Message,), {
   'DESCRIPTOR' : _GETREQUEST,
@@ -451,14 +623,38 @@ _sym_db.RegisterMessage(TransferResponse)
 
 DESCRIPTOR._options = None
 
+_CENTRALCONSISTENTSTORAGE = _descriptor.ServiceDescriptor(
+  name='CentralConsistentStorage',
+  full_name='CentralConsistentStorage',
+  file=DESCRIPTOR,
+  index=0,
+  serialized_options=None,
+  serialized_start=918,
+  serialized_end=992,
+  methods=[
+  _descriptor.MethodDescriptor(
+    name='Request',
+    full_name='CentralConsistentStorage.Request',
+    index=0,
+    containing_service=None,
+    input_type=_WRAPPEDREQUEST,
+    output_type=_WRAPPEDRESPONSE,
+    serialized_options=None,
+  ),
+])
+_sym_db.RegisterServiceDescriptor(_CENTRALCONSISTENTSTORAGE)
+
+DESCRIPTOR.services_by_name['CentralConsistentStorage'] = _CENTRALCONSISTENTSTORAGE
+
+
 _CONSISTENTSTORAGE = _descriptor.ServiceDescriptor(
   name='ConsistentStorage',
   full_name='ConsistentStorage',
   file=DESCRIPTOR,
-  index=0,
+  index=1,
   serialized_options=None,
-  serialized_start=566,
-  serialized_end=753,
+  serialized_start=995,
+  serialized_end=1182,
   methods=[
   _descriptor.MethodDescriptor(
     name='Get',
