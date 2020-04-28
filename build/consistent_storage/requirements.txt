@@ -1,3 +1,5 @@
 grpcio
 nameko
 protobuf
+pycryptodome
+rsa

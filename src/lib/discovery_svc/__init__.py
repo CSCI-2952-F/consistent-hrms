@@ -13,13 +13,13 @@ class DiscoveryService:
         channel = grpc.insecure_channel(GRPC_ADDR)
         self.client = HospitalDiscoveryStub(channel)
 
-    def get_id(self):
+    def get_id(self) -> str:
         req = InfoRequest()
         res = self.client.GetInfo(req)
 
         return res.id
 
-    def get_private_key(self):
+    def get_private_key(self) -> str:
         req = InfoRequest()
         res = self.client.GetInfo(req)
 

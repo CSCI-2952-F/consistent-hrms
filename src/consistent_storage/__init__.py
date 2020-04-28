@@ -2,6 +2,7 @@ import os
 
 from nameko.rpc import rpc
 
+from consistent_storage.centraldb import CentralDBStorageBackend
 from consistent_storage.sagas import SagasBackend
 from lib.consistent_storage import BaseStorageBackend
 
@@ -31,6 +32,13 @@ class ConsistentStorageProxy:
 
         elif BACKEND == 'bigchain':
             raise NotImplementedError()
+
+        elif BACKEND == 'centraldb':
+            grpc_addr = os.getenv('CENTRALDB_GRPC_ADDR')
+            if not grpc_addr:
+                raise Exception('CENTRALDB_GRPC_ADDR not set')
+
+            self.backend = CentralDBStorageBackend(grpc_addr)
 
         else:
             raise Exception(f'Invalid consistent storage backend: "{BACKEND}"')
