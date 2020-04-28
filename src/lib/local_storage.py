@@ -28,14 +28,14 @@ class LocalStorage():
         """
 
         value = crypto.encrypt(str(value), public_key)
-        self.redis.lpush(uid, value)
+        self.redis.rpush(uid, value)
 
     def load_items(self, uid, items):
         """
         Loads items directly into local storage.
         """
 
-        self.redis.lpush(uid, *items)
+        self.redis.rpush(uid, *items)
 
     def get_items(self, uid, offset=0, length=None):
         """
@@ -53,7 +53,7 @@ class LocalStorage():
         Update hospital staff roster.
         """
 
-        self.redis.lpush(physician_id, value)
+        self.redis.rpush(physician_id, value)
 
     def valid_staff(self, physician_id):
         """
