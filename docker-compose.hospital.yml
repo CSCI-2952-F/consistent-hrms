@@ -34,7 +34,6 @@ services:
       interhospital:
         aliases:
           - ${HOSPITAL_NAME_SLUG}
-
     depends_on:
       - rabbitmq
       - patient_service
