@@ -200,7 +200,7 @@ class PatientService:
         encoded = base64.b64encode(data.encode('utf-8'))
 
         # Sign the encoded data to get a signature
-        signature = crypto.sign(encoded, crypto.load_privkey(priv_key))
+        signature = crypto.sign(encoded, crypto.load_privkey(priv_key)).hex()
 
         # Send out the transfer request to the target hospital
         addr = dest_hospital_info['gateway_addr']

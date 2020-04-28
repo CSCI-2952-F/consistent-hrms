@@ -23,9 +23,9 @@ def load_pubkey(keystr: str) -> rsa.PublicKey:
     return rsa.PublicKey.load_pkcs1(keystr)
 
 
-def sign(data: bytes, priv_key: rsa.PrivateKey) -> str:
+def sign(data: bytes, priv_key: rsa.PrivateKey) -> bytes:
     "Returns a signature of the data."
-    return rsa.sign(data, priv_key, hash_method='SHA-256').hex()
+    return rsa.sign(data, priv_key, hash_method='SHA-256')
 
 
 def verify(data: bytes, signature: str, pub_key: rsa.PublicKey) -> bool:
