@@ -77,7 +77,7 @@ services:
       context: .
       dockerfile: ./src/bigchaindb/compose/bigchaindb_driver/Dockerfile
     volumes:
-      - .:/usr/src/app/
+      - ./src/bigchaindb/:/usr/src/app/
     command: make -C docs html
   vdocs:
     image: nginx

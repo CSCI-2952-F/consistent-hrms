@@ -15,13 +15,12 @@ class BigchaindbBackend(BaseStorageBackend):
     Implements the BaseStorageBackend interface.
     """
     def __init__(self):
-        self.root_url = "http://localhost:9984"
-        # self.root_url = "http://bdb-server:9984"  # could be this instead???
-
-        self.bdb = BigchainDB(self.root_url)
+        self.bdb = BigchainDB("http://0.0.0.0:9984")
 
     def get(self, key: str) -> dict:
-        res = self.bdb.get(search=key)
+        query_hospital_public_key = None  # TODO: where do we get this from?
+
+        res = self.bdb.assets.get(search=key)
 
         if len(res) == 0:
             return {
@@ -29,43 +28,71 @@ class BigchaindbBackend(BaseStorageBackend):
                 'value': None,
             }
 
-        # TODO: how do we determine owner? I think we need a Hospital key somewhere
+        patient_block = res[0]
+        tx_block = self.bdb.transactions.retrieve(patient_block['id'])
+        owner = tx_block['outputs'][0]['public_keys'][0]
+
         return {
             'exists': True,
-            'value': res[0]['id'],
-            'is_owner': True,
-            'owner': res[0]['key'],
+            'value': res[0]['data']['patient']['public_key'],
+            'is_owner': owner == query_hospital_public_key,
+            'owner': owner,
         }
 
     def put(self, key: str, value: str) -> dict:
+        hospital_public_key = None  # TODO: where do we get this from?
+        hospital_private_key = None  # TODO: where do we get this from?
+
+        patient = {
+            'data': {
+                'patient': {
+                    'public_key': value,
+                    'uuid': key
+                }
+            }
+        }
+        metadata = {
+            'patient': 'registration',
+            'hospital_name': None  # TODO
+        }
+
         prepared_creation_tx = self.bdb.transactions.prepare(
             operation='CREATE',
-            signers=key,
-            asset=value
+            signers=hospital_public_key,
+            asset=patient,
+            metadata=metadata
         )
 
-        # TODO: I think we might need a hospital's key here?
         fulfilled_creation_tx = self.bdb.transactions.fulfill(
-            prepared_creation_tx, private_keys=None)
+            prepared_creation_tx,
+            private_keys=hospital_private_key
+        )
 
-        self.bdb.transactions.send_commit(fulfilled_creation_tx)
-
-        # TODO: we should probably check if the transaction is successful here
+        res_tx = self.bdb.transactions.send_commit(fulfilled_creation_tx)
 
         return {
-            'ok': True,
-            'owner': key,
+            'ok': res_tx == fulfilled_creation_tx,
+            'owner': hospital_public_key,
         }
 
     def remove(self, key: str) -> dict:
         raise NotImplementedError
 
     def transfer(self, key: str, dest: str) -> dict:
-        get_res = self.get(key)
+        source_hospital_public_key = None  # TODO: where do we get this from?
+        source_hospital_private_key = None  # TODO: where do we get this from?
+        destination_hospital_public_key = None  # TODO: where do we get this from?
 
-        if not get_res['exists']:
+        query_results = self.bdb.assets.get(search=key)
+
+        if len(query_results) == 0:
             error = 'Key does not exist'
-        elif not get_res['is_owner']:
+
+        tx_id = query_results[0]['id']
+        patient_block = self.bdb.transactions.retrieve(tx_id)
+        output = patient_block['outputs'][0]
+
+        if output['public_keys'][0] != source_hospital_public_key:
             error = 'Not owner of key'
 
         if error:
@@ -73,9 +100,40 @@ class BigchaindbBackend(BaseStorageBackend):
                 'transferred': False,
                 'error': error,
             }
-        else:
-            transfer_asset = {
-                'id': get_res['value']
+
+        patient_transfer_asset = {
+            'id': tx_id
+        }
+
+        transfer_input = {
+            'fulfillment': output['condition']['details'],
+            'fulfills': {
+                'output_index': 0,  # TODO: should this always be 0?
+                'transaction_id': tx_id
+            },
+            'owners_before': output['public_keys']
+        }
+
+        prepared_transfer_tx = self.bdb.transactions.prepare(
+            operation='TRANSFER',
+            asset=patient_transfer_asset,
+            inputs=transfer_input,
+            recipients=destination_hospital_public_key
+        )
+
+        fulfilled_transfer_tx = self.bdb.transactions.fulfill(
+            prepared_transfer_tx,
+            private_keys=source_hospital_private_key
+        )
+
+        res_tx = self.bdb.transactions.send_commit(fulfilled_transfer_tx)
+
+        if res_tx != fulfilled_transfer_tx:
+            return {
+                'transferred': False,
+                'error': "Checksum failed"
             }
-            # TODO: We need to discuss this
-            raise NotImplementedError
+        else:
+            return {
+                'transferred': True
+            }

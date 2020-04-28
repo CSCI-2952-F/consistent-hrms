@@ -47,14 +47,14 @@ class ConsistentStorageProxy:
         Fetches a key from consistent storage.
 
         Arguments:
-            key {str} -- Key to fetch.
+            key {str} -- Key to fetch. Patient's UUIF
 
         Returns:
             dict --  Returns a dictionary as follows:
 
             {
                 'exists': [bool],
-                'value': [str or NoneType],
+                'value': [str or NoneType],  # Patient's public key
                 'is_owner': [bool],
                 'owner': [str],
             }
@@ -71,8 +71,8 @@ class ConsistentStorageProxy:
         Fails if the key is already present and stored by another owner.
 
         Arguments:
-            key {str} -- Key to store.
-            value {str} -- Value to store.
+            key {str} -- Key to store. Patient's UUID
+            value {str} -- Value to store. Patients's public key
 
         Returns:
             dict --  Returns a dictionary as follows:
