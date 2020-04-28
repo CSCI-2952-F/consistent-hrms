@@ -131,7 +131,6 @@ func (s *Server) Put(ctx context.Context, request *PutRequest) (*PutResponse, er
 			_ = tx.Rollback()
 			return nil, err
 		}
-
 	} else {
 		res, err = tx.ExecContext(ctx, `INSERT INTO patient_registrations (patient_id, hospital_id, public_key) VALUES (?, ?, ?);`, request.Key, id, request.Value)
 		if err != nil {
@@ -166,11 +165,151 @@ func (s *Server) Put(ctx context.Context, request *PutRequest) (*PutResponse, er
 }
 
 func (s *Server) Remove(ctx context.Context, request *RemoveRequest) (*RemoveResponse, error) {
-	panic("implement me")
+	var hospitalId string
+	exists := true
+
+	// Get requestor's hospital ID
+	id := ctx.Value("id").(string)
+	if id == "" {
+		return nil, ErrNilRequestorId
+	}
+
+	// Start transaction
+	tx, err := s.db.Begin()
+	if err != nil {
+		return nil, err
+	}
+
+	// Check if there is an existing entry with a write lock
+	row := tx.QueryRowContext(ctx, `SELECT hospital_id FROM patient_registrations WHERE patient_id = ? FOR UPDATE;`, request.Key)
+	if err := row.Scan(&hospitalId); err != nil {
+		if err != sql.ErrNoRows {
+			_ = tx.Rollback()
+			return nil, err
+		}
+		exists = false
+	}
+
+	// Cannot remove nonexistent key
+	if !exists {
+		// Rollback transaction
+		_ = tx.Rollback()
+
+		// Return failure response
+		resp := RemoveResponse{Removed: false, ErrorType: RemoveError_REMOVE_KEY_ERROR}
+		return &resp, nil
+	}
+
+	// Fail if an existing entry exists but the owner does not match
+	if hospitalId != id {
+		// Rollback transaction
+		_ = tx.Rollback()
+
+		// Return failure response
+		resp := RemoveResponse{Removed: false, ErrorType: RemoveError_REMOVE_NOT_OWNER}
+		return &resp, nil
+	}
+
+	// Delete row from database.
+	res, err := tx.ExecContext(ctx, `DELETE FROM patient_registrations WHERE patient_id = ?;`, request.Key)
+	if err != nil {
+		_ = tx.Rollback()
+		return nil, err
+	}
+
+	// Make sure that we deleted a row
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		_ = tx.Rollback()
+		return nil, err
+	}
+	if rowsAffected != 1 {
+		_ = tx.Rollback()
+		return nil, errors.New("no rows updated")
+	}
+
+	// Commit the transaction
+	if err := tx.Commit(); err != nil {
+		return nil, err
+	}
+
+	// Prepare response
+	resp := RemoveResponse{Removed: true}
+	return &resp, nil
 }
 
 func (s *Server) Transfer(ctx context.Context, request *TransferRequest) (*TransferResponse, error) {
-	panic("implement me")
+	var hospitalId string
+	exists := true
+
+	// Get requestor's hospital ID
+	id := ctx.Value("id").(string)
+	if id == "" {
+		return nil, ErrNilRequestorId
+	}
+
+	// Start transaction
+	tx, err := s.db.Begin()
+	if err != nil {
+		return nil, err
+	}
+
+	// Check if there is an existing entry with a write lock
+	row := tx.QueryRowContext(ctx, `SELECT hospital_id FROM patient_registrations WHERE patient_id = ? FOR UPDATE;`, request.Key)
+	if err := row.Scan(&hospitalId); err != nil {
+		if err != sql.ErrNoRows {
+			_ = tx.Rollback()
+			return nil, err
+		}
+		exists = false
+	}
+
+	// Cannot transfer nonexistent key
+	if !exists {
+		// Rollback transaction
+		_ = tx.Rollback()
+
+		// Return failure response
+		resp := TransferResponse{Transferred: false, ErrorType: TransferError_TRANSFER_KEY_ERROR}
+		return &resp, nil
+	}
+
+	// Fail if an existing entry exists but the owner does not match
+	if hospitalId != id {
+		// Rollback transaction
+		_ = tx.Rollback()
+
+		// Return failure response
+		resp := TransferResponse{Transferred: false, ErrorType: TransferError_TRANSFER_NOT_OWNER}
+		return &resp, nil
+	}
+
+	// Update owner in database.
+	res, err := tx.ExecContext(ctx, `UPDATE patient_registrations SET hospital_id = ? WHERE patient_id = ?;`, request.NewOwner, request.Key)
+	if err != nil {
+		_ = tx.Rollback()
+		return nil, err
+	}
+
+	// Make sure that we updated a row
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		_ = tx.Rollback()
+		return nil, err
+	}
+	if rowsAffected != 1 {
+		_ = tx.Rollback()
+		return nil, errors.New("no rows updated")
+	}
+
+	// Commit the transaction
+	if err := tx.Commit(); err != nil {
+		return nil, err
+	}
+
+	// Prepare response
+	resp := TransferResponse{Transferred: true}
+	return &resp, nil
 }
 
 func (s *Server) Request(ctx context.Context, r *WrappedRequest) (*WrappedResponse, error) {
