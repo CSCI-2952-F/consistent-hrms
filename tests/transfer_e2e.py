@@ -75,6 +75,15 @@ def main():
     })
     print(f'    Exception obtained: {res}')
 
+    # Attempt to transfer from hospital A to hospital A
+    print(f'[*] Attempting to transfer uid={patient_uid} from {hospitals[0]} to {hospitals[0]}...')
+    res = fail('http://localhost:8100/patient_transfer', {
+        'uid': patient_uid,
+        'auth_token': valid_token,
+        'dest_hospital': slugs[0],
+    })
+    print(f'    Exception obtained: {res}')
+
     # Now transfer from hospital A to hospital B for real
     print(f'[*] Transferring uid={patient_uid} from {hospitals[0]} to {hospitals[1]} for real this time...')
     res = succeed('http://localhost:8100/patient_transfer', {
