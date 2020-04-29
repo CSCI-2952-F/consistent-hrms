@@ -22,6 +22,7 @@ services:
       context: .
       dockerfile: ./src/bigchaindb/Dockerfile-dev
     volumes:
+      - ./src/bigchaindb:/usr/src/app
       - ./src/bigchaindb/bigchaindb:/usr/src/app/bigchaindb
       - ./src/bigchaindb/tests:/usr/src/app/tests
       - ./src/bigchaindb/docs:/usr/src/app/docs
