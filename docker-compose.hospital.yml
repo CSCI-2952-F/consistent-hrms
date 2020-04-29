@@ -101,6 +101,8 @@ services:
     build:
       context: .
       dockerfile: ./build/consistent_storage/Dockerfile
+    ports:
+      - '127.0.0.1:${CONSISTENT_STORAGE_PORT:-8200}:80'
     networks:
       - default
       - rabbitmq

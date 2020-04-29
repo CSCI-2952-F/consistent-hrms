@@ -12,6 +12,7 @@ from subprocess import Popen
 
 BASE_FRONTEND_PORT = 8000
 BASE_API_GATEWAY_PORT = 8100
+BASE_CONSISTENT_STORAGE_PORT = 8200
 
 DOCKER_COMPOSE_FILES = ['docker-compose.hospital.yml', 'docker-compose.hospital.override.yml']
 HOSPITAL_NAMES_FILE = 'data/hospitals.txt'
@@ -96,6 +97,7 @@ def execute(args):
         # Prepare ports
         frontend_port = BASE_FRONTEND_PORT + i
         api_gateway_port = BASE_API_GATEWAY_PORT + i
+        consistent_storage_port = BASE_CONSISTENT_STORAGE_PORT + i
 
         # Prepare environment
         env = {
@@ -103,6 +105,7 @@ def execute(args):
             'HOSPITAL_NAME_SLUG': slug,
             'FRONTEND_PORT': str(frontend_port),
             'API_GATEWAY_PORT': str(api_gateway_port),
+            'CONSISTENT_STORAGE_PORT': str(consistent_storage_port),
         }
 
         # Build and start containers in detached mode
