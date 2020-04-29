@@ -13,9 +13,10 @@ type ServiceDiscovery interface {
 }
 
 type RegisterValue struct {
-	Id             string `json:"id"`
-	Name           string `json:"name"`
-	GatewayAddr    string `json:"gateway_addr"`
-	PublicKey      []byte `json:"public_key"`
-	RegisteredTime int64  `json:"registered_time"`
+	Id                    string `json:"id"`
+	Name                  string `json:"name"`
+	GatewayAddr           string `json:"gateway_addr"`
+	ConsistentStorageAddr string `json:"consistent_storage_addr"`
+	PublicKey             []byte `json:"public_key"`
+	RegisteredTime        int64  `json:"registered_time"`
 }

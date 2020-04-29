@@ -17,8 +17,8 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='discovery.proto',
   package='',
   syntax='proto3',
-  serialized_options=b'Z\004main',
-  serialized_pb=b'\n\x0f\x64iscovery.proto\"d\n\x08Hospital\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x16\n\x0eregisteredTime\x18\x03 \x01(\x03\x12\x13\n\x0bgatewayAddr\x18\x04 \x01(\t\x12\x11\n\tpublicKey\x18\x05 \x01(\x0c\"\r\n\x0bInfoRequest\"T\n\x0cInfoResponse\x12\x16\n\x0eregisteredTime\x18\x01 \x01(\x03\x12\n\n\x02id\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x12\n\nprivateKey\x18\x04 \x01(\x0c\"\r\n\x0bListRequest\",\n\x0cListResponse\x12\x1c\n\thospitals\x18\x01 \x03(\x0b\x32\t.Hospital2m\n\x11HospitalDiscovery\x12(\n\x07GetInfo\x12\x0c.InfoRequest\x1a\r.InfoResponse\"\x00\x12.\n\rListHospitals\x12\x0c.ListRequest\x1a\r.ListResponse\"\x00\x42\x06Z\x04mainb\x06proto3'
+  serialized_options=b'Z\tdiscovery',
+  serialized_pb=b'\n\x0f\x64iscovery.proto\"\x83\x01\n\x08Hospital\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x16\n\x0eregisteredTime\x18\x03 \x01(\x03\x12\x13\n\x0bgatewayAddr\x18\x04 \x01(\t\x12\x11\n\tpublicKey\x18\x05 \x01(\x0c\x12\x1d\n\x15\x63onsistentStorageAddr\x18\x06 \x01(\t\"\r\n\x0bInfoRequest\"T\n\x0cInfoResponse\x12\x16\n\x0eregisteredTime\x18\x01 \x01(\x03\x12\n\n\x02id\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x12\n\nprivateKey\x18\x04 \x01(\x0c\"\r\n\x0bListRequest\",\n\x0cListResponse\x12\x1c\n\thospitals\x18\x01 \x03(\x0b\x32\t.Hospital2m\n\x11HospitalDiscovery\x12(\n\x07GetInfo\x12\x0c.InfoRequest\x1a\r.InfoResponse\"\x00\x12.\n\rListHospitals\x12\x0c.ListRequest\x1a\r.ListResponse\"\x00\x42\x0bZ\tdiscoveryb\x06proto3'
 )
 
 
@@ -66,6 +66,13 @@ _HOSPITAL = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='consistentStorageAddr', full_name='Hospital.consistentStorageAddr', index=5,
+      number=6, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -78,8 +85,8 @@ _HOSPITAL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=19,
-  serialized_end=119,
+  serialized_start=20,
+  serialized_end=151,
 )
 
 
@@ -102,8 +109,8 @@ _INFOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=121,
-  serialized_end=134,
+  serialized_start=153,
+  serialized_end=166,
 )
 
 
@@ -154,8 +161,8 @@ _INFORESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=136,
-  serialized_end=220,
+  serialized_start=168,
+  serialized_end=252,
 )
 
 
@@ -178,8 +185,8 @@ _LISTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=222,
-  serialized_end=235,
+  serialized_start=254,
+  serialized_end=267,
 )
 
 
@@ -209,8 +216,8 @@ _LISTRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=237,
-  serialized_end=281,
+  serialized_start=269,
+  serialized_end=313,
 )
 
 _LISTRESPONSE.fields_by_name['hospitals'].message_type = _HOSPITAL
@@ -265,8 +272,8 @@ _HOSPITALDISCOVERY = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=283,
-  serialized_end=392,
+  serialized_start=315,
+  serialized_end=424,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetInfo',

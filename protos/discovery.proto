@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "main";
+option go_package = "discovery";
 
 service HospitalDiscovery {
   rpc GetInfo(InfoRequest) returns (InfoResponse) {}
@@ -14,6 +14,7 @@ message Hospital {
   string gatewayAddr = 4;   // Address to the hospital's gateway
   bytes publicKey = 5;      // Public key of the hospital for any signed
                             // communication
+  string consistentStorageAddr = 6; // Address to hospital's consistent storage
 }
 
 message InfoRequest {}

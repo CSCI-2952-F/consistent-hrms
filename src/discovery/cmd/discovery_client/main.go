@@ -45,6 +45,10 @@ func main() {
 	if hospitalGatewayAddr == "" {
 		log.Fatalf("HOSPITAL_GATEWAY_ADDR not set")
 	}
+	consistentStorageAddr := os.Getenv("CONSISTENT_STORAGE_ADDR")
+	if consistentStorageAddr == "" {
+		log.Fatalf("CONSISTENT_STORAGE_ADDR not set")
+	}
 
 	// Configuration environment variables
 	grpcListenAddr := os.Getenv("GRPC_LISTEN_ADDR")
@@ -100,11 +104,12 @@ func main() {
 	// Prepare register value
 	registeredTime = time.Now()
 	value := discovery.RegisterValue{
-		Id:             hospitalId,
-		Name:           hospitalName,
-		GatewayAddr:    hospitalGatewayAddr,
-		PublicKey:      hospitalPublicKey,
-		RegisteredTime: registeredTime.Unix(),
+		Id:                    hospitalId,
+		Name:                  hospitalName,
+		GatewayAddr:           hospitalGatewayAddr,
+		ConsistentStorageAddr: consistentStorageAddr,
+		PublicKey:             hospitalPublicKey,
+		RegisteredTime:        registeredTime.Unix(),
 	}
 
 	// Register ourselves on service discovery

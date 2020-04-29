@@ -19,7 +19,7 @@ ensure_up() {
 
   dco="docker-compose -p "$project_name" $files"
 
-  $dco up -d --build
+  $dco up -d --build --remove-orphans
   stopped=$($dco ps --services --filter status=stopped)
   if [[ "$stopped" ]]
   then

@@ -29,11 +29,12 @@ func (s *Server) ListHospitals(ctx context.Context, _ *discovery.ListRequest) (*
 
 	for _, value := range values {
 		hospital := discovery.Hospital{
-			Id:             value.Id,
-			Name:           value.Name,
-			GatewayAddr:    value.GatewayAddr,
-			PublicKey:      value.PublicKey,
-			RegisteredTime: value.RegisteredTime,
+			Id:                    value.Id,
+			Name:                  value.Name,
+			GatewayAddr:           value.GatewayAddr,
+			ConsistentStorageAddr: value.ConsistentStorageAddr,
+			PublicKey:             value.PublicKey,
+			RegisteredTime:        value.RegisteredTime,
 		}
 
 		hospitals = append(hospitals, &hospital)

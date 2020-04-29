@@ -33,7 +33,7 @@ services:
       rabbitmq: {}
       interhospital:
         aliases:
-          - ${HOSPITAL_NAME_SLUG}
+          - ${HOSPITAL_NAME_SLUG}.interhospital
     depends_on:
       - rabbitmq
       - patient_service
@@ -49,7 +49,8 @@ services:
     environment:
       - HOSPITAL_ID=${HOSPITAL_NAME_SLUG}
       - HOSPITAL_NAME
-      - HOSPITAL_GATEWAY_ADDR=${HOSPITAL_NAME_SLUG}:80
+      - HOSPITAL_GATEWAY_ADDR=${HOSPITAL_NAME_SLUG}.interhospital
+      - CONSISTENT_STORAGE_ADDR=${HOSPITAL_NAME_SLUG}.loadtesting.local
       - ZK_ADDR=zookeeper:2181
       - KEY_PREFIX=/hrms/hospitals/
       - GRPC_LISTEN_ADDR=:8080
@@ -104,11 +105,13 @@ services:
     ports:
       - '127.0.0.1:${CONSISTENT_STORAGE_PORT:-8200}:80'
     networks:
-      - default
-      - rabbitmq
-      - hospital-bigchain
-      - hospital-centraldb
-      - loadtesting
+      default: {}
+      rabbitmq: {}
+      hospital-bigchain: {}
+      hospital-centraldb: {}
+      loadtesting:
+        aliases:
+          - ${HOSPITAL_NAME_SLUG}.loadtesting.local # DNS hostname within the loadtesting network
     environment:
       - CONSISTENT_STORAGE_BACKEND=${CONSISTENT_STORAGE_BACKEND:-sagas}
       - SAGAS_GRPC_ADDR=sagas:8080

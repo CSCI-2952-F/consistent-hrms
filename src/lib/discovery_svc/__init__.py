@@ -37,6 +37,7 @@ class DiscoveryService:
                 'registered_time': datetime.fromtimestamp(hospital.registeredTime).isoformat(),
                 'public_key': hospital.publicKey.decode('utf-8'),
                 'gateway_addr': hospital.gatewayAddr,
+                'consistent_storage_addr': hospital.consistentStorageAddr,
             })
 
         return hospitals
