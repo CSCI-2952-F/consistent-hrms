@@ -10,6 +10,7 @@ import (
 	"syscall"
 
 	"github.com/irvinlim/cs2952f-hrms/src/discovery"
+
 	"github.com/irvinlim/cs2952f-hrms/src/loadtesting"
 )
 
