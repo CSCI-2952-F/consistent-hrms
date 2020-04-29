@@ -7,8 +7,9 @@ import string
 import sys
 import time
 
-from gevent.pool import Pool
+import grequests
 import requests
+from gevent.pool import Pool
 
 from lib.discovery_svc import DiscoveryService
 
@@ -35,7 +36,7 @@ def request(method, addr, data):
         return None
 
 
-def dispatch(method, get_data, addrs):
+def dispatch(method, get_data, addrs, executor):
     """
     Dispatch requests asynchronously and return the time taken, as well as the results.
 
@@ -46,38 +47,49 @@ def dispatch(method, get_data, addrs):
         addrs {List[str]} -- List of addresses that the requests should dispatch to.
     """
 
-    # Use arbitrary pool size of 100
-    pool = Pool(1000)
-
     start_time = time.time()
 
-    # Spawn greenlets
-    greenlets = [pool.spawn(request, method, addr, data) for data in get_data for addr in addrs]
+    if executor == 'gevent':
+        # Use arbitrary pool size of 1000
+        pool = Pool(1000)
 
-    # Wait until complete
-    pool.join()
+        # Spawn greenlets
+        greenlets = [pool.spawn(request, method, addr, data) for data in get_data for addr in addrs]
 
-    end_time = time.time()
-    actual_duration = end_time - start_time
+        # Wait until complete
+        pool.join()
+        end_time = time.time()
 
-    # Get responses
-    responses = [g.value for g in greenlets]
+        # Get responses
+        responses = [g.value for g in greenlets]
+
+    elif executor == 'grequests':
+        # Create requests
+        reqs = (grequests.request(method, f'http://{addr}/', json=data) for data in get_data for addr in addrs)
+
+        # Map requests to responses
+        responses = grequests.map(reqs)
+        end_time = time.time()
+
+    else:
+        raise Exception(f'Unknown executor: {executor}')
 
     # Compute total duration as a sum of elapsed time for valid responses
     durations = [res.elapsed.total_seconds() for res in responses if res]
     res_data = [res.json() for res in responses if res]
 
+    actual_duration = end_time - start_time
     return actual_duration, durations, res_data
 
 
-def run(test, num_requests, hospitals):
+def run(test, num_requests, hospitals, executor):
     addrs = [hospital['consistent_storage_addr'] for hospital in hospitals]
     ids = [hospital['id'] for hospital in hospitals]
 
     if test == "get":
         # Fetch random, non-existent keys
         data = ({'key': random_key()} for _ in range(num_requests))
-        actual_duration, durations, responses = dispatch('GET', data, addrs)
+        actual_duration, durations, responses = dispatch('GET', data, addrs, executor)
 
         # Count successes
         num_success = len([1 for res in responses if res['exists']])
@@ -89,11 +101,11 @@ def run(test, num_requests, hospitals):
 
         # Put random keys
         data = ({'key': key, 'value': PUBLIC_KEY} for key in keys)
-        dispatch('PUT', data, addrs)
+        dispatch('PUT', data, addrs, executor)
 
         # Now measure getting successfully put keys
         data = ({'key': key} for key in keys)
-        actual_duration, durations, responses = dispatch('GET', data, addrs)
+        actual_duration, durations, responses = dispatch('GET', data, addrs, executor)
 
         # Count successes
         num_success = len([1 for res in responses if res['exists']])
@@ -102,7 +114,7 @@ def run(test, num_requests, hospitals):
     elif test == "put":
         # Put random keys
         data = ({'key': random_key(), 'value': PUBLIC_KEY} for _ in range(num_requests))
-        actual_duration, durations, responses = dispatch('PUT', data, addrs)
+        actual_duration, durations, responses = dispatch('PUT', data, addrs, executor)
 
         # Count successes
         num_success = len([1 for res in responses if res['ok']])
@@ -114,11 +126,11 @@ def run(test, num_requests, hospitals):
 
         # Put keys initially
         data = ({'key': key, 'value': PUBLIC_KEY} for key in keys)
-        dispatch('PUT', data, addrs)
+        dispatch('PUT', data, addrs, executor)
 
         # Now measure the removal
         data = ({'key': key} for key in keys)
-        actual_duration, durations, responses = dispatch('REMOVE', data, addrs)
+        actual_duration, durations, responses = dispatch('REMOVE', data, addrs, executor)
 
         # Count successes
         num_success = len([1 for res in responses if res['removed']])
@@ -130,12 +142,12 @@ def run(test, num_requests, hospitals):
 
         # Put keys initially
         data = ({'key': key, 'value': PUBLIC_KEY} for key in keys)
-        dispatch('PUT', data, addrs)
+        dispatch('PUT', data, addrs, executor)
 
         # Now transfer them all to some random hospital
         owners = (random.choice(ids) for _ in range(num_requests))
         data = ({'key': key, 'owner': owner} for key, owner in zip(keys, owners))
-        actual_duration, durations, responses = dispatch('TRANSFER', data, addrs)
+        actual_duration, durations, responses = dispatch('TRANSFER', data, addrs, executor)
 
         # Count successes
         num_success = len([1 for res in responses if res['transferred']])
@@ -146,12 +158,18 @@ def run(test, num_requests, hospitals):
 
 
 def main():
-    if len(sys.argv) != 3:
-        print('Usage python storage_load_test.py <test> <num_requests>')
+    if len(sys.argv) < 3:
+        print('Usage python storage_load_test.py <test> <num_requests> <executor>')
         sys.exit(1)
 
     test = sys.argv[1].strip().lower()
     num_requests = int(sys.argv[2])
+
+    executor = 'gevent'
+    if len(sys.argv) == 4 and sys.argv[3] == 'grequests':
+        executor = 'grequests'
+
+    print(f'Using {executor} executor.')
 
     # Find all hospitals via discovery service
     hospitals = DiscoveryService().list_hospitals()
@@ -161,7 +179,7 @@ def main():
     print(f'Discovered {num_hospitals} hospitals: {hospital_ids}')
 
     # Dispatch requests
-    actual_duration, durations, num_success = run(test, num_requests, hospitals)
+    actual_duration, durations, num_success = run(test, num_requests, hospitals, executor)
 
     # Number of valid responses
     num_ok = len(durations)
