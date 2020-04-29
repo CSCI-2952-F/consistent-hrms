@@ -31,8 +31,11 @@ class ConsistentStorageProxy:
             self.backend = SagasBackend(grpc_addr)
 
         elif BACKEND == 'bigchain':
-            self.backend = BigchaindbBackend()
-            raise NotImplementedError()
+            bdb_root_url = os.getenv('BIGCHAIN_ROOT_URL')
+            if not bdb_root_url:
+                raise Exception('BIGCHAIN_ROOT_URL not set')
+
+            self.backend = BigchaindbBackend(bdb_root_url)
 
         else:
             raise Exception(f'Invalid consistent storage backend: "{BACKEND}"')

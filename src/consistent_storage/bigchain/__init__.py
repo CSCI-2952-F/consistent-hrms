@@ -2,9 +2,15 @@
 import base64
 import os
 
+# global
+from bigchaindb_driver import BigchainDB
+from bigchaindb_driver.crypto import generate_keypair
+
 # local
-from src.bigchaindb.bigchaindb_driver import BigchainDB
 from lib.consistent_storage import BaseStorageBackend
+
+GENESIS_PUBLIC_KEY = 'BZcVfy3LgB5z1uj2HT4s2sJ8DVnW8Hzh1CJZTZecf2ac'
+GENESIS_PRIVATE_KEY = 'HzKkzuCDYfppGH7vbBrXeMA6Fg6fEVAiPaeXhxmcJ9Vm'
 
 
 class BigchaindbBackend(BaseStorageBackend):
@@ -14,12 +20,42 @@ class BigchaindbBackend(BaseStorageBackend):
 
     Implements the BaseStorageBackend interface.
     """
-    def __init__(self):
-        self.bdb = BigchainDB("http://0.0.0.0:9984")
+    def __init__(self, bdb_root_url: str, hospital_slug: str):
+        self.hospital_slug = hospital_slug
+        self.keys = generate_keypair()
+        self.bdb = BigchainDB(bdb_root_url)
+
+        if not self._put_self_key():
+            raise Exception("ERROR: Failed to put self key on bigchaindb")
+
+    def _put_self_key(self) -> bool:
+        hospital = {
+            'data': {
+                'public_key': self.keys.public_key,
+            }
+        }
+        metadata = {
+            'record_type': 'hospital_key',
+            'index': self.hospital_slug + "-public-key",
+        }
+
+        prepared_creation_tx = self.bdb.transactions.prepare(
+            operation='CREATE',
+            signers=GENESIS_PUBLIC_KEY,
+            asset=hospital,
+            metadata=metadata
+        )
+
+        fulfilled_creation_tx = self.bdb.transactions.fulfill(
+            prepared_creation_tx,
+            private_keys=GENESIS_PRIVATE_KEY
+        )
+
+        res_tx = self.bdb.transactions.send_commit(fulfilled_creation_tx)
+
+        return res_tx == fulfilled_creation_tx
 
     def get(self, key: str) -> dict:
-        query_hospital_public_key = None  # TODO: where do we get this from?
-
         res = self.bdb.assets.get(search=key)
 
         if len(res) == 0:
@@ -35,14 +71,11 @@ class BigchaindbBackend(BaseStorageBackend):
         return {
             'exists': True,
             'value': res[0]['data']['patient']['public_key'],
-            'is_owner': owner == query_hospital_public_key,
+            'is_owner': owner == self.keys.public_key,
             'owner': owner,
         }
 
     def put(self, key: str, value: str) -> dict:
-        hospital_public_key = None  # TODO: where do we get this from?
-        hospital_private_key = None  # TODO: where do we get this from?
-
         patient = {
             'data': {
                 'patient': {
@@ -52,36 +85,36 @@ class BigchaindbBackend(BaseStorageBackend):
             }
         }
         metadata = {
-            'patient': 'registration',
-            'hospital_name': None  # TODO
+            'record_type': 'patient_registration',
+            'hospital_slug': self.hospital_slug
         }
 
         prepared_creation_tx = self.bdb.transactions.prepare(
             operation='CREATE',
-            signers=hospital_public_key,
+            signers=self.keys.public_key,
             asset=patient,
             metadata=metadata
         )
 
         fulfilled_creation_tx = self.bdb.transactions.fulfill(
             prepared_creation_tx,
-            private_keys=hospital_private_key
+            private_keys=self.keys.private_key
         )
 
         res_tx = self.bdb.transactions.send_commit(fulfilled_creation_tx)
 
         return {
             'ok': res_tx == fulfilled_creation_tx,
-            'owner': hospital_public_key,
+            'owner': self.keys.public_key,
         }
 
     def remove(self, key: str) -> dict:
         raise NotImplementedError
 
     def transfer(self, key: str, dest: str) -> dict:
-        source_hospital_public_key = None  # TODO: where do we get this from?
-        source_hospital_private_key = None  # TODO: where do we get this from?
-        destination_hospital_public_key = None  # TODO: where do we get this from?
+        # assumes dest is the hospital slug
+        # use dest to query blockchain to find public key of destination hospital
+        destination_hospital_public_key = self._get_key_by_slug(dest)
 
         query_results = self.bdb.assets.get(search=key)
 
@@ -92,7 +125,7 @@ class BigchaindbBackend(BaseStorageBackend):
         patient_block = self.bdb.transactions.retrieve(tx_id)
         output = patient_block['outputs'][0]
 
-        if output['public_keys'][0] != source_hospital_public_key:
+        if output['public_keys'][0] != self.keys.public_key:
             error = 'Not owner of key'
 
         if error:
@@ -123,7 +156,7 @@ class BigchaindbBackend(BaseStorageBackend):
 
         fulfilled_transfer_tx = self.bdb.transactions.fulfill(
             prepared_transfer_tx,
-            private_keys=source_hospital_private_key
+            private_keys=self.keys.private_key
         )
 
         res_tx = self.bdb.transactions.send_commit(fulfilled_transfer_tx)
@@ -137,3 +170,13 @@ class BigchaindbBackend(BaseStorageBackend):
             return {
                 'transferred': True
             }
+
+    def _get_key_by_slug(self, hospital_slug: str) -> str:
+        query_index = hospital_slug + '-public-key'
+        res = self.bdb.metadata.get(search=query_index)
+
+        if len(res) == 0:
+            return ""
+
+        hospital_block = res[0]
+        return hospital_block['data']['public_key']

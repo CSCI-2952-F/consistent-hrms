@@ -29,4 +29,4 @@ mkdnet hrms-hospital-discovery
 # Start common infra with Docker Compose
 ensure_up docker-compose.discovery.yml
 ensure_up docker-compose.sagas.yml
-ensure_up docker-compose.bigchaindb.yml
+ensure_up docker-compose.bigchain.yml

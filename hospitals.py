@@ -154,6 +154,13 @@ def main():
     elif command == 'help':
         print_help()
 
+    elif command == 'build_networks':
+        cmds = []
+        networks = ['hrms-hospital-discovery', 'hrms-hospital-sagas', 'hrms-hospital-bigchain']
+        for network in networks:
+            cmds.append(f"docker network create {network}")
+        os.system('; '.join(cmds))
+
     else:
         print_help()
         sys.exit(1)
