@@ -2,6 +2,9 @@ module github.com/irvinlim/cs2952f-hrms/src/discovery
 
 go 1.14
 
+// Temporary fix: https://github.com/etcd-io/etcd/issues/11563#issuecomment-620474246
+replace go.etcd.io/etcd => go.etcd.io/etcd v0.5.0-alpha.5.0.20200329194405-dd816f0735f8
+
 require (
 	github.com/coreos/go-semver v0.3.0 // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
@@ -12,6 +15,7 @@ require (
 	github.com/gorilla/websocket v1.4.2 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.2.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.14.4 // indirect
+	github.com/irvinlim/cs2952f-hrms/src/golang-lib v0.0.0-20200429211721-5f83562f74e0
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/prometheus/client_golang v1.5.1 // indirect
 	github.com/prometheus/procfs v0.0.11 // indirect
@@ -19,9 +23,7 @@ require (
 	github.com/sirupsen/logrus v1.5.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/tmc/grpc-websocket-proxy v0.0.0-20200122045848-3419fae592fc // indirect
-	go.etcd.io/bbolt v1.3.4 // indirect
 	go.etcd.io/etcd v0.5.0-alpha.5.0.20200306183522-221f0cc107cb
-	go.uber.org/zap v1.14.1 // indirect
 	golang.org/x/crypto v0.0.0-20200422194213-44a606286825 // indirect
 	golang.org/x/net v0.0.0-20200421231249-e086a090c8fd // indirect
 	golang.org/x/sys v0.0.0-20200420163511-1957bb5e6d1f // indirect

@@ -11,11 +11,6 @@ type KeyStorage struct {
 	filepath string
 }
 
-type CryptoKeyStorage interface {
-	Get() ([]byte, error)
-	Put(data []byte) error
-}
-
 func NewKeyStorage(filepath string) (*KeyStorage, error) {
 	// Ensure that path exists
 	if err := os.MkdirAll(path.Dir(filepath), os.ModePerm); err != nil {
@@ -32,10 +27,10 @@ func NewKeyStorage(filepath string) (*KeyStorage, error) {
 	return &KeyStorage{filepath: filepath}, nil
 }
 
-func (s *KeyStorage) Get() ([]byte, error) {
+func (s *KeyStorage) GetPrivateKey() ([]byte, error) {
 	return ioutil.ReadFile(s.filepath)
 }
 
-func (s *KeyStorage) Put(data []byte) error {
+func (s *KeyStorage) PutPrivateKey(data []byte) error {
 	return ioutil.WriteFile(s.filepath, data, os.ModePerm)
 }

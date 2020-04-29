@@ -15,6 +15,16 @@ import (
 	"log"
 )
 
+type CryptoPrivateKeyStorage interface {
+	GetPrivateKey() ([]byte, error)
+	PutPrivateKey(data []byte) error
+}
+
+type CryptoPublicKeyStorage interface {
+	GetPublicKey(name string) ([]byte, error)
+	PutPublicKey(name string, data []byte) error
+}
+
 // A Signer can create signatures that verify against a public key.
 type Signer interface {
 	// Sign returns raw signature for the given data.
@@ -87,9 +97,9 @@ func newUnsignerFromKey(k *rsa.PublicKey) (Unsigner, error) {
 	return &rsaPublicKey{k}, nil
 }
 
-func LoadPrivateKey(storage CryptoKeyStorage) (Signer, error) {
+func LoadPrivateKey(storage CryptoPrivateKeyStorage) (Signer, error) {
 	// Try to load private key, otherwise regenerate it
-	bytes, err := storage.Get()
+	bytes, err := storage.GetPrivateKey()
 	if err != nil || bytes == nil {
 		return generatePrivateKey(storage)
 	}
@@ -105,7 +115,16 @@ func LoadPrivateKey(storage CryptoKeyStorage) (Signer, error) {
 	return generatePrivateKey(storage)
 }
 
-func generatePrivateKey(storage CryptoKeyStorage) (Signer, error) {
+func LoadPublicKey(storage CryptoPublicKeyStorage, key string) (Unsigner, error) {
+	bytes, err := storage.GetPublicKey(key)
+	if err != nil || bytes == nil {
+		return nil, fmt.Errorf("could not load public key for %s", key)
+	}
+
+	return ParsePublicKey(bytes)
+}
+
+func generatePrivateKey(storage CryptoPrivateKeyStorage) (Signer, error) {
 	key, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
 		return nil, err
@@ -118,7 +137,7 @@ func generatePrivateKey(storage CryptoKeyStorage) (Signer, error) {
 		},
 	)
 
-	if err := storage.Put(pemdata); err != nil {
+	if err := storage.PutPrivateKey(pemdata); err != nil {
 		return nil, err
 	}
 

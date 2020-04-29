@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
+
+	lib "github.com/irvinlim/cs2952f-hrms/src/golang-lib"
 )
 
 type SagaOperationType int
@@ -36,7 +38,7 @@ func (val SagaValue) checkOwnership(op SagaOperation) bool {
 	}
 
 	// Load public key for supposed owner
-	key, err := loadPublicKey(op.metadata.Owner)
+	key, err := lib.LoadPublicKey(keyStorage, op.metadata.Owner)
 	if err != nil {
 		log.Printf("ownership check failed for %s: public key not found: %s", op, err)
 		return false

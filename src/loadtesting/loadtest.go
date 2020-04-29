@@ -65,6 +65,9 @@ func (t *LoadTest) Run(ctx context.Context, name string, numRequests int, hospit
 				go t.request(ctx, "GET", url, body, "exists")
 			}
 		}
+
+	default:
+		return nil, fmt.Errorf("invalid test name: %s", name)
 	}
 
 	// Wait to receive response
