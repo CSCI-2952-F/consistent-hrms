@@ -36,7 +36,7 @@ func NewFilePersistentStorage(filePath string) (*FilePersistentStorage, error) {
 	}
 
 	// Ensure that path exists
-	err := os.MkdirAll(path.Base(filePath), os.ModePerm)
+	err := os.MkdirAll(path.Dir(filePath), os.ModePerm)
 	if err != nil {
 		return nil, err
 	}

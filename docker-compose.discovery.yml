@@ -1,6 +1,21 @@
 version: '3'
 
 services:
+  # Centralized discovery server that exposes all hospitals
+  discovery_server:
+    build:
+      context: ./src/discovery
+    entrypoint: discovery_server
+    networks:
+      - hospital-discovery
+    environment:
+      - ZK_ADDR=zookeeper:2181
+      - KEY_PREFIX=/hrms/hospitals/
+      - GRPC_LISTEN_ADDR=:8080
+    expose:
+      - 8080
+
+  # Uses ZK for service discovery
   zookeeper:
     image: zookeeper
     networks:

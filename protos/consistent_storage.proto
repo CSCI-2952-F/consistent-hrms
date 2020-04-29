@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+option go_package = "main";
+
+// Protobuf service that wraps a ConsistentStorage API
+// to include fields and functionality for multiplexing
+// requests from multiple clients. Adds identification
+// and authorization fields.
+service CentralConsistentStorage {
+  rpc Request(WrappedRequest) returns (WrappedResponse) {}
+}
+
+message WrappedRequest {
+  string id = 1;       // Unique ID of the requestor
+  bytes signature = 2; // Signature of the request, signed by the requestor's
+                       // private key
+
+  oneof request { // Exactly one type of request can be specified
+    GetRequest get = 10;
+    PutRequest put = 11;
+    RemoveRequest remove = 12;
+    TransferRequest transfer = 13;
+  }
+}
+
+message WrappedResponse {
+  oneof response { // Exactly one response is returned
+    GetResponse get = 10;
+    PutResponse put = 11;
+    RemoveResponse remove = 12;
+    TransferResponse transfer = 13;
+  }
+}
+
+// Perform DB operations on a consistent storage.
+service ConsistentStorage {
+  rpc Get(GetRequest) returns (GetResponse) {}
+  rpc Put(PutRequest) returns (PutResponse) {}
+  rpc Remove(RemoveRequest) returns (RemoveResponse) {}
+  rpc Transfer(TransferRequest) returns (TransferResponse) {}
+}
+
+message GetRequest { string key = 1; }
+
+message GetResponse {
+  bool exists = 1;
+  bytes value = 2;
+  bool isOwner = 3;
+  string owner = 4;
+}
+
+message PutRequest {
+  string key = 1;
+  bytes value = 2;
+}
+
+message PutResponse {
+  bool ok = 1;
+  string owner = 2;
+}
+
+message RemoveRequest { string key = 1; }
+
+enum RemoveError {
+  REMOVE_KEY_ERROR = 0;
+  REMOVE_NOT_OWNER = 1;
+}
+
+message RemoveResponse {
+  bool removed = 1;
+  RemoveError errorType = 2;
+}
+
+message TransferRequest {
+  string key = 1;
+  string newOwner = 2;
+}
+
+enum TransferError {
+  TRANSFER_KEY_ERROR = 0;
+  TRANSFER_NOT_OWNER = 1;
+}
+
+message TransferResponse {
+  bool transferred = 1;
+  TransferError errorType = 2;
+}

@@ -1,11 +1,12 @@
 #!/bin/sh
 
-set -x
+set -ex
 
 # Prettier
 prettier \
   --write \
-  src/**/*
+  src/**/*.html \
+  src/**/*.css
 
 # YAPF
 yapf \

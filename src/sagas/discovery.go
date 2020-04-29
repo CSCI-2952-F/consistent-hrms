@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"errors"
+	"fmt"
 
 	"google.golang.org/grpc"
 )
@@ -21,7 +23,16 @@ func NewDiscoverySvcClient(grpcAddr string) (*DiscoverySvcClient, error) {
 	}, nil
 }
 
-func (c *DiscoverySvcClient) GetInfo() (*InfoResponse, error) {
+func (c *DiscoverySvcClient) GetUniqueId() (string, error) {
 	req := InfoRequest{}
-	return c.client.GetInfo(context.Background(), &req)
+	info, err := c.client.GetInfo(context.Background(), &req)
+	if err != nil {
+		return "", fmt.Errorf("could not lookup discovery svc: %s", err)
+	}
+
+	if info.Id == "" {
+		return "", errors.New("discovery svc returned empty hospital id")
+	}
+
+	return info.Id, nil
 }

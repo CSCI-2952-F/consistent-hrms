@@ -18,7 +18,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='',
   syntax='proto3',
   serialized_options=b'Z\004main',
-  serialized_pb=b'\n\x0f\x64iscovery.proto\"<\n\x08Hospital\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x16\n\x0eregisteredTime\x18\x03 \x01(\x03\"\r\n\x0bInfoRequest\"+\n\x0cInfoResponse\x12\x1b\n\x08hospital\x18\x01 \x01(\x0b\x32\t.Hospital\"\r\n\x0bListRequest\",\n\x0cListResponse\x12\x1c\n\thospitals\x18\x01 \x03(\x0b\x32\t.Hospital2m\n\x11HospitalDiscovery\x12(\n\x07GetInfo\x12\x0c.InfoRequest\x1a\r.InfoResponse\"\x00\x12.\n\rListHospitals\x12\x0c.ListRequest\x1a\r.ListResponse\"\x00\x42\x06Z\x04mainb\x06proto3'
+  serialized_pb=b'\n\x0f\x64iscovery.proto\"d\n\x08Hospital\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x16\n\x0eregisteredTime\x18\x03 \x01(\x03\x12\x13\n\x0bgatewayAddr\x18\x04 \x01(\t\x12\x11\n\tpublicKey\x18\x05 \x01(\x0c\"\r\n\x0bInfoRequest\"T\n\x0cInfoResponse\x12\x16\n\x0eregisteredTime\x18\x01 \x01(\x03\x12\n\n\x02id\x18\x02 \x01(\t\x12\x0c\n\x04name\x18\x03 \x01(\t\x12\x12\n\nprivateKey\x18\x04 \x01(\x0c\"\r\n\x0bListRequest\",\n\x0cListResponse\x12\x1c\n\thospitals\x18\x01 \x03(\x0b\x32\t.Hospital2m\n\x11HospitalDiscovery\x12(\n\x07GetInfo\x12\x0c.InfoRequest\x1a\r.InfoResponse\"\x00\x12.\n\rListHospitals\x12\x0c.ListRequest\x1a\r.ListResponse\"\x00\x42\x06Z\x04mainb\x06proto3'
 )
 
 
@@ -52,6 +52,20 @@ _HOSPITAL = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='gatewayAddr', full_name='Hospital.gatewayAddr', index=3,
+      number=4, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='publicKey', full_name='Hospital.publicKey', index=4,
+      number=5, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"",
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -65,7 +79,7 @@ _HOSPITAL = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=19,
-  serialized_end=79,
+  serialized_end=119,
 )
 
 
@@ -88,8 +102,8 @@ _INFOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=81,
-  serialized_end=94,
+  serialized_start=121,
+  serialized_end=134,
 )
 
 
@@ -101,9 +115,30 @@ _INFORESPONSE = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='hospital', full_name='InfoResponse.hospital', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      name='registeredTime', full_name='InfoResponse.registeredTime', index=0,
+      number=1, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='id', full_name='InfoResponse.id', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='name', full_name='InfoResponse.name', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='privateKey', full_name='InfoResponse.privateKey', index=3,
+      number=4, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"",
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -119,8 +154,8 @@ _INFORESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=96,
-  serialized_end=139,
+  serialized_start=136,
+  serialized_end=220,
 )
 
 
@@ -143,8 +178,8 @@ _LISTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=141,
-  serialized_end=154,
+  serialized_start=222,
+  serialized_end=235,
 )
 
 
@@ -174,11 +209,10 @@ _LISTRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=156,
-  serialized_end=200,
+  serialized_start=237,
+  serialized_end=281,
 )
 
-_INFORESPONSE.fields_by_name['hospital'].message_type = _HOSPITAL
 _LISTRESPONSE.fields_by_name['hospitals'].message_type = _HOSPITAL
 DESCRIPTOR.message_types_by_name['Hospital'] = _HOSPITAL
 DESCRIPTOR.message_types_by_name['InfoRequest'] = _INFOREQUEST
@@ -231,8 +265,8 @@ _HOSPITALDISCOVERY = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=202,
-  serialized_end=311,
+  serialized_start=283,
+  serialized_end=392,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetInfo',

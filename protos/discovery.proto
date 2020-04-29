@@ -11,12 +11,19 @@ message Hospital {
   string id = 1;            // Unique ID for hospital
   string name = 2;          // Name representation of hospital
   int64 registeredTime = 3; // UNIX timestamp when the hospital was registered
+  string gatewayAddr = 4;   // Address to the hospital's gateway
+  bytes publicKey = 5;      // Public key of the hospital for any signed
+                            // communication
 }
 
 message InfoRequest {}
 
 message InfoResponse {
-  Hospital hospital = 1; // Hospital info of ourselves
+  int64 registeredTime = 1; // UNIX timestamp when the hospital was registered
+  string id = 2;            // Unique ID for hospital
+  string name = 3;          // Name representation of hospital
+  bytes privateKey = 4;     // Private key to be used for any signed
+                            // communication
 }
 
 message ListRequest {}

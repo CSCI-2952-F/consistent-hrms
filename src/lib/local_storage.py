@@ -13,13 +13,29 @@ class LocalStorage():
         # Returned responses are always decoded into strings
         self.redis = Redis(host=redis_host, port=redis_port, decode_responses=True)
 
+    def delete_key(self, uid):
+        """
+        Removes a key from local storage.
+        If the key refers to a list (patient records), all records are deleted.
+        Returns the total number of items deleted.
+        """
+
+        return self.redis.delete(uid)
+
     def insert_item(self, uid, public_key, value):
         """
         Inserts a new item into a list in local storage with encrypted data.
         """
 
         value = crypto.encrypt(str(value), public_key)
-        self.redis.lpush(uid, value)
+        self.redis.rpush(uid, value)
+
+    def load_items(self, uid, items):
+        """
+        Loads items directly into local storage.
+        """
+
+        self.redis.rpush(uid, *items)
 
     def get_items(self, uid, offset=0, length=None):
         """
@@ -37,11 +53,11 @@ class LocalStorage():
         Update hospital staff roster.
         """
 
-        self.redis.lpush(physician_id, value)
+        self.redis.rpush(physician_id, value)
 
     def valid_staff(self, physician_id):
         """
         Return True if physician_id exists in staff roster.
         """
 
-        raise self.redis.exists(physician_id)
+        return self.redis.exists(physician_id)
