@@ -65,8 +65,9 @@ def dco(project_name, command_args, env=None):
 
     docker_compose = get_docker_compose_executable()
     args = [docker_compose]
-    for f in DOCKER_COMPOSE_FILES:
-        args += ['-f', f]
+    for filename in DOCKER_COMPOSE_FILES:
+        if os.path.exists(filename):
+            args += ['-f', filename]
     if project_name:
         args += ['-p', project_name]
     args += command_args
