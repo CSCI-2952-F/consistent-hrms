@@ -1,7 +1,7 @@
 FROM golang:1.14
 
 # Built binary will be `centraldb`
-WORKDIR /go/src/centraldb
+WORKDIR /go/src/github.com/irvinlim/cs2952f-hrms/src/centraldb
 
 # Install dependencies
 COPY go.mod go.sum ./
