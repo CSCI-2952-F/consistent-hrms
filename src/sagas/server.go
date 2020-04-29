@@ -76,7 +76,7 @@ func (s *sagasConsistentStorageServer) Remove(_ context.Context, r *RemoveReques
 
 	if !result.Ok {
 		resp := &RemoveResponse{}
-		if result.Value.Value == nil {
+		if result.Value == nil || result.Value.Value == nil {
 			resp.ErrorType = RemoveError_REMOVE_KEY_ERROR
 		} else {
 			resp.ErrorType = RemoveError_REMOVE_NOT_OWNER
@@ -104,7 +104,7 @@ func (s *sagasConsistentStorageServer) Transfer(_ context.Context, r *TransferRe
 
 	if !result.Ok {
 		resp := &TransferResponse{}
-		if result.Value.Value == nil {
+		if result.Value == nil || result.Value.Value == nil {
 			resp.ErrorType = TransferError_TRANSFER_KEY_ERROR
 		} else {
 			resp.ErrorType = TransferError_TRANSFER_NOT_OWNER
