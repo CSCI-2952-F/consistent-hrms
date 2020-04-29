@@ -115,8 +115,6 @@ services:
     environment:
       - CONSISTENT_STORAGE_BACKEND=${CONSISTENT_STORAGE_BACKEND:-sagas}
       - SAGAS_GRPC_ADDR=sagas:8080
-      - BIGCHAIN_ROOT_URL=http://bigchaindb:9984
-      - HOSPITAL_NAME_SLUG=${HOSPITAL_NAME_SLUG}
       - CENTRALDB_GRPC_ADDR=centraldb:8080
     depends_on:
       - sagas
@@ -134,7 +132,6 @@ services:
       - KAFKA_BROKERS=kafka:9092
       - STORAGE_FILE_PATH=/var/lib/sagas/data.json
       - GRPC_LISTEN_ADDR=:8080
-      - DISCOVERY_GRPC_ADDR=discovery_service:8080
     expose:
       - '8080'
     volumes:

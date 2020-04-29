@@ -12,6 +12,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/irvinlim/cs2952f-hrms/src/discovery"
 	lib "github.com/irvinlim/cs2952f-hrms/src/golang-lib"
 	"google.golang.org/grpc"
 	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
@@ -25,7 +26,7 @@ var (
 	keyStorage      *PersistentKeyStorage
 	producer        *Producer
 	consumer        *Consumer
-	discoveryClient *DiscoverySvcClient
+	discoveryClient *discovery.DiscoverySvcClient
 
 	// Mapping of partition to results by offset.
 	resultChans []map[kafka.Offset]chan SagaResult
@@ -54,7 +55,6 @@ func main() {
 	brokers := os.Getenv("KAFKA_BROKERS")
 	storageFilePath := os.Getenv("STORAGE_FILE_PATH")
 	grpcListenAddr := os.Getenv("GRPC_LISTEN_ADDR")
-	discoveryGrpcAddr := os.Getenv("DISCOVERY_GRPC_ADDR")
 
 	// Initialize channels
 	var i int32
@@ -71,7 +71,7 @@ func main() {
 	storage = s
 
 	// Create discovery service client
-	discoveryClient, err = NewDiscoverySvcClient(discoveryGrpcAddr)
+	discoveryClient, err = discovery.NewDiscoverySvcClient()
 	if err != nil {
 		log.Fatal(err)
 	}
