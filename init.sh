@@ -44,4 +44,4 @@ ensure_up docker-compose.centraldb.yml
 
 # For testing pruposes
 mkdnet hrms-loadtesting
-# ensure_up docker-compose.loadtesting.yml
+ensure_up docker-compose.loadtesting.yml
