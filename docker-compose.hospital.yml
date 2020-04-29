@@ -108,6 +108,7 @@ services:
       - rabbitmq
       - hospital-bigchain
       - hospital-centraldb
+      - loadtesting
     environment:
       - CONSISTENT_STORAGE_BACKEND=${CONSISTENT_STORAGE_BACKEND:-sagas}
       - SAGAS_GRPC_ADDR=sagas:8080
@@ -162,3 +163,6 @@ networks:
   hospital-centraldb:
     external:
       name: hrms-hospital-centraldb
+  loadtesting:
+    external:
+      name: hrms-loadtesting

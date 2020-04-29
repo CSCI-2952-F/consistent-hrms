@@ -40,3 +40,7 @@ mkdnet hrms-hospital-discovery
 ensure_up docker-compose.discovery.yml
 ensure_up docker-compose.sagas.yml
 ensure_up docker-compose.centraldb.yml
+
+# For testing pruposes
+mkdnet hrms-loadtesting
+ensure_up docker-compose.loadtesting.yml

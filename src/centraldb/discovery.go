@@ -11,7 +11,7 @@ type DiscoverySvcClient struct {
 	client HospitalDiscoveryClient
 }
 
-const DISCOVERY_GRPC_ADDR = "discovery_server:8080"
+const DISCOVERY_GRPC_ADDR = "discovery_service:8080"
 
 func NewDiscoverySvcClient() (*DiscoverySvcClient, error) {
 	conn, err := grpc.Dial(DISCOVERY_GRPC_ADDR, grpc.WithInsecure())

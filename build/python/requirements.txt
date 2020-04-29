@@ -1,0 +1,9 @@
+grpcio
+grequests
+nameko
+protobuf
+pycryptodome
+PyJWT[crypto]
+redis
+requests
+rsa
