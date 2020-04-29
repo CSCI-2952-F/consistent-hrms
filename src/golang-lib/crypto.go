@@ -19,6 +19,7 @@ type CryptoKeyStorage interface {
 	GetPrivateKey() ([]byte, error)
 	PutPrivateKey(data []byte) error
 	GetPublicKey(name string) ([]byte, error)
+	PutPublicKey(name string, data []byte) error
 }
 
 // A Signer can create signatures that verify against a public key.
