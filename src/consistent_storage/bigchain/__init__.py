@@ -8,6 +8,7 @@ from bigchaindb_driver.crypto import generate_keypair
 
 # local
 from lib.consistent_storage import BaseStorageBackend
+from lib.discovery_svc import DiscoveryService
 
 GENESIS_PUBLIC_KEY = 'BZcVfy3LgB5z1uj2HT4s2sJ8DVnW8Hzh1CJZTZecf2ac'
 GENESIS_PRIVATE_KEY = 'HzKkzuCDYfppGH7vbBrXeMA6Fg6fEVAiPaeXhxmcJ9Vm'
@@ -20,10 +21,12 @@ class BigchaindbBackend(BaseStorageBackend):
 
     Implements the BaseStorageBackend interface.
     """
-    def __init__(self, bdb_root_url: str, hospital_slug: str):
-        self.hospital_slug = hospital_slug
+    def __init__(self, bdb_root_url: str):
         self.keys = generate_keypair()
         self.bdb = BigchainDB(bdb_root_url)
+
+        ds = DiscoveryService()
+        self.hospital_slug = ds.get_id()
 
         if not self._put_self_key():
             raise Exception("ERROR: Failed to put self key on bigchaindb")
