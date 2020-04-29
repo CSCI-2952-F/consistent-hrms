@@ -83,6 +83,10 @@ func newSignerFromKey(k *rsa.PrivateKey) (Signer, error) {
 	return &rsaPrivateKey{k}, nil
 }
 
+func newUnsignerFromKey(k *rsa.PublicKey) (Unsigner, error) {
+	return &rsaPublicKey{k}, nil
+}
+
 func LoadPrivateKey(storage CryptoKeyStorage) (Signer, error) {
 	// Try to load private key, otherwise regenerate it
 	bytes, err := storage.Get()
@@ -134,6 +138,24 @@ func parsePrivateKey(pemBytes []byte) (Signer, error) {
 			return nil, err
 		}
 		return newSignerFromKey(key)
+	default:
+		return nil, fmt.Errorf("ssh: unsupported key type %q", block.Type)
+	}
+}
+
+func parsePublicKey(pemBytes []byte) (Unsigner, error) {
+	block, _ := pem.Decode(pemBytes)
+	if block == nil {
+		return nil, errors.New("ssh: no key found")
+	}
+
+	switch block.Type {
+	case "RSA PUBLIC KEY":
+		key, err := x509.ParsePKCS1PublicKey(block.Bytes)
+		if err != nil {
+			return nil, err
+		}
+		return newUnsignerFromKey(key)
 	default:
 		return nil, fmt.Errorf("ssh: unsupported key type %q", block.Type)
 	}

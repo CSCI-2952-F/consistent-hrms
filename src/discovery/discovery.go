@@ -2,21 +2,50 @@ package discovery
 
 import (
 	"context"
-	"time"
+	"errors"
+
+	"google.golang.org/grpc"
 )
 
-type ServiceDiscovery interface {
-	Register(ctx context.Context, value RegisterValue) error
-	Renew(ctx context.Context, duration time.Duration)
-	Revoke(ctx context.Context) error
-	ListValues(ctx context.Context) ([]RegisterValue, error)
+type DiscoverySvcClient struct {
+	client HospitalDiscoveryClient
 }
 
-type RegisterValue struct {
-	Id                    string `json:"id"`
-	Name                  string `json:"name"`
-	GatewayAddr           string `json:"gateway_addr"`
-	ConsistentStorageAddr string `json:"consistent_storage_addr"`
-	PublicKey             []byte `json:"public_key"`
-	RegisteredTime        int64  `json:"registered_time"`
+const DISCOVERY_GRPC_ADDR = "discovery_service:8080"
+
+func NewDiscoverySvcClient() (*DiscoverySvcClient, error) {
+	conn, err := grpc.Dial(DISCOVERY_GRPC_ADDR, grpc.WithInsecure())
+	if err != nil {
+		return nil, err
+	}
+	client := NewHospitalDiscoveryClient(conn)
+	return &DiscoverySvcClient{
+		client: client,
+	}, nil
+}
+
+func (c *DiscoverySvcClient) GetHospitals(ctx context.Context) ([]*Hospital, error) {
+	req := ListRequest{}
+	resp, err := c.client.ListHospitals(ctx, &req)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.Hospitals, nil
+}
+
+func (c *DiscoverySvcClient) GetPublicKey(ctx context.Context, id string) (Unsigner, error) {
+	hospitals, err := c.GetHospitals(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, hospital := range hospitals {
+		if hospital.GetId() == id {
+			key := hospital.GetPublicKey()
+			return parsePublicKey(key)
+		}
+	}
+
+	return nil, errors.New("hospital not found")
 }
