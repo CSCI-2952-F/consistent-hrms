@@ -1,4 +1,4 @@
-package main
+package golang_lib
 
 // See: https://play.golang.org/p/bzpD7Pa9mr
 
@@ -12,6 +12,7 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
+	"log"
 )
 
 // A Signer can create signatures that verify against a public key.
@@ -86,7 +87,45 @@ func newUnsignerFromKey(k *rsa.PublicKey) (Unsigner, error) {
 	return &rsaPublicKey{k}, nil
 }
 
-func parsePrivateKey(pemBytes []byte) (Signer, error) {
+func LoadPrivateKey(storage CryptoKeyStorage) (Signer, error) {
+	// Try to load private key, otherwise regenerate it
+	bytes, err := storage.Get()
+	if err != nil || bytes == nil {
+		return generatePrivateKey(storage)
+	}
+
+	// Parse private key, otherwise regenerate it
+	key, err := ParsePrivateKey(bytes)
+	if err == nil {
+		return key, nil
+	}
+
+	log.Printf("warning: private key stored is corrupt, regenerating")
+
+	return generatePrivateKey(storage)
+}
+
+func generatePrivateKey(storage CryptoKeyStorage) (Signer, error) {
+	key, err := rsa.GenerateKey(rand.Reader, 2048)
+	if err != nil {
+		return nil, err
+	}
+
+	pemdata := pem.EncodeToMemory(
+		&pem.Block{
+			Type:  "RSA PRIVATE KEY",
+			Bytes: x509.MarshalPKCS1PrivateKey(key),
+		},
+	)
+
+	if err := storage.Put(pemdata); err != nil {
+		return nil, err
+	}
+
+	return newSignerFromKey(key)
+}
+
+func ParsePrivateKey(pemBytes []byte) (Signer, error) {
 	block, _ := pem.Decode(pemBytes)
 	if block == nil {
 		return nil, errors.New("ssh: no key found")
@@ -104,7 +143,7 @@ func parsePrivateKey(pemBytes []byte) (Signer, error) {
 	}
 }
 
-func parsePublicKey(pemBytes []byte) (Unsigner, error) {
+func ParsePublicKey(pemBytes []byte) (Unsigner, error) {
 	block, _ := pem.Decode(pemBytes)
 	if block == nil {
 		return nil, errors.New("ssh: no key found")
