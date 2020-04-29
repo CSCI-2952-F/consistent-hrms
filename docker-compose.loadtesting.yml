@@ -1,11 +1,11 @@
 version: '3'
 
 services:
-  loadtesting:
+  loadtester:
     build:
       context: .
-      dockerfile: ./build/python/Dockerfile
-    command: bash -c "echo 'To run load test, use docker/docker-compose exec to invoke Python manually.' && tail -f /dev/null"
+      dockerfile: ./build/golang/Dockerfile
+    command: bash -c "echo 'To run load test, use docker/docker-compose exec to invoke manually.' && tail -f /dev/null"
     networks:
       - loadtesting
       - hospital-discovery
