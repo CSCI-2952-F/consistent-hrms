@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 
-	"discovery"
+	"github.com/irvinlim/cs2952f-hrms/src/discovery"
 )
 
 type Server struct {

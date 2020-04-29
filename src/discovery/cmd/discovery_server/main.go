@@ -10,7 +10,7 @@ import (
 
 	"google.golang.org/grpc"
 
-	"discovery"
+	"github.com/irvinlim/cs2952f-hrms/src/discovery"
 )
 
 var (

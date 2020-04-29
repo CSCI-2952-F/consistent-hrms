@@ -1,6 +1,6 @@
 FROM golang:1.14
 
-WORKDIR /go/src/discovery
+WORKDIR /go/src/github.com/irvinlim/cs2952f-hrms/src/discovery
 
 # Install dependencies
 COPY go.mod go.sum ./

@@ -1,4 +1,4 @@
-module discovery
+module github.com/irvinlim/cs2952f-hrms/src/discovery
 
 go 1.14
 
