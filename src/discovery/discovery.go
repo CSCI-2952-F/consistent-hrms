@@ -3,6 +3,7 @@ package discovery
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	lib "github.com/irvinlim/cs2952f-hrms/src/golang-lib"
 	"google.golang.org/grpc"
@@ -23,6 +24,29 @@ func NewDiscoverySvcClient() (*DiscoverySvcClient, error) {
 	return &DiscoverySvcClient{
 		client: client,
 	}, nil
+}
+
+func (c *DiscoverySvcClient) GetInfo() (*InfoResponse, error) {
+	req := InfoRequest{}
+	info, err := c.client.GetInfo(context.Background(), &req)
+	if err != nil {
+		return nil, fmt.Errorf("could not lookup discovery svc: %s", err)
+	}
+
+	return info, nil
+}
+
+func (c *DiscoverySvcClient) GetUniqueId() (string, error) {
+	info, err := c.GetInfo()
+	if err != nil {
+		return "", fmt.Errorf("could not get info: %s", err)
+	}
+
+	if info.Id == "" {
+		return "", errors.New("discovery svc returned empty hospital id")
+	}
+
+	return info.Id, nil
 }
 
 func (c *DiscoverySvcClient) GetHospitals(ctx context.Context) ([]*Hospital, error) {
