@@ -9,6 +9,15 @@ services:
       - loadtesting
       - hospital-discovery
 
+  loadtester-py:
+    build:
+      context: .
+      dockerfile: ./src/loadtesting_py/Dockerfile
+    command: bash -c "echo 'To run load test, use docker/docker-compose exec to invoke manually.' && tail -f /dev/null"
+    networks:
+      - loadtesting
+      - hospital-discovery
+
 networks:
   loadtesting:
     external:
