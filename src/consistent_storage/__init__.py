@@ -1,6 +1,8 @@
+import json
 import os
 
 from nameko.rpc import rpc
+from nameko.web.handlers import http
 
 from consistent_storage.centraldb import CentralDBStorageBackend
 from consistent_storage.sagas import SagasBackend
@@ -128,3 +130,24 @@ class ConsistentStorageProxy:
             }
         """
         return self.backend.transfer(key, dest)
+
+    @http('GET', '/')
+    def http_get(self, request):
+        return self._handle_http(self.get, request)
+
+    @http('PUT', '/')
+    def http_put(self, request):
+        return self._handle_http(self.put, request)
+
+    @http('REMOVE', '/')
+    def http_remove(self, request):
+        return self._handle_http(self.remove, request)
+
+    @http('TRANSFER', '/')
+    def http_transfer(self, request):
+        return self._handle_http(self.transfer, request)
+
+    def _handle_http(self, handler, request):
+        data = json.loads(request.get_data(as_text=True))
+        res = handler(**data)
+        return json.dumps(res)

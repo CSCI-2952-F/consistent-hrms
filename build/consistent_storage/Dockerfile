@@ -14,4 +14,7 @@ COPY src .
 # Copy config
 COPY build/nameko/config.yaml /etc/nameko/config.yaml
 
+# Expose HTTP server
+EXPOSE 80
+
 ENTRYPOINT [ "nameko", "run", "consistent_storage", "--config=/etc/nameko/config.yaml" ]

@@ -128,7 +128,7 @@ services:
       - GRPC_LISTEN_ADDR=:8080
       - DISCOVERY_GRPC_ADDR=discovery_service:8080
     expose:
-      - 8080
+      - '8080'
     volumes:
       - sagas-storage:/var/lib/sagas
     depends_on:
