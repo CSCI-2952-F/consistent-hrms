@@ -1,3 +1,0 @@
-# Docker Compose file for a single hospital's microservice architecture.
-
-version: '3'
