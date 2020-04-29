@@ -21,8 +21,6 @@ services:
       dockerfile: ./build/nameko/Dockerfile
       args:
         module: api_gateway
-    environment:
-      - DISCOVERY_GRPC_ADDR=discovery_service:8080
     ports:
       - '127.0.0.1:${API_GATEWAY_PORT:-8100}:80'
     healthcheck:
@@ -31,8 +29,11 @@ services:
       timeout: 5s
       retries: 3
     networks:
-      - default
-      - rabbitmq
+      default: {}
+      rabbitmq: {}
+      interhospital:
+        aliases:
+          - ${HOSPITAL_NAME_SLUG}
     depends_on:
       - rabbitmq
       - patient_service
@@ -48,11 +49,12 @@ services:
     environment:
       - HOSPITAL_ID=${HOSPITAL_NAME_SLUG}
       - HOSPITAL_NAME
+      - HOSPITAL_GATEWAY_ADDR=${HOSPITAL_NAME_SLUG}:80
       - ZK_ADDR=zookeeper:2181
       - KEY_PREFIX=/hrms/hospitals/
       - GRPC_LISTEN_ADDR=:8080
     expose:
-      - 8080
+      - '8080'
 
   patient_service:
     build:
@@ -66,6 +68,7 @@ services:
     networks:
       - default
       - rabbitmq
+      - interhospital
     depends_on:
       - rabbitmq
       - consistent_storage
@@ -102,11 +105,13 @@ services:
       - default
       - rabbitmq
       - hospital-bigchain
+      - hospital-centraldb
     environment:
       - CONSISTENT_STORAGE_BACKEND=${CONSISTENT_STORAGE_BACKEND:-sagas}
       - SAGAS_GRPC_ADDR=sagas:8080
       - BIGCHAIN_ROOT_URL=http://bigchaindb:9984
       - HOSPITAL_NAME_SLUG=${HOSPITAL_NAME_SLUG}
+      - CENTRALDB_GRPC_ADDR=centraldb:8080
     depends_on:
       - sagas
 
@@ -142,6 +147,9 @@ volumes:
 
 networks:
   rabbitmq: {}
+  interhospital:
+    external:
+      name: hrms-interhospital
   hospital-discovery:
     external:
       name: hrms-hospital-discovery
@@ -151,3 +159,6 @@ networks:
   hospital-bigchain:
     external:
       name: hrms-hospital-bigchain
+  hospital-centraldb:
+    external:
+      name: hrms-hospital-centraldb

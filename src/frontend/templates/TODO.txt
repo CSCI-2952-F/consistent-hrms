@@ -1,3 +1,0 @@
-- Add a private key to upload onto the page (so that we can decrypt their patient data)
-- Add a route to get patient card
-- Download patient card/private key

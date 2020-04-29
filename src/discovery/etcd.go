@@ -1,4 +1,4 @@
-package main
+package discovery
 
 import (
 	"context"
@@ -16,9 +16,10 @@ type EtcdServiceDiscovery struct {
 	leaseExpiry time.Duration
 
 	keyPrefix string
+	id        string
 }
 
-func NewEtcdServiceDiscovery(etcdAddr string, keyPrefix string, leaseExpiry time.Duration) (*EtcdServiceDiscovery, error) {
+func NewEtcdServiceDiscovery(etcdAddr string, keyPrefix string, id string, leaseExpiry time.Duration) (*EtcdServiceDiscovery, error) {
 	etcd, err := etcd3.New(etcd3.Config{
 		Endpoints:   []string{etcdAddr},
 		DialTimeout: 10 * time.Second,
@@ -30,6 +31,7 @@ func NewEtcdServiceDiscovery(etcdAddr string, keyPrefix string, leaseExpiry time
 	return &EtcdServiceDiscovery{
 		etcd:        etcd,
 		keyPrefix:   keyPrefix,
+		id:          id,
 		leaseExpiry: leaseExpiry,
 	}, nil
 }
@@ -44,7 +46,7 @@ func (sd *EtcdServiceDiscovery) Register(ctx context.Context, value RegisterValu
 	sd.leaseID = grant.ID
 
 	// Key is prefix + hospital ID
-	key := keyPrefix + hospitalId
+	key := sd.keyPrefix + sd.id
 
 	bytes, err := json.Marshal(value)
 	if err != nil {
@@ -83,7 +85,7 @@ func (sd *EtcdServiceDiscovery) Revoke(ctx context.Context) error {
 
 func (sd *EtcdServiceDiscovery) ListValues(ctx context.Context) ([]RegisterValue, error) {
 	// Get all keys with prefix
-	etcdResp, err := sd.etcd.Get(ctx, keyPrefix, etcd3.WithPrefix())
+	etcdResp, err := sd.etcd.Get(ctx, sd.keyPrefix, etcd3.WithPrefix())
 	if err != nil {
 		return nil, err
 	}

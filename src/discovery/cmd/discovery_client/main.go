@@ -10,34 +10,29 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
+
+	"discovery"
 )
 
 var (
-	serviceDiscovery ServiceDiscovery
+	serviceDiscovery discovery.ServiceDiscovery
 	keyPrefix        string
 
-	hospitalId     string
-	hospitalName   string
-	registeredTime time.Time
+	hospitalId         string
+	hospitalName       string
+	hospitalPublicKey  []byte
+	hospitalPrivateKey []byte
+	registeredTime     time.Time
+
+	keyStorage *discovery.KeyStorage
 )
 
-type ServiceDiscovery interface {
-	Register(ctx context.Context, value RegisterValue) error
-	Renew(ctx context.Context, duration time.Duration)
-	Revoke(ctx context.Context) error
-	ListValues(ctx context.Context) ([]RegisterValue, error)
-}
-
-type RegisterValue struct {
-	Id             string `json:"id"`
-	Name           string `json:"name"`
-	RegisteredTime int64  `json:"registered_time"`
-}
+const keyPath = "/etc/discovery/key.pem"
 
 func main() {
 	ctx, cancelFunc := context.WithCancel(context.Background())
 
-	// Parse environment variables
+	// Service metadata environment variables
 	hospitalId = os.Getenv("HOSPITAL_ID")
 	if hospitalId == "" {
 		log.Fatalf("HOSPITAL_ID not set")
@@ -46,6 +41,12 @@ func main() {
 	if hospitalName == "" {
 		log.Fatalf("HOSPITAL_NAME not set")
 	}
+	hospitalGatewayAddr := os.Getenv("HOSPITAL_GATEWAY_ADDR")
+	if hospitalGatewayAddr == "" {
+		log.Fatalf("HOSPITAL_GATEWAY_ADDR not set")
+	}
+
+	// Configuration environment variables
 	grpcListenAddr := os.Getenv("GRPC_LISTEN_ADDR")
 	keyPrefix = os.Getenv("KEY_PREFIX")
 
@@ -59,19 +60,50 @@ func main() {
 		leaseExpiry = expiry
 	}
 
+	// Initialize key storage
+	storage, err := discovery.NewKeyStorage(keyPath)
+	if err != nil {
+		log.Fatalf("could not initialize key storage: %s", err)
+	}
+	keyStorage = storage
+
+	// Load or generate private key
+	signer, err := discovery.LoadPrivateKey(keyStorage)
+	if err != nil {
+		log.Fatalf("could not load private key from storage: %s", err)
+	}
+
+	// Export keys to bytes
+	privKey, err := signer.MarshalBinary()
+	if err != nil {
+		log.Fatalf("could not export public key: %s", err)
+	}
+	pubKey, err := signer.GetUnsigner().MarshalBinary()
+	if err != nil {
+		log.Fatalf("could not export public key: %s", err)
+	}
+
+	hospitalPrivateKey = privKey
+	hospitalPublicKey = pubKey
+
 	// Create service discovery backed by ZooKeeper
 	zkAddr := os.Getenv("ZK_ADDR")
-	sd, err := NewZkServiceDiscovery(zkAddr, keyPrefix, leaseExpiry)
+	sd, err := discovery.NewZkServiceDiscovery(zkAddr, keyPrefix, leaseExpiry)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("cannot start ZooKeeper ServiceDiscovery: %s", err)
 	}
+
+	// Set our hospital ID
+	sd.SetID(hospitalId)
 	serviceDiscovery = sd
 
 	// Prepare register value
 	registeredTime = time.Now()
-	value := RegisterValue{
+	value := discovery.RegisterValue{
 		Id:             hospitalId,
 		Name:           hospitalName,
+		GatewayAddr:    hospitalGatewayAddr,
+		PublicKey:      hospitalPublicKey,
 		RegisteredTime: registeredTime.Unix(),
 	}
 
@@ -80,13 +112,16 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// Create server
+	server := NewServer(sd)
+
 	// Create gRPC server
 	lis, err := net.Listen("tcp", grpcListenAddr)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	grpcServer := grpc.NewServer()
-	RegisterHospitalDiscoveryServer(grpcServer, NewServer(sd))
+	discovery.RegisterHospitalDiscoveryServer(grpcServer, server)
 
 	// Register signal handlers
 	done := make(chan bool)

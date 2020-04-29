@@ -5,7 +5,7 @@ from nameko.exceptions import RemoteError, safe_for_serialization
 from nameko.rpc import RpcProxy
 from werkzeug.wrappers import Response
 
-from api_gateway.discovery_svc import DiscoveryService
+from lib.discovery_svc import DiscoveryService
 from lib.nameko_cors import CorsHttpRequestHandler
 
 
@@ -22,17 +22,13 @@ class HttpEntrypoint(CorsHttpRequestHandler):
 
 http = HttpEntrypoint.decorator
 
-DISCOVERY_GRPC_ADDR = os.getenv('DISCOVERY_GRPC_ADDR')
-if not DISCOVERY_GRPC_ADDR:
-    raise Exception('DISCOVERY_GRPC_ADDR not set')
-
 
 class ApiGatewayService:
     name = 'api_gateway'
 
     patient_rpc = RpcProxy('patient_service')
     physician_rpc = RpcProxy('physician_service')
-    discovery_svc = DiscoveryService(DISCOVERY_GRPC_ADDR)
+    discovery_svc = DiscoveryService()
 
     @http('GET', '/healthy')
     def healthy(self, _):
@@ -65,22 +61,33 @@ class ApiGatewayService:
     @http('POST', '/physician_reg')
     def physician_register_hospital(self, request):
         data = json.loads(request.get_data(as_text=True))
-        success = self.physician_rpc.register(physician_name=data['name'], physician_id=data['id'])
-        return json.dumps({'success': success})
+        uid = self.physician_rpc.register(physician_name=data['name'], physician_id=data['id'])
+        return json.dumps({'success': True, 'uid': uid})
 
     @http('POST', '/physician_read')
     def physician_read_hospital(self, request):
         data = json.loads(request.get_data(as_text=True))
-        success = self.physician_rpc.read(patient_uid=data['uid'])
-        return json.dumps({'success': success})
+        res = self.patient_rpc.read(patient_uid=data['uid'])
+        return json.dumps({'success': True, 'data': res})
 
     @http('POST', '/physician_write')
     def physician_write_hospital(self, request):
         data = json.loads(request.get_data(as_text=True))
-        success = self.physician_rpc.write(physician_id=data['phys_id'], patient_uid=data['patient_uid'], data=data['data'])
+        success = self.physician_rpc.write(physician_uid=data['phys_uid'], patient_uid=data['patient_uid'], data=data['data'])
         return json.dumps({'success': success})
 
     @http('GET', '/list_hospitals')
     def list_hospitals(self, _):
         hospitals = self.discovery_svc.list_hospitals()
         return json.dumps(hospitals)
+
+    @http('POST', '/transfer_request')
+    def transfer_request(self, request):
+        data = json.loads(request.get_data(as_text=True))
+        success = self.patient_rpc.transfer_request(
+            hospital_id=data['hospital_id'],
+            patient_uid=data['uid'],
+            patient_data=data['data'],
+            signature=data['signature'],
+        )
+        return json.dumps({'success': success})
