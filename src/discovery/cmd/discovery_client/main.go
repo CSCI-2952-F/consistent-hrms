@@ -9,6 +9,7 @@ import (
 	"syscall"
 	"time"
 
+	lib "github.com/irvinlim/cs2952f-hrms/src/golang-lib"
 	"google.golang.org/grpc"
 
 	"github.com/irvinlim/cs2952f-hrms/src/discovery"
@@ -24,7 +25,8 @@ var (
 	hospitalPrivateKey []byte
 	registeredTime     time.Time
 
-	keyStorage *discovery.KeyStorage
+	// Stores our private key
+	keyStorage lib.CryptoPrivateKeyStorage
 )
 
 const keyPath = "/etc/discovery/key.pem"
@@ -72,7 +74,7 @@ func main() {
 	keyStorage = storage
 
 	// Load or generate private key
-	signer, err := discovery.LoadPrivateKey(keyStorage)
+	signer, err := lib.LoadPrivateKey(keyStorage)
 	if err != nil {
 		log.Fatalf("could not load private key from storage: %s", err)
 	}

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	lib "github.com/irvinlim/cs2952f-hrms/src/golang-lib"
 	"google.golang.org/grpc"
 )
 
@@ -24,7 +25,7 @@ func NewDiscoverySvcClient() (*DiscoverySvcClient, error) {
 	}, nil
 }
 
-func (c *DiscoverySvcClient) GetPublicKey(ctx context.Context, id string) (Unsigner, error) {
+func (c *DiscoverySvcClient) GetPublicKey(ctx context.Context, id string) (lib.Unsigner, error) {
 	req := ListRequest{}
 	resp, err := c.client.ListHospitals(ctx, &req)
 	if err != nil {
@@ -34,7 +35,7 @@ func (c *DiscoverySvcClient) GetPublicKey(ctx context.Context, id string) (Unsig
 	for _, hospital := range resp.Hospitals {
 		if hospital.GetId() == id {
 			key := hospital.GetPublicKey()
-			return parsePublicKey(key)
+			return lib.ParsePublicKey(key)
 		}
 	}
 

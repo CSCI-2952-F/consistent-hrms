@@ -12,6 +12,7 @@ import (
 	"syscall"
 	"time"
 
+	lib "github.com/irvinlim/cs2952f-hrms/src/golang-lib"
 	"google.golang.org/grpc"
 	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
 )
@@ -21,6 +22,7 @@ var (
 	topicName       string
 	groupId         string
 	storage         PersistentStorage
+	keyStorage      *PersistentKeyStorage
 	producer        *Producer
 	consumer        *Consumer
 	discoveryClient *DiscoverySvcClient
@@ -30,7 +32,7 @@ var (
 	resultMtx   []*sync.Mutex
 
 	// Cryptographic keys for signing Kafka messages
-	privateKey Signer
+	privateKey lib.Signer
 )
 
 func main() {
@@ -85,7 +87,8 @@ func main() {
 	log.Printf("Acquired unique group ID: %s\n", groupId)
 
 	// Initialize private key for signing Kafka messages
-	privateKey, err = loadPrivateKey()
+	keyStorage = &PersistentKeyStorage{storage: storage}
+	privateKey, err = lib.LoadPrivateKey(keyStorage)
 	if err != nil {
 		log.Fatalf("could not load private key: %s", err)
 	}
