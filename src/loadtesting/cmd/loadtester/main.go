@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 
 	"github.com/irvinlim/cs2952f-hrms/src/discovery"
@@ -38,6 +39,13 @@ func main() {
 		log.Fatal(err)
 	}
 
+	var hospitalIds []string
+	for _, hospital := range hospitals {
+		hospitalIds = append(hospitalIds, hospital.GetId())
+	}
+
+	fmt.Printf("Discovered hospitals: %s\n", strings.Join(hospitalIds, ", "))
+
 	// Create new load test
 	test := loadtesting.NewLoadTest()
 
@@ -50,6 +58,8 @@ func main() {
 		cancelFunc()
 	}()
 
+	fmt.Println("Starting test.")
+
 	// Run test!
 	result, err := test.Run(ctx, testName, numRequests, hospitals)
 	if err != nil {
@@ -57,17 +67,17 @@ func main() {
 	}
 
 	// Print results
-	fmt.Printf("Time taken: %dms\n", result.ActualDuration.Milliseconds())
+	fmt.Printf("Time taken: %.4fs\n", result.ActualDuration.Seconds())
 	fmt.Println()
 
-	fmt.Printf("Number of requests: %d\n", numRequests)
+	fmt.Printf("Number of requests: %d\n", numRequests*len(hospitalIds))
 	fmt.Printf("Number of valid responses: %d\n", result.NumOk)
 	fmt.Printf("Number of successes: %d\n", result.NumSuccess)
 	fmt.Println()
 
-	avgTime := float64(result.TotalRequestDuration.Milliseconds()) / float64(result.NumOk)
+	avgTime := result.TotalRequestDuration.Seconds() / float64(result.NumOk)
 	qps := 1 / avgTime
-	fmt.Printf("Total request elapsed time: %dms\n", result.TotalRequestDuration.Milliseconds())
-	fmt.Printf("Average time taken per request: %.6fms\n", avgTime)
+	fmt.Printf("Total request elapsed time: %.2fs\n", result.TotalRequestDuration.Seconds())
+	fmt.Printf("Average time taken per request: %.6fs\n", avgTime)
 	fmt.Printf("Queries per second: %.2f QPS\n", qps)
 }
