@@ -7,10 +7,11 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/irvinlim/cs2952f-hrms/src/discovery"
 	"google.golang.org/grpc"
 )
 
-var discoveryClient *DiscoverySvcClient
+var discoveryClient *discovery.DiscoverySvcClient
 
 func main() {
 	var err error
@@ -20,7 +21,7 @@ func main() {
 	dsn := os.Getenv("SQL_DSN")
 
 	// Create discovery service client
-	discoveryClient, err = NewDiscoverySvcClient()
+	discoveryClient, err = discovery.NewDiscoverySvcClient()
 	if err != nil {
 		log.Fatal(err)
 	}
