@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: ./build/python/Dockerfile
-    command: bash -c "To run load test, use docker/docker-compose exec to invoke Python manually."
+    command: bash -c "echo 'To run load test, use docker/docker-compose exec to invoke Python manually.' && tail -f /dev/null"
     networks:
       - loadtesting
       - hospital-discovery
