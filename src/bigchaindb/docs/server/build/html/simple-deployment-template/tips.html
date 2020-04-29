@@ -1,0 +1,302 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Tips &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Troubleshooting" href="troubleshooting.html" />
+    <link rel="prev" title="How to Set Up a BigchainDB Network" href="network-setup.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Simple Deployment Template</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="deploy-a-machine.html">Deploy a Machine for Your BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="set-up-nginx.html">Set Up NGINX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="set-up-node-software.html">Set Up BigchainDB, MongoDB and Tendermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="network-setup.html">How to Set Up a BigchainDB Network</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tips</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tendermint-tips">Tendermint Tips</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#refreshing-your-node">Refreshing Your Node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#shutting-down-bigchaindb">Shutting Down BigchainDB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#member-dynamically-add-or-remove-validators">Member: Dynamically Add or Remove Validators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#logging-and-log-rotation">Logging and Log Rotation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../k8s-deployment-template/index.html">Kubernetes Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Simple Deployment Template</a> &raquo;</li>
+        
+      <li>Tips</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/simple-deployment-template/tips.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="tips">
+<h1>Tips<a class="headerlink" href="#tips" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="tendermint-tips">
+<h2>Tendermint Tips<a class="headerlink" href="#tendermint-tips" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="https://tendermint.com/docs/tendermint-core/using-tendermint.html#no-empty-blocks">Configure Tendermint to create no empty blocks</a>.</li>
+<li>Store the Tendermint data on a fast drive. You can do that by changing <a class="reference external" href="https://tendermint.com/docs/tendermint-core/using-tendermint.html#directory-root">the location of TMHOME</a> to be on the fast drive.</li>
+</ul>
+</div>
+<div class="section" id="refreshing-your-node">
+<h2>Refreshing Your Node<a class="headerlink" href="#refreshing-your-node" title="Permalink to this headline">¶</a></h2>
+<p>If you want to refresh your node back to a fresh empty state, then your best bet is to terminate it and deploy a new machine, but if that’s not an option, then you can:</p>
+<ul class="simple">
+<li>drop the <code class="docutils literal notranslate"><span class="pre">bigchain</span></code> database in MongoDB using <code class="docutils literal notranslate"><span class="pre">bigchaindb</span> <span class="pre">drop</span></code> (but that only works if MongoDB is running)</li>
+<li>reset Tendermint using <code class="docutils literal notranslate"><span class="pre">tendermint</span> <span class="pre">unsafe_reset_all</span></code></li>
+<li>delete the directory <code class="docutils literal notranslate"><span class="pre">$HOME/.tendermint</span></code></li>
+</ul>
+</div>
+<div class="section" id="shutting-down-bigchaindb">
+<h2>Shutting Down BigchainDB<a class="headerlink" href="#shutting-down-bigchaindb" title="Permalink to this headline">¶</a></h2>
+<p>If you want to stop/kill BigchainDB, you can do so by sending <code class="docutils literal notranslate"><span class="pre">SIGINT</span></code>, <code class="docutils literal notranslate"><span class="pre">SIGQUIT</span></code> or <code class="docutils literal notranslate"><span class="pre">SIGTERM</span></code> to the running BigchainDB
+process(es). Depending on how you started BigchainDB i.e. foreground or background. e.g. you started BigchainDB in the background as mentioned above in the guide:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ nohup bigchaindb start <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span> &gt; bigchaindb.log <span class="p">&amp;</span>
+
+$ <span class="c1"># Check the PID of the main BigchainDB process</span>
+$ ps -ef <span class="p">|</span> grep bigchaindb
+&lt;user&gt;    *&lt;pid&gt; &lt;ppid&gt;   &lt;C&gt; &lt;STIME&gt; &lt;tty&gt;        &lt;time&gt; bigchaindb
+&lt;user&gt;     &lt;pid&gt; &lt;ppid&gt;*  &lt;C&gt; &lt;STIME&gt; &lt;tty&gt;        &lt;time&gt; gunicorn: master <span class="o">[</span>bigchaindb_gunicorn<span class="o">]</span>
+&lt;user&gt;     &lt;pid&gt; &lt;ppid&gt;*  &lt;C&gt; &lt;STIME&gt; &lt;tty&gt;        &lt;time&gt; bigchaindb_ws
+&lt;user&gt;     &lt;pid&gt; &lt;ppid&gt;*  &lt;C&gt; &lt;STIME&gt; &lt;tty&gt;        &lt;time&gt; bigchaindb_ws_to_tendermint
+&lt;user&gt;     &lt;pid&gt; &lt;ppid&gt;*  &lt;C&gt; &lt;STIME&gt; &lt;tty&gt;        &lt;time&gt; bigchaindb_exchange
+&lt;user&gt;     &lt;pid&gt; &lt;ppid&gt;   &lt;C&gt; &lt;STIME&gt; &lt;tty&gt;        &lt;time&gt; gunicorn: worker <span class="o">[</span>bigchaindb_gunicorn<span class="o">]</span>
+&lt;user&gt;     &lt;pid&gt; &lt;ppid&gt;   &lt;C&gt; &lt;STIME&gt; &lt;tty&gt;        &lt;time&gt; gunicorn: worker <span class="o">[</span>bigchaindb_gunicorn<span class="o">]</span>
+&lt;user&gt;     &lt;pid&gt; &lt;ppid&gt;   &lt;C&gt; &lt;STIME&gt; &lt;tty&gt;        &lt;time&gt; gunicorn: worker <span class="o">[</span>bigchaindb_gunicorn<span class="o">]</span>
+&lt;user&gt;     &lt;pid&gt; &lt;ppid&gt;   &lt;C&gt; &lt;STIME&gt; &lt;tty&gt;        &lt;time&gt; gunicorn: worker <span class="o">[</span>bigchaindb_gunicorn<span class="o">]</span>
+&lt;user&gt;     &lt;pid&gt; &lt;ppid&gt;   &lt;C&gt; &lt;STIME&gt; &lt;tty&gt;        &lt;time&gt; gunicorn: worker <span class="o">[</span>bigchaindb_gunicorn<span class="o">]</span>
+...
+
+$ <span class="c1"># Send any of the above mentioned signals to the parent/root process(marked with `*` for clarity)</span>
+<span class="c1"># Sending SIGINT</span>
+$ <span class="nb">kill</span> -2 &lt;bigchaindb_parent_pid&gt;
+
+$ <span class="c1"># OR</span>
+
+<span class="c1"># Sending SIGTERM</span>
+$ <span class="nb">kill</span> -15 &lt;bigchaindb_parent_pid&gt;
+
+$ <span class="c1"># OR</span>
+
+<span class="c1"># Sending SIGQUIT</span>
+$ <span class="nb">kill</span> -3 &lt;bigchaindb_parent_pid&gt;
+
+<span class="c1"># If you want to kill all the processes by name yourself</span>
+$ pgrep bigchaindb <span class="p">|</span> xargs <span class="nb">kill</span> -9
+</pre></div>
+</div>
+<p>If you started BigchainDB in the foreground, a <code class="docutils literal notranslate"><span class="pre">Ctrl</span> <span class="pre">+</span> <span class="pre">C</span></code> or <code class="docutils literal notranslate"><span class="pre">Ctrl</span> <span class="pre">+</span> <span class="pre">Z</span></code> would shut down BigchainDB.</p>
+</div>
+<div class="section" id="member-dynamically-add-or-remove-validators">
+<h2>Member: Dynamically Add or Remove Validators<a class="headerlink" href="#member-dynamically-add-or-remove-validators" title="Permalink to this headline">¶</a></h2>
+<p>One member can make a proposal to call an election to add a validator, remove a validator, or change the voting power of a validator. They then share the election/proposal ID with all the other members. Once more than 2/3 of the voting power votes yes, the proposed change comes into effect. The commands to create a new election/proposal, to approve an election/proposal, and to get the current status of an election/proposal can be found in the documentation about the <a class="reference external" href="../server-reference/bigchaindb-cli#bigchaindb-election">bigchaindb election</a> subcommands.</p>
+</div>
+<div class="section" id="logging-and-log-rotation">
+<h2>Logging and Log Rotation<a class="headerlink" href="#logging-and-log-rotation" title="Permalink to this headline">¶</a></h2>
+<p>See the page in the Appendices about <a class="reference internal" href="../appendices/log-rotation.html"><span class="doc">logging and log rotation</span></a>.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="troubleshooting.html" class="btn btn-neutral float-right" title="Troubleshooting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="network-setup.html" class="btn btn-neutral float-left" title="How to Set Up a BigchainDB Network" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

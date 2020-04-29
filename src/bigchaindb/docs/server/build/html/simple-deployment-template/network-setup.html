@@ -1,0 +1,408 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>How to Set Up a BigchainDB Network &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tips" href="tips.html" />
+    <link rel="prev" title="Set Up BigchainDB, MongoDB and Tendermint" href="set-up-node-software.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Simple Deployment Template</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="deploy-a-machine.html">Deploy a Machine for Your BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="set-up-nginx.html">Set Up NGINX</a></li>
+<li class="toctree-l2"><a class="reference internal" href="set-up-node-software.html">Set Up BigchainDB, MongoDB and Tendermint</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">How to Set Up a BigchainDB Network</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#member-share-hostname-pub-key-value-and-node-id">Member: Share hostname, pub_key.value and node_id</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#coordinator-create-share-the-genesis-json-file">Coordinator: Create &amp; Share the genesis.json File</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#member-connect-to-the-other-members">Member: Connect to the Other Members</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#member-start-mongodb">Member: Start MongoDB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#member-start-bigchaindb-and-tendermint-using-monit">Member: Start BigchainDB and Tendermint Using Monit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#how-others-can-access-your-node">How Others Can Access Your Node</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tips.html">Tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../k8s-deployment-template/index.html">Kubernetes Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Simple Deployment Template</a> &raquo;</li>
+        
+      <li>How to Set Up a BigchainDB Network</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/simple-deployment-template/network-setup.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <!---
+Copyright © 2020 Interplanetary Database Association e.V.,
+BigchainDB and IPDB software contributors.
+SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
+Code is Apache-2.0 and docs are CC-BY-4.0
+---><div class="section" id="how-to-set-up-a-bigchaindb-network">
+<h1>How to Set Up a BigchainDB Network<a class="headerlink" href="#how-to-set-up-a-bigchaindb-network" title="Permalink to this headline">¶</a></h1>
+<p>Until now, everything could be done by a node operator, by themselves.
+Now the node operators, also called <strong>Members</strong>, must share some information
+with each other, so they can form a network.</p>
+<p>There is one special Member who helps coordinate everyone: the <strong>Coordinator</strong>.</p>
+<div class="section" id="member-share-hostname-pub-key-value-and-node-id">
+<h2>Member: Share hostname, pub_key.value and node_id<a class="headerlink" href="#member-share-hostname-pub-key-value-and-node-id" title="Permalink to this headline">¶</a></h2>
+<p>Each BigchainDB node is identified by its:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">hostname</span></code>, i.e. the node’s DNS subdomain, such as <code class="docutils literal notranslate"><span class="pre">bnode.example.com</span></code>, or its IP address, such as <code class="docutils literal notranslate"><span class="pre">46.145.17.32</span></code></li>
+<li>Tendermint <code class="docutils literal notranslate"><span class="pre">pub_key.value</span></code></li>
+<li>Tendermint <code class="docutils literal notranslate"><span class="pre">node_id</span></code></li>
+</ul>
+<p>The Tendermint <code class="docutils literal notranslate"><span class="pre">pub_key.value</span></code> is stored
+in the file <code class="docutils literal notranslate"><span class="pre">$HOME/.tendermint/config/priv_validator.json</span></code>.
+That file should look like:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;address&quot;</span><span class="p">:</span> <span class="s2">&quot;E22D4340E5A92E4A9AD7C62DA62888929B3921E9&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;pub_key&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;tendermint/PubKeyEd25519&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;P+aweH73Hii8RyCmNWbwPsa9o4inq3I+0fSfprVkZa0=&quot;</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;last_height&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;last_round&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;last_step&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="nt">&quot;priv_key&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;tendermint/PrivKeyEd25519&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;AHBiZXdZhkVZoPUAiMzClxhl0VvUp7Xl3YT6GvCc93A/5rB4fvceKLxHIKY1ZvA+xr2jiKercj7R9J+mtWRlrQ==&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>To get your Tendermint <code class="docutils literal notranslate"><span class="pre">node_id</span></code>, run the command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tendermint</span> <span class="n">show_node_id</span>
+</pre></div>
+</div>
+<p>An example <code class="docutils literal notranslate"><span class="pre">node_id</span></code> is <code class="docutils literal notranslate"><span class="pre">9b989cd5ac65fec52652a457aed6f5fd200edc22</span></code>.</p>
+<p><strong>Share your <code class="docutils literal notranslate"><span class="pre">hostname</span></code>, <code class="docutils literal notranslate"><span class="pre">pub_key.value</span></code> and <code class="docutils literal notranslate"><span class="pre">node_id</span></code> with all other Members.</strong></p>
+</div>
+<div class="section" id="coordinator-create-share-the-genesis-json-file">
+<h2>Coordinator: Create &amp; Share the genesis.json File<a class="headerlink" href="#coordinator-create-share-the-genesis-json-file" title="Permalink to this headline">¶</a></h2>
+<p>At this point the Coordinator should have received the data
+from all the Members, and should combine them in the file
+<code class="docutils literal notranslate"><span class="pre">$HOME/.tendermint/config/genesis.json</span></code>:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+   <span class="nt">&quot;genesis_time&quot;</span><span class="p">:</span><span class="s2">&quot;0001-01-01T00:00:00Z&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;chain_id&quot;</span><span class="p">:</span><span class="s2">&quot;test-chain-la6HSr&quot;</span><span class="p">,</span>
+   <span class="nt">&quot;consensus_params&quot;</span><span class="p">:{</span>
+      <span class="nt">&quot;block_size_params&quot;</span><span class="p">:{</span>
+         <span class="nt">&quot;max_bytes&quot;</span><span class="p">:</span><span class="s2">&quot;22020096&quot;</span><span class="p">,</span>
+         <span class="nt">&quot;max_txs&quot;</span><span class="p">:</span><span class="s2">&quot;10000&quot;</span><span class="p">,</span>
+         <span class="nt">&quot;max_gas&quot;</span><span class="p">:</span><span class="s2">&quot;-1&quot;</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;tx_size_params&quot;</span><span class="p">:{</span>
+         <span class="nt">&quot;max_bytes&quot;</span><span class="p">:</span><span class="s2">&quot;10240&quot;</span><span class="p">,</span>
+         <span class="nt">&quot;max_gas&quot;</span><span class="p">:</span><span class="s2">&quot;-1&quot;</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;block_gossip_params&quot;</span><span class="p">:{</span>
+         <span class="nt">&quot;block_part_size_bytes&quot;</span><span class="p">:</span><span class="s2">&quot;65536&quot;</span>
+      <span class="p">},</span>
+      <span class="nt">&quot;evidence_params&quot;</span><span class="p">:{</span>
+         <span class="nt">&quot;max_age&quot;</span><span class="p">:</span><span class="s2">&quot;100000&quot;</span>
+      <span class="p">}</span>
+   <span class="p">},</span>
+   <span class="nt">&quot;validators&quot;</span><span class="p">:[</span>
+      <span class="p">{</span>
+         <span class="nt">&quot;pub_key&quot;</span><span class="p">:{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;tendermint/PubKeyEd25519&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;Member 1 public key&gt;&quot;</span>
+         <span class="p">},</span>
+         <span class="nt">&quot;power&quot;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span>
+         <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;Member 1 name&gt;&quot;</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+         <span class="nt">&quot;pub_key&quot;</span><span class="p">:{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;tendermint/PubKeyEd25519&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;Member 2 public key&gt;&quot;</span>
+         <span class="p">},</span>
+         <span class="nt">&quot;power&quot;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span>
+         <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;Member 2 name&gt;&quot;</span>
+      <span class="p">},</span>
+      <span class="p">{</span>
+         <span class="nt">&quot;...&quot;</span><span class="p">:{</span>
+
+         <span class="p">},</span>
+
+      <span class="p">},</span>
+      <span class="p">{</span>
+         <span class="nt">&quot;pub_key&quot;</span><span class="p">:{</span>
+            <span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;tendermint/PubKeyEd25519&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;Member N public key&gt;&quot;</span>
+         <span class="p">},</span>
+         <span class="nt">&quot;power&quot;</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span>
+         <span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;&lt;Member N name&gt;&quot;</span>
+      <span class="p">}</span>
+   <span class="p">],</span>
+   <span class="nt">&quot;app_hash&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Note:</strong> The above <code class="docutils literal notranslate"><span class="pre">consensus_params</span></code> in the <code class="docutils literal notranslate"><span class="pre">genesis.json</span></code>
+are default values.</p>
+<p>The new <code class="docutils literal notranslate"><span class="pre">genesis.json</span></code> file contains the data that describes the Network.
+The key <code class="docutils literal notranslate"><span class="pre">name</span></code> is the Member’s moniker; it can be any valid string,
+but put something human-readable like <code class="docutils literal notranslate"><span class="pre">&quot;Alice's</span> <span class="pre">Node</span> <span class="pre">Shop&quot;</span></code>.</p>
+<p>At this point, the Coordinator must share the new <code class="docutils literal notranslate"><span class="pre">genesis.json</span></code> file with all Members.</p>
+</div>
+<div class="section" id="member-connect-to-the-other-members">
+<h2>Member: Connect to the Other Members<a class="headerlink" href="#member-connect-to-the-other-members" title="Permalink to this headline">¶</a></h2>
+<p>At this point the Member should have received the <code class="docutils literal notranslate"><span class="pre">genesis.json</span></code> file.</p>
+<p>The Member must copy the <code class="docutils literal notranslate"><span class="pre">genesis.json</span></code> file
+into their local <code class="docutils literal notranslate"><span class="pre">$HOME/.tendermint/config</span></code> directory.
+Every Member now shares the same <code class="docutils literal notranslate"><span class="pre">chain_id</span></code> and <code class="docutils literal notranslate"><span class="pre">genesis_time</span></code> (used to identify the Network),
+and the same list of <code class="docutils literal notranslate"><span class="pre">validators</span></code>.</p>
+<p>Each Member must edit their <code class="docutils literal notranslate"><span class="pre">$HOME/.tendermint/config/config.toml</span></code> file
+and make the following changes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">moniker</span> <span class="o">=</span> <span class="s2">&quot;Name of our node&quot;</span>
+<span class="n">create_empty_blocks</span> <span class="o">=</span> <span class="n">false</span>
+<span class="n">log_level</span> <span class="o">=</span> <span class="s2">&quot;main:info,state:info,*:error&quot;</span>
+
+<span class="n">persistent_peers</span> <span class="o">=</span> <span class="s2">&quot;&lt;Member 1 node id&gt;@&lt;Member 1 hostname&gt;:26656,</span><span class="se">\</span>
+<span class="s2">&lt;Member 2 node id&gt;@&lt;Member 2 hostname&gt;:26656,</span><span class="se">\</span>
+<span class="s2">&lt;Member N node id&gt;@&lt;Member N hostname&gt;:26656,&quot;</span>
+
+<span class="n">send_rate</span> <span class="o">=</span> <span class="mi">102400000</span>
+<span class="n">recv_rate</span> <span class="o">=</span> <span class="mi">102400000</span>
+
+<span class="n">recheck</span> <span class="o">=</span> <span class="n">false</span>
+</pre></div>
+</div>
+<p>Note: The list of <code class="docutils literal notranslate"><span class="pre">persistent_peers</span></code> doesn’t have to include all nodes
+in the network.</p>
+</div>
+<div class="section" id="member-start-mongodb">
+<h2>Member: Start MongoDB<a class="headerlink" href="#member-start-mongodb" title="Permalink to this headline">¶</a></h2>
+<p>If you installed MongoDB using <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">mongodb</span></code>, then MongoDB should already be running in the background. You can check using <code class="docutils literal notranslate"><span class="pre">systemctl</span> <span class="pre">status</span> <span class="pre">mongodb</span></code>.</p>
+<p>If MongoDB isn’t running, then you can start it using the command <code class="docutils literal notranslate"><span class="pre">mongod</span></code>, but that will run it in the foreground. If you want to run it in the background (so it will continue running after you logout), you can use <code class="docutils literal notranslate"><span class="pre">mongod</span> <span class="pre">--fork</span> <span class="pre">--logpath</span> <span class="pre">/var/log/mongodb.log</span></code>. (You might have to create the <code class="docutils literal notranslate"><span class="pre">/var/log</span></code> directory if it doesn’t already exist.)</p>
+<p>If you installed MongoDB using <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">mongodb</span></code>, then a MongoDB startup script should already be installed (so MongoDB will start automatically when the machine is restarted). Otherwise, you should install a startup script for MongoDB.</p>
+</div>
+<div class="section" id="member-start-bigchaindb-and-tendermint-using-monit">
+<h2>Member: Start BigchainDB and Tendermint Using Monit<a class="headerlink" href="#member-start-bigchaindb-and-tendermint-using-monit" title="Permalink to this headline">¶</a></h2>
+<p>This section describes how to manage the BigchainDB and Tendermint processes using <a class="reference external" href="https://www.mmonit.com/monit">Monit</a>, a small open-source utility for managing and monitoring Unix processes. BigchainDB and Tendermint are managed together, because if BigchainDB is stopped (or crashes) and is restarted, <em>Tendermint won’t try reconnecting to it</em>. (That’s not a bug. It’s just how Tendermint works.)</p>
+<p>Install Monit:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">monit</span>
+</pre></div>
+</div>
+<p>If you installed the <code class="docutils literal notranslate"><span class="pre">bigchaindb</span></code> Python package as above, you should have the <code class="docutils literal notranslate"><span class="pre">bigchaindb-monit-config</span></code> script in your <code class="docutils literal notranslate"><span class="pre">PATH</span></code> now. Run the script to build a configuration file for Monit:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bigchaindb</span><span class="o">-</span><span class="n">monit</span><span class="o">-</span><span class="n">config</span>
+</pre></div>
+</div>
+<p>Run Monit as a daemon, instructing it to wake up every second to check on processes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">monit</span> <span class="o">-</span><span class="n">d</span> <span class="mi">1</span>
+</pre></div>
+</div>
+<p>Monit will run the BigchainDB and Tendermint processes and restart them when they crash. If the root <code class="docutils literal notranslate"><span class="pre">bigchaindb_</span></code> process crashes, Monit will also restart the Tendermint process.</p>
+<p>You can check the status by running <code class="docutils literal notranslate"><span class="pre">monit</span> <span class="pre">status</span></code> or <code class="docutils literal notranslate"><span class="pre">monit</span> <span class="pre">summary</span></code>.</p>
+<p>By default, it will collect program logs into the <code class="docutils literal notranslate"><span class="pre">~/.bigchaindb-monit/logs</span></code> folder.</p>
+<p>To learn more about Monit, use <code class="docutils literal notranslate"><span class="pre">monit</span> <span class="pre">-h</span></code> (help) or read <a class="reference external" href="https://mmonit.com/monit/documentation/monit.html">the Monit documentation</a>.</p>
+<p>Check <code class="docutils literal notranslate"><span class="pre">bigchaindb-monit-config</span> <span class="pre">-h</span></code> if you want to arrange a different folder for logs or some of the Monit internal artifacts.</p>
+<p>If you want to start and manage the BigchainDB and Tendermint processes yourself, then look inside the file <a class="reference external" href="https://github.com/bigchaindb/bigchaindb/blob/master/pkg/scripts/bigchaindb-monit-config">bigchaindb/pkg/scripts/bigchaindb-monit-config</a> to see how <em>it</em> starts BigchainDB and Tendermint.</p>
+</div>
+<div class="section" id="how-others-can-access-your-node">
+<h2>How Others Can Access Your Node<a class="headerlink" href="#how-others-can-access-your-node" title="Permalink to this headline">¶</a></h2>
+<p>If you followed the above instructions, then your node should be publicly-accessible with BigchainDB Root URL <code class="docutils literal notranslate"><span class="pre">https://hostname</span></code> or <code class="docutils literal notranslate"><span class="pre">http://hostname:9984</span></code>. That is, anyone can interact with your node using the <a class="reference internal" href="../http-client-server-api.html"><span class="doc">BigchainDB HTTP API</span></a> exposed at that address. The most common way to do that is to use one of the <a class="reference internal" href="../drivers-clients/index.html"><span class="doc">BigchainDB Drivers</span></a>.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="tips.html" class="btn btn-neutral float-right" title="Tips" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="set-up-node-software.html" class="btn btn-neutral float-left" title="Set Up BigchainDB, MongoDB and Tendermint" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

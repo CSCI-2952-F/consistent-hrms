@@ -1,0 +1,329 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Set Up BigchainDB, MongoDB and Tendermint &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="How to Set Up a BigchainDB Network" href="network-setup.html" />
+    <link rel="prev" title="Set Up NGINX" href="set-up-nginx.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Simple Deployment Template</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="deploy-a-machine.html">Deploy a Machine for Your BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="set-up-nginx.html">Set Up NGINX</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Set Up BigchainDB, MongoDB and Tendermint</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#install-bigchaindb-server">Install BigchainDB Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configure-bigchaindb-server">Configure BigchainDB Server</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-and-start-mongodb">Install (and Start) MongoDB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-tendermint">Install Tendermint</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#start-configuring-tendermint">Start Configuring Tendermint</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="network-setup.html">How to Set Up a BigchainDB Network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tips.html">Tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../k8s-deployment-template/index.html">Kubernetes Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Simple Deployment Template</a> &raquo;</li>
+        
+      <li>Set Up BigchainDB, MongoDB and Tendermint</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/simple-deployment-template/set-up-node-software.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <!---
+Copyright © 2020 Interplanetary Database Association e.V.,
+BigchainDB and IPDB software contributors.
+SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
+Code is Apache-2.0 and docs are CC-BY-4.0
+---><div class="section" id="set-up-bigchaindb-mongodb-and-tendermint">
+<h1>Set Up BigchainDB, MongoDB and Tendermint<a class="headerlink" href="#set-up-bigchaindb-mongodb-and-tendermint" title="Permalink to this headline">¶</a></h1>
+<p>We now install and configure software that must run
+in every BigchainDB node: BigchainDB Server,
+MongoDB and Tendermint.</p>
+<div class="section" id="install-bigchaindb-server">
+<h2>Install BigchainDB Server<a class="headerlink" href="#install-bigchaindb-server" title="Permalink to this headline">¶</a></h2>
+<p>BigchainDB Server requires <strong>Python 3.6+</strong>, so make sure your system has it.</p>
+<p>Install the required OS-level packages:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># For Ubuntu 18.04:</span>
+<span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">python3</span><span class="o">-</span><span class="n">pip</span> <span class="n">libssl</span><span class="o">-</span><span class="n">dev</span>
+<span class="c1"># Ubuntu 16.04, and other Linux distros, may require other packages or more packages</span>
+</pre></div>
+</div>
+<p>BigchainDB Server requires <a class="reference external" href="http://www.gevent.org/">gevent</a>, and to install gevent, you must use pip 19 or later (as of 2019, because gevent now uses manylinux2010 wheels). Upgrade pip to the latest version:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">pip3</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="n">pip</span>
+</pre></div>
+</div>
+<p>Now install the latest version of BigchainDB Server.
+You can find the latest version by going
+to the <a class="reference external" href="https://pypi.org/project/BigchainDB/#history">BigchainDB project release history page on PyPI</a>.
+For example, to install version 2.0.0, you would do:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Change 2.0.0 to the latest version as explained above:</span>
+<span class="n">sudo</span> <span class="n">pip3</span> <span class="n">install</span> <span class="n">bigchaindb</span><span class="o">==</span><span class="mf">2.0</span><span class="o">.</span><span class="mi">0</span>
+</pre></div>
+</div>
+<p>Check that you installed the correct version of BigchainDB Server using <code class="docutils literal notranslate"><span class="pre">bigchaindb</span> <span class="pre">--version</span></code>.</p>
+</div>
+<div class="section" id="configure-bigchaindb-server">
+<h2>Configure BigchainDB Server<a class="headerlink" href="#configure-bigchaindb-server" title="Permalink to this headline">¶</a></h2>
+<p>To configure BigchainDB Server, run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bigchaindb</span> <span class="n">configure</span>
+</pre></div>
+</div>
+<p>The first question is <code class="docutils literal notranslate"><span class="pre">API</span> <span class="pre">Server</span> <span class="pre">bind?</span> <span class="pre">(default</span> <span class="pre">`localhost:9984`)</span></code>.</p>
+<ul class="simple">
+<li>If you’re using NGINX (e.g. if you want HTTPS),
+then accept the default value (<code class="docutils literal notranslate"><span class="pre">localhost:9984</span></code>).</li>
+<li>If you’re not using NGINX, then enter the value <code class="docutils literal notranslate"><span class="pre">0.0.0.0:9984</span></code></li>
+</ul>
+<p>You can accept the default value for all other BigchainDB config settings.</p>
+<p>If you’re using NGINX, then you should edit your BigchainDB config file
+(in <code class="docutils literal notranslate"><span class="pre">$HOME/.bigchaindb</span></code> by default) and set the following values
+under <code class="docutils literal notranslate"><span class="pre">&quot;wsserver&quot;</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;advertised_scheme&quot;</span><span class="p">:</span> <span class="s2">&quot;wss&quot;</span><span class="p">,</span>
+<span class="s2">&quot;advertised_host&quot;</span><span class="p">:</span> <span class="s2">&quot;bnode.example.com&quot;</span><span class="p">,</span>
+<span class="s2">&quot;advertised_port&quot;</span><span class="p">:</span> <span class="mi">443</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">bnode.example.com</span></code> should be replaced by your node’s actual subdomain.</p>
+</div>
+<div class="section" id="install-and-start-mongodb">
+<h2>Install (and Start) MongoDB<a class="headerlink" href="#install-and-start-mongodb" title="Permalink to this headline">¶</a></h2>
+<p>Install a recent version of MongoDB.
+BigchainDB Server requires version 3.4 or newer.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="n">mongodb</span>
+</pre></div>
+</div>
+<p>If you install MongoDB using the above command (which installs the <code class="docutils literal notranslate"><span class="pre">mongodb</span></code> package),
+it also configures MongoDB, starts MongoDB (in the background),
+and installs a MongoDB startup script
+(so that MongoDB will be started automatically when the machine is restarted).</p>
+<p>Note: The <code class="docutils literal notranslate"><span class="pre">mongodb</span></code> package is <em>not</em> the official MongoDB package
+from MongoDB the company. If you want to install the official MongoDB package,
+please see
+<a class="reference external" href="https://docs.mongodb.com/manual/installation/">the MongoDB documentation</a>.
+Note that installing the official package <em>doesn’t</em> also start MongoDB.</p>
+</div>
+<div class="section" id="install-tendermint">
+<h2>Install Tendermint<a class="headerlink" href="#install-tendermint" title="Permalink to this headline">¶</a></h2>
+<p>The version of BigchainDB Server described in these docs only works well
+with Tendermint 0.31.5 (not a higher version number). Install that:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">unzip</span>
+<span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">tendermint</span><span class="o">/</span><span class="n">tendermint</span><span class="o">/</span><span class="n">releases</span><span class="o">/</span><span class="n">download</span><span class="o">/</span><span class="n">v0</span><span class="o">.</span><span class="mf">31.5</span><span class="o">/</span><span class="n">tendermint_v0</span><span class="o">.</span><span class="mf">31.5</span><span class="n">_linux_amd64</span><span class="o">.</span><span class="n">zip</span>
+<span class="n">unzip</span> <span class="n">tendermint_v0</span><span class="o">.</span><span class="mf">31.5</span><span class="n">_linux_amd64</span><span class="o">.</span><span class="n">zip</span>
+<span class="n">rm</span> <span class="n">tendermint_v0</span><span class="o">.</span><span class="mf">31.5</span><span class="n">_linux_amd64</span><span class="o">.</span><span class="n">zip</span>
+<span class="n">sudo</span> <span class="n">mv</span> <span class="n">tendermint</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="nb">bin</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="start-configuring-tendermint">
+<h2>Start Configuring Tendermint<a class="headerlink" href="#start-configuring-tendermint" title="Permalink to this headline">¶</a></h2>
+<p>You won’t be able to finish configuring Tendermint until you have some information
+from the other nodes in the network, but you can start by doing:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tendermint</span> <span class="n">init</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="network-setup.html" class="btn btn-neutral float-right" title="How to Set Up a BigchainDB Network" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="set-up-nginx.html" class="btn btn-neutral float-left" title="Set Up NGINX" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

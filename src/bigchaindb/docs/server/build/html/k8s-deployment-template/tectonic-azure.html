@@ -1,0 +1,360 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Walkthrough: Deploy a Kubernetes Cluster on Azure using Tectonic by CoreOS &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Cluster Troubleshooting" href="troubleshoot.html" />
+    <link rel="prev" title="Kubernetes Template: Deploying a BigchainDB network" href="bigchaindb-network-on-kubernetes.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../simple-deployment-template/index.html">Simple Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Kubernetes Deployment Template</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="workflow.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ca-installation.html">How to Set Up a Self-Signed Certificate Authority</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server-tls-certificate.html">How to Generate a Server Certificate for MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client-tls-certificate.html">How to Generate a Client Certificate for MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revoke-tls-certificate.html">How to Revoke an SSL/TLS Certificate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="template-kubernetes-azure.html">Template: Deploy a Kubernetes Cluster on Azure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node-on-kubernetes.html">Kubernetes Template: Deploy a Single BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node-config-map-and-secrets.html">How to Configure a BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="log-analytics.html">Log Analytics on Azure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cloud-manager.html">Configure MongoDB Cloud Manager for Monitoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="easy-rsa.html">How to Install &amp; Configure Easy-RSA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upgrade-on-kubernetes.html">Kubernetes Template: Upgrade all Software in a BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bigchaindb-network-on-kubernetes.html">Kubernetes Template: Deploying a BigchainDB network</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Walkthrough: Deploy a Kubernetes Cluster on Azure using Tectonic by CoreOS</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#step-1-prerequisites-for-deploying-tectonic-cluster">Step 1: Prerequisites for Deploying Tectonic Cluster</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-2-get-a-tectonic-subscription">Step 2: Get a Tectonic Subscription</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-3-deploy-the-cluster-on-azure">Step 3: Deploy the cluster on Azure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-4-configure-kubectl">Step 4: Configure kubectl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tectonic-references">Tectonic References</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshoot.html">Cluster Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html">Architecture of a BigchainDB Node Running in a Kubernetes Cluster</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Kubernetes Deployment Template</a> &raquo;</li>
+        
+      <li>Walkthrough: Deploy a Kubernetes Cluster on Azure using Tectonic by CoreOS</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/k8s-deployment-template/tectonic-azure.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="walkthrough-deploy-a-kubernetes-cluster-on-azure-using-tectonic-by-coreos">
+<h1>Walkthrough: Deploy a Kubernetes Cluster on Azure using Tectonic by CoreOS<a class="headerlink" href="#walkthrough-deploy-a-kubernetes-cluster-on-azure-using-tectonic-by-coreos" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">A highly-available Kubernetes cluster requires at least five virtual machines
+(three for the master and two for your app’s containers).
+Therefore we don’t recommend using Kubernetes to run a BigchainDB node
+if that’s the only thing the Kubernetes cluster will be running.
+Instead, see our <a class="reference internal" href="../simple-deployment-template/index.html#simple-deployment-template"><span class="std std-ref">Simple Deployment Template</span></a>.
+If your organization already <em>has</em> a big Kubernetes cluster running many containers,
+and your organization has people who know Kubernetes,
+then this Kubernetes deployment template might be helpful.</p>
+</div>
+<p>A BigchainDB node can be run inside a <a class="reference external" href="https://kubernetes.io/">Kubernetes</a>
+cluster.
+This page describes one way to deploy a Kubernetes cluster on Azure using Tectonic.
+Tectonic helps in easier cluster management of Kubernetes clusters.</p>
+<p>If you would rather use Azure Container Service to manage Kubernetes Clusters,
+please read <a class="reference internal" href="template-kubernetes-azure.html"><span class="doc">our guide for that</span></a>.</p>
+<div class="section" id="step-1-prerequisites-for-deploying-tectonic-cluster">
+<h2>Step 1: Prerequisites for Deploying Tectonic Cluster<a class="headerlink" href="#step-1-prerequisites-for-deploying-tectonic-cluster" title="Permalink to this headline">¶</a></h2>
+<p>Get an Azure account. Refer to
+<a class="reference internal" href="template-kubernetes-azure.html#get-a-pay-as-you-go-azure-subscription"><span class="std std-ref">this step in our docs</span></a>.</p>
+<p>Create an SSH Key pair for the new Tectonic cluster. Refer to
+<a class="reference internal" href="template-kubernetes-azure.html#create-an-ssh-key-pair"><span class="std std-ref">this step in our docs</span></a>.</p>
+</div>
+<div class="section" id="step-2-get-a-tectonic-subscription">
+<h2>Step 2: Get a Tectonic Subscription<a class="headerlink" href="#step-2-get-a-tectonic-subscription" title="Permalink to this headline">¶</a></h2>
+<p>CoreOS offers Tectonic for free for up to 10 nodes.</p>
+<p>Sign up for an account <a class="reference external" href="https://coreos.com/tectonic">here</a> if you do not
+have one already and get a license for 10 nodes.</p>
+<p>Login to your account, go to Overview &gt; Your Account and save the
+<code class="docutils literal notranslate"><span class="pre">CoreOS</span> <span class="pre">License</span></code> and the <code class="docutils literal notranslate"><span class="pre">Pull</span> <span class="pre">Secret</span></code> to your local machine.</p>
+</div>
+<div class="section" id="step-3-deploy-the-cluster-on-azure">
+<h2>Step 3: Deploy the cluster on Azure<a class="headerlink" href="#step-3-deploy-the-cluster-on-azure" title="Permalink to this headline">¶</a></h2>
+<p>The latest instructions for deployment can be found
+<a class="reference external" href="https://coreos.com/tectonic/docs/latest/tutorials/azure/install.html">here</a>.</p>
+<p>The following points suggests some customizations for a BigchainDB deployment
+when following the steps above:</p>
+<ol class="arabic simple">
+<li>Set the <code class="docutils literal notranslate"><span class="pre">CLUSTER</span></code> variable to the name of the cluster. Also note that the
+cluster will be deployed in a resource group named
+<code class="docutils literal notranslate"><span class="pre">tectonic-cluster-CLUSTER</span></code>.</li>
+<li>Set the <code class="docutils literal notranslate"><span class="pre">tectonic_base_domain</span></code> to <code class="docutils literal notranslate"><span class="pre">&quot;&quot;</span></code> if you want to use Azure managed
+DNS. You will be assigned a <code class="docutils literal notranslate"><span class="pre">cloudapp.azure.com</span></code> sub-domain by default and
+you can skip the <code class="docutils literal notranslate"><span class="pre">Configuring</span> <span class="pre">Azure</span> <span class="pre">DNS</span></code> section from the Tectonic installation
+guide.</li>
+<li>Set the <code class="docutils literal notranslate"><span class="pre">tectonic_cl_channel</span></code> to <code class="docutils literal notranslate"><span class="pre">&quot;stable&quot;</span></code> unless you want to
+experiment or test with the latest release.</li>
+<li>Set the <code class="docutils literal notranslate"><span class="pre">tectonic_cluster_name</span></code> to the <code class="docutils literal notranslate"><span class="pre">CLUSTER</span></code> variable defined in
+the step above.</li>
+<li>Set the <code class="docutils literal notranslate"><span class="pre">tectonic_license_path</span></code> and <code class="docutils literal notranslate"><span class="pre">tectonic_pull_secret_path</span></code> to the
+location where you have stored the <code class="docutils literal notranslate"><span class="pre">tectonic-license.txt</span></code> and the
+<code class="docutils literal notranslate"><span class="pre">config.json</span></code> files downloaded in the previous step.</li>
+<li>Set the <code class="docutils literal notranslate"><span class="pre">tectonic_etcd_count</span></code> to <code class="docutils literal notranslate"><span class="pre">&quot;3&quot;</span></code>, so that you have a multi-node
+etcd cluster that can tolerate a single node failure.</li>
+<li>Set the <code class="docutils literal notranslate"><span class="pre">tectonic_etcd_tls_enabled</span></code> to <code class="docutils literal notranslate"><span class="pre">&quot;true&quot;</span></code> as this will enable TLS
+connectivity between the etcd nodes and their clients.</li>
+<li>Set the <code class="docutils literal notranslate"><span class="pre">tectonic_master_count</span></code> to <code class="docutils literal notranslate"><span class="pre">&quot;3&quot;</span></code> so that you cane tolerate a
+single master failure.</li>
+<li>Set the <code class="docutils literal notranslate"><span class="pre">tectonic_worker_count</span></code> to <code class="docutils literal notranslate"><span class="pre">&quot;2&quot;</span></code>.</li>
+<li>Set the <code class="docutils literal notranslate"><span class="pre">tectonic_azure_location</span></code> to <code class="docutils literal notranslate"><span class="pre">&quot;westeurope&quot;</span></code> if you want to host
+the cluster in Azure’s <code class="docutils literal notranslate"><span class="pre">westeurope</span></code> datacenter.</li>
+<li>Set the <code class="docutils literal notranslate"><span class="pre">tectonic_azure_ssh_key</span></code> to the path of the public key created in
+the previous step.</li>
+<li>We recommend setting up or using a CA(Certificate Authority) to generate Tectonic
+Console’s server certificate(s) and adding it to your trusted authorities on the client side,
+accessing the Tectonic Console i.e. Browser. If you already have a CA(self-signed or otherwise),
+Set the <code class="docutils literal notranslate"><span class="pre">tectonic_ca_cert</span></code> and <code class="docutils literal notranslate"><span class="pre">tectonic_ca_key</span></code> configurations with the content
+of PEM-encoded certificate and key files, respectively. For more information about, how to set
+up a self-signed CA, Please refer to
+<a class="reference internal" href="ca-installation.html"><span class="doc">How to Set up self-signed CA</span></a>.</li>
+<li>Note that the <code class="docutils literal notranslate"><span class="pre">tectonic_azure_client_secret</span></code> is the same as the
+<code class="docutils literal notranslate"><span class="pre">ARM_CLIENT_SECRET</span></code>.</li>
+<li>Note that the URL for the Tectonic console using these settings will be the
+cluster name set in the configutation file, the datacenter name and
+<code class="docutils literal notranslate"><span class="pre">cloudapp.azure.com</span></code>. For example, if you named your cluster as
+<code class="docutils literal notranslate"><span class="pre">test-cluster</span></code> and specified the datacenter as <code class="docutils literal notranslate"><span class="pre">westeurope</span></code>, the Tectonic
+console will be available at <code class="docutils literal notranslate"><span class="pre">test-cluster.westeurope.cloudapp.azure.com</span></code>.</li>
+<li>Note that, if you do not specify <code class="docutils literal notranslate"><span class="pre">tectonic_ca_cert</span></code>, a CA certificate will
+be generated automatically and you will encounter the untrusted certificate
+message on your client(Browser), when accessing the Tectonic Console.</li>
+</ol>
+</div>
+<div class="section" id="step-4-configure-kubectl">
+<h2>Step 4: Configure kubectl<a class="headerlink" href="#step-4-configure-kubectl" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Refer to <a class="reference external" href="https://coreos.com/tectonic/docs/latest/tutorials/azure/first-app.html">this tutorial</a>
+for instructions on how to download the kubectl configuration files for
+your cluster.</li>
+<li>Set the <code class="docutils literal notranslate"><span class="pre">KUBECONFIG</span></code> environment variable to make <code class="docutils literal notranslate"><span class="pre">kubectl</span></code> use the new
+config file along with the existing configuration.</li>
+</ol>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ export KUBECONFIG=$HOME/.kube/config:/path/to/config/kubectl-config
+
+# OR to only use the new configuration, try
+
+$ export KUBECONFIG=/path/to/config/kubectl-config
+</pre></div>
+</div>
+<p>Next, you can follow one of our following deployment templates:</p>
+<ul class="simple">
+<li><a class="reference internal" href="node-on-kubernetes.html"><span class="doc">Kubernetes Template: Deploy a Single BigchainDB Node</span></a>.</li>
+</ul>
+</div>
+<div class="section" id="tectonic-references">
+<h2>Tectonic References<a class="headerlink" href="#tectonic-references" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><a class="reference external" href="https://coreos.com/tectonic/docs/latest/tutorials/azure/install.html">https://coreos.com/tectonic/docs/latest/tutorials/azure/install.html</a></li>
+<li><a class="reference external" href="https://coreos.com/tectonic/docs/latest/troubleshooting/installer-terraform.html">https://coreos.com/tectonic/docs/latest/troubleshooting/installer-terraform.html</a></li>
+<li><a class="reference external" href="https://coreos.com/tectonic/docs/latest/tutorials/azure/first-app.html">https://coreos.com/tectonic/docs/latest/tutorials/azure/first-app.html</a></li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="troubleshoot.html" class="btn btn-neutral float-right" title="Cluster Troubleshooting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="bigchaindb-network-on-kubernetes.html" class="btn btn-neutral float-left" title="Kubernetes Template: Deploying a BigchainDB network" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

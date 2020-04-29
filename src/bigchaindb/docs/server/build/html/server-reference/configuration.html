@@ -1,0 +1,585 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Configuration Settings &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Command Line Interface (CLI)" href="bigchaindb-cli.html" />
+    <link rel="prev" title="Settings &amp; CLI" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../simple-deployment-template/index.html">Simple Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Settings &amp; CLI</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Configuration Settings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#database">database.*</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#server">server.*</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#wsserver">wsserver.*</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#wsserver-scheme-wsserver-host-and-wsserver-port">wsserver.scheme, wsserver.host and wsserver.port</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#wsserver-advertised-scheme-wsserver-advertised-host-and-wsserver-advertised-port">wsserver.advertised_scheme, wsserver.advertised_host and wsserver.advertised_port</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#log">log.*</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#log-file">log.file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#log-error-file">log.error_file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#log-level-console">log.level_console</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#log-level-logfile">log.level_logfile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#log-datefmt-console">log.datefmt_console</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#log-datefmt-logfile">log.datefmt_logfile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#log-fmt-console">log.fmt_console</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#log-fmt-logfile">log.fmt_logfile</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#log-granular-levels">log.granular_levels</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#tendermint">tendermint.*</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="bigchaindb-cli.html">Command Line Interface (CLI)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../k8s-deployment-template/index.html">Kubernetes Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Settings &amp; CLI</a> &raquo;</li>
+        
+      <li>Configuration Settings</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/server-reference/configuration.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <!---
+Copyright © 2020 Interplanetary Database Association e.V.,
+BigchainDB and IPDB software contributors.
+SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
+Code is Apache-2.0 and docs are CC-BY-4.0
+---><div class="section" id="configuration-settings">
+<h1>Configuration Settings<a class="headerlink" href="#configuration-settings" title="Permalink to this headline">¶</a></h1>
+<p>Every BigchainDB Server configuration setting has two names: a config-file name and an environment variable name. For example, one of the settings has the config-file name <code class="docutils literal notranslate"><span class="pre">database.host</span></code> and the environment variable name <code class="docutils literal notranslate"><span class="pre">BIGCHAINDB_DATABASE_HOST</span></code>. Here are some more examples:</p>
+<p><code class="docutils literal notranslate"><span class="pre">database.port</span></code> ↔ <code class="docutils literal notranslate"><span class="pre">BIGCHAINDB_DATABASE_PORT</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">database.keyfile_passphrase</span></code> ↔ <code class="docutils literal notranslate"><span class="pre">BIGCHAINDB_DATABASE_KEYFILE_PASSPHRASE</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">server.bind</span></code> ↔ <code class="docutils literal notranslate"><span class="pre">BIGCHAINDB_SERVER_BIND</span></code></p>
+<p>The value of each setting is determined according to the following rules:</p>
+<ul class="simple">
+<li>If it’s set by an environment variable, then use that value</li>
+<li>Otherwise, if it’s set in a local config file, then use that value</li>
+<li>Otherwise, use the default value</li>
+</ul>
+<p>The local config file is <code class="docutils literal notranslate"><span class="pre">$HOME/.bigchaindb</span></code> by default (a file which might not even exist), but you can tell BigchainDB to use a different file by using the <code class="docutils literal notranslate"><span class="pre">-c</span></code> command-line option, e.g. <code class="docutils literal notranslate"><span class="pre">bigchaindb</span> <span class="pre">-c</span> <span class="pre">path/to/config_file.json</span> <span class="pre">start</span></code>
+or using the <code class="docutils literal notranslate"><span class="pre">BIGCHAINDB_CONFIG_PATH</span></code> environment variable, e.g. <code class="docutils literal notranslate"><span class="pre">BIGHAINDB_CONFIG_PATH=.my_bigchaindb_config</span> <span class="pre">bigchaindb</span> <span class="pre">start</span></code>.
+Note that the <code class="docutils literal notranslate"><span class="pre">-c</span></code> command line option will always take precedence if both the <code class="docutils literal notranslate"><span class="pre">BIGCHAINDB_CONFIG_PATH</span></code> and the <code class="docutils literal notranslate"><span class="pre">-c</span></code> command line option are used.</p>
+<p>You can read the current default values in the file <a class="reference external" href="https://github.com/bigchaindb/bigchaindb/blob/master/bigchaindb/__init__.py">bigchaindb/__init__.py</a>. (The link is to the latest version.)</p>
+<p>Running <code class="docutils literal notranslate"><span class="pre">bigchaindb</span> <span class="pre">-y</span> <span class="pre">configure</span> <span class="pre">localmongodb</span></code> will generate a local config file in <code class="docutils literal notranslate"><span class="pre">$HOME/.bigchaindb</span></code> with all the default values.</p>
+<div class="section" id="database">
+<h2>database.*<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h2>
+<p>The settings with names of the form <code class="docutils literal notranslate"><span class="pre">database.*</span></code> are for the backend database
+(currently only MongoDB). They are:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">database.backend</span></code> can only be <code class="docutils literal notranslate"><span class="pre">localmongodb</span></code>, currently.</li>
+<li><code class="docutils literal notranslate"><span class="pre">database.host</span></code> is the hostname (FQDN) of the backend database.</li>
+<li><code class="docutils literal notranslate"><span class="pre">database.port</span></code> is self-explanatory.</li>
+<li><code class="docutils literal notranslate"><span class="pre">database.name</span></code> is a user-chosen name for the database inside MongoDB, e.g. <code class="docutils literal notranslate"><span class="pre">bigchain</span></code>.</li>
+<li><code class="docutils literal notranslate"><span class="pre">database.connection_timeout</span></code> is the maximum number of milliseconds that BigchainDB will wait before giving up on one attempt to connect to the backend database.</li>
+<li><code class="docutils literal notranslate"><span class="pre">database.max_tries</span></code> is the maximum number of times that BigchainDB will try to establish a connection with the backend database. If 0, then it will try forever.</li>
+<li><code class="docutils literal notranslate"><span class="pre">database.replicaset</span></code> is the name of the MongoDB replica set. The default value is <code class="docutils literal notranslate"><span class="pre">null</span></code> because in BigchainDB 2.0+, each BigchainDB node has its own independent MongoDB database and no replica set is necessary. Replica set must already exist if this option is configured, BigchainDB will not create it.</li>
+<li><code class="docutils literal notranslate"><span class="pre">database.ssl</span></code> must be <code class="docutils literal notranslate"><span class="pre">true</span></code> or <code class="docutils literal notranslate"><span class="pre">false</span></code>. It tells BigchainDB Server whether it should connect to MongoDB using TLS/SSL or not. The default value is <code class="docutils literal notranslate"><span class="pre">false</span></code>.</li>
+</ul>
+<p>There are three ways for BigchainDB Server to authenticate itself with MongoDB (or a specific MongoDB database): no authentication, username/password, and x.509 certificate authentication.</p>
+<p><strong>No Authentication</strong></p>
+<p>If you use all the default BigchainDB configuration settings, then no authentication will be used.</p>
+<p><strong>Username/Password Authentication</strong></p>
+<p>To use username/password authentication, a MongoDB instance must already be running somewhere (maybe in another machine), it must already have a database for use by BigchainDB (usually named <code class="docutils literal notranslate"><span class="pre">bigchain</span></code>, which is the default <code class="docutils literal notranslate"><span class="pre">database.name</span></code>), and that database must already have a “readWrite” user with associated username and password. To create such a user, login to your MongoDB instance as Admin and run the following commands:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>use &lt;database.name&gt;
+db.createUser({user: &quot;&lt;database.login&gt;&quot;, pwd: &quot;&lt;database.password&gt;&quot;, roles: [{role: &quot;readWrite&quot;, db: &quot;&lt;database.name&gt;&quot;}]})
+</pre></div>
+</div>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">database.login</span></code> is the user’s username.</li>
+<li><code class="docutils literal notranslate"><span class="pre">database.password</span></code> is the user’s password, given in plaintext.</li>
+<li><code class="docutils literal notranslate"><span class="pre">database.ca_cert</span></code>, <code class="docutils literal notranslate"><span class="pre">database.certfile</span></code>, <code class="docutils literal notranslate"><span class="pre">database.keyfile</span></code>, <code class="docutils literal notranslate"><span class="pre">database.crlfile</span></code>, and <code class="docutils literal notranslate"><span class="pre">database.keyfile_passphrase</span></code> are not used so they can have their default values.</li>
+</ul>
+<p><strong>x.509 Certificate Authentication</strong></p>
+<p>To use x.509 certificate authentication, a MongoDB instance must be running somewhere (maybe in another machine), it must already have a database for use by BigchainDB (usually named <code class="docutils literal notranslate"><span class="pre">bigchain</span></code>, which is the default <code class="docutils literal notranslate"><span class="pre">database.name</span></code>), and that database must be set up to use x.509 authentication. See the MongoDB docs about how to do that.</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">database.login</span></code> is the user’s username.</li>
+<li><code class="docutils literal notranslate"><span class="pre">database.password</span></code> isn’t used so the default value (<code class="docutils literal notranslate"><span class="pre">null</span></code>) is fine.</li>
+<li><code class="docutils literal notranslate"><span class="pre">database.ca_cert</span></code>, <code class="docutils literal notranslate"><span class="pre">database.certfile</span></code>, <code class="docutils literal notranslate"><span class="pre">database.keyfile</span></code> and <code class="docutils literal notranslate"><span class="pre">database.crlfile</span></code> are the paths to the CA, signed certificate, private key and certificate revocation list files respectively.</li>
+<li><code class="docutils literal notranslate"><span class="pre">database.keyfile_passphrase</span></code> is the private key decryption passphrase, specified in plaintext.</li>
+</ul>
+<p><strong>Example using environment variables</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>export BIGCHAINDB_DATABASE_BACKEND=localmongodb
+export BIGCHAINDB_DATABASE_HOST=localhost
+export BIGCHAINDB_DATABASE_PORT=27017
+export BIGCHAINDB_DATABASE_NAME=database8
+export BIGCHAINDB_DATABASE_CONNECTION_TIMEOUT=5000
+export BIGCHAINDB_DATABASE_MAX_TRIES=3
+</pre></div>
+</div>
+<p><strong>Default values</strong></p>
+<p>If (no environment variables were set and there’s no local config file), or you used <code class="docutils literal notranslate"><span class="pre">bigchaindb</span> <span class="pre">-y</span> <span class="pre">configure</span> <span class="pre">localmongodb</span></code> to create a default local config file for a <code class="docutils literal notranslate"><span class="pre">localmongodb</span></code> backend, then the defaults will be:</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;database&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;backend&quot;</span><span class="o">:</span> <span class="s2">&quot;localmongodb&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;host&quot;</span><span class="o">:</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;port&quot;</span><span class="o">:</span> <span class="mi">27017</span><span class="p">,</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span> <span class="s2">&quot;bigchain&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;connection_timeout&quot;</span><span class="o">:</span> <span class="mi">5000</span><span class="p">,</span>
+    <span class="s2">&quot;max_tries&quot;</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">&quot;replicaset&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;login&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;password&quot;</span><span class="o">:</span> <span class="kc">null</span>
+    <span class="s2">&quot;ssl&quot;</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;ca_cert&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;certfile&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;keyfile&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;crlfile&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+    <span class="s2">&quot;keyfile_passphrase&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="server">
+<h2>server.*<a class="headerlink" href="#server" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">server.bind</span></code>, <code class="docutils literal notranslate"><span class="pre">server.loglevel</span></code> and <code class="docutils literal notranslate"><span class="pre">server.workers</span></code>
+are settings for the <a class="reference external" href="http://gunicorn.org/">Gunicorn HTTP server</a>, which is used to serve the <a class="reference internal" href="../http-client-server-api.html"><span class="doc">HTTP client-server API</span></a>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">server.bind</span></code> is where to bind the Gunicorn HTTP server socket. It’s a string. It can be any valid value for <a class="reference external" href="http://docs.gunicorn.org/en/stable/settings.html#bind">Gunicorn’s bind setting</a>. For example:</p>
+<ul class="simple">
+<li>If you want to allow IPv4 connections from anyone, on port 9984, use <code class="docutils literal notranslate"><span class="pre">0.0.0.0:9984</span></code></li>
+<li>If you want to allow IPv6 connections from anyone, on port 9984, use <code class="docutils literal notranslate"><span class="pre">[::]:9984</span></code></li>
+</ul>
+<p>In a production setting, we recommend you use Gunicorn behind a reverse proxy server such as NGINX. If Gunicorn and the reverse proxy are running on the same machine, then you can use <code class="docutils literal notranslate"><span class="pre">localhost:9984</span></code> (the default value), meaning Gunicorn will talk to the reverse proxy on port 9984. The reverse proxy could then be bound to port 80 (for HTTP) or port 443 (for HTTPS), so that external clients would connect using that port. For example:</p>
+<p>[External clients]—(port 443)—[NGINX]—(port 9984)—[Gunicorn / BigchainDB Server]</p>
+<p>If Gunicorn and the reverse proxy are running on different machines, then <code class="docutils literal notranslate"><span class="pre">server.bind</span></code> should be <code class="docutils literal notranslate"><span class="pre">hostname:9984</span></code>, where hostname is the IP address or <a class="reference external" href="https://en.wikipedia.org/wiki/Fully_qualified_domain_name">FQDN</a> of the reverse proxy.</p>
+<p>There’s <a class="reference external" href="http://docs.gunicorn.org/en/stable/deploy.html">more information about deploying behind a reverse proxy in the Gunicorn documentation</a>. (They call it a proxy.)</p>
+<p><code class="docutils literal notranslate"><span class="pre">server.loglevel</span></code> sets the log level of Gunicorn’s Error log outputs. See
+<a class="reference external" href="http://docs.gunicorn.org/en/latest/settings.html#loglevel">Gunicorn’s documentation</a>
+for more information.</p>
+<p><code class="docutils literal notranslate"><span class="pre">server.workers</span></code> is <a class="reference external" href="http://docs.gunicorn.org/en/stable/settings.html#workers">the number of worker processes</a> for handling requests. If set to <code class="docutils literal notranslate"><span class="pre">None</span></code>, the value will be (2 × cpu_count + 1). Each worker process has a single thread. The HTTP server will be able to handle <code class="docutils literal notranslate"><span class="pre">server.workers</span></code> requests simultaneously.</p>
+<p><strong>Example using environment variables</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>export BIGCHAINDB_SERVER_BIND=0.0.0.0:9984
+export BIGCHAINDB_SERVER_LOGLEVEL=debug
+export BIGCHAINDB_SERVER_WORKERS=5
+</pre></div>
+</div>
+<p><strong>Example config file snippet</strong></p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;server&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;bind&quot;</span><span class="o">:</span> <span class="s2">&quot;0.0.0.0:9984&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;loglevel&quot;</span><span class="o">:</span> <span class="s2">&quot;debug&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;workers&quot;</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Default values (from a config file)</strong></p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;server&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;bind&quot;</span><span class="o">:</span> <span class="s2">&quot;localhost:9984&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;loglevel&quot;</span><span class="o">:</span> <span class="s2">&quot;info&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;workers&quot;</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="wsserver">
+<h2>wsserver.*<a class="headerlink" href="#wsserver" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="wsserver-scheme-wsserver-host-and-wsserver-port">
+<h3>wsserver.scheme, wsserver.host and wsserver.port<a class="headerlink" href="#wsserver-scheme-wsserver-host-and-wsserver-port" title="Permalink to this headline">¶</a></h3>
+<p>These settings are for the
+<a class="reference external" href="https://aiohttp.readthedocs.io/en/stable/index.html">aiohttp server</a>,
+which is used to serve the
+<a class="reference internal" href="../events/websocket-event-stream-api.html"><span class="doc">WebSocket Event Stream API</span></a>.
+<code class="docutils literal notranslate"><span class="pre">wsserver.scheme</span></code> should be either <code class="docutils literal notranslate"><span class="pre">&quot;ws&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;wss&quot;</span></code>
+(but setting it to <code class="docutils literal notranslate"><span class="pre">&quot;wss&quot;</span></code> does <em>not</em> enable SSL/TLS).
+<code class="docutils literal notranslate"><span class="pre">wsserver.host</span></code> is where to bind the aiohttp server socket and
+<code class="docutils literal notranslate"><span class="pre">wsserver.port</span></code> is the corresponding port.
+If you want to allow connections from anyone, on port 9985,
+set <code class="docutils literal notranslate"><span class="pre">wsserver.host</span></code> to 0.0.0.0 and <code class="docutils literal notranslate"><span class="pre">wsserver.port</span></code> to 9985.</p>
+<p><strong>Example using environment variables</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>export BIGCHAINDB_WSSERVER_SCHEME=ws
+export BIGCHAINDB_WSSERVER_HOST=0.0.0.0
+export BIGCHAINDB_WSSERVER_PORT=9985
+</pre></div>
+</div>
+<p><strong>Example config file snippet</strong></p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;wsserver&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;scheme&quot;</span><span class="o">:</span> <span class="s2">&quot;wss&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;host&quot;</span><span class="o">:</span> <span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;port&quot;</span><span class="o">:</span> <span class="mi">65000</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Default values (from a config file)</strong></p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;wsserver&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;scheme&quot;</span><span class="o">:</span> <span class="s2">&quot;ws&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;host&quot;</span><span class="o">:</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;port&quot;</span><span class="o">:</span> <span class="mi">9985</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="wsserver-advertised-scheme-wsserver-advertised-host-and-wsserver-advertised-port">
+<h3>wsserver.advertised_scheme, wsserver.advertised_host and wsserver.advertised_port<a class="headerlink" href="#wsserver-advertised-scheme-wsserver-advertised-host-and-wsserver-advertised-port" title="Permalink to this headline">¶</a></h3>
+<p>These settings are for the advertising the Websocket URL to external clients in
+the root API endpoint. These configurations might be useful if your deployment
+is hosted behind a firewall, NAT, etc. where the exposed public IP or domain is
+different from where BigchainDB is running.</p>
+<p><strong>Example using environment variables</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>export BIGCHAINDB_WSSERVER_ADVERTISED_SCHEME=wss
+export BIGCHAINDB_WSSERVER_ADVERTISED_HOST=mybigchaindb.com
+export BIGCHAINDB_WSSERVER_ADVERTISED_PORT=443
+</pre></div>
+</div>
+<p><strong>Example config file snippet</strong></p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;wsserver&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;advertised_scheme&quot;</span><span class="o">:</span> <span class="s2">&quot;wss&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;advertised_host&quot;</span><span class="o">:</span> <span class="s2">&quot;mybigchaindb.com&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;advertised_port&quot;</span><span class="o">:</span> <span class="mi">443</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Default values (from a config file)</strong></p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;wsserver&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;advertised_scheme&quot;</span><span class="o">:</span> <span class="s2">&quot;ws&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;advertised_host&quot;</span><span class="o">:</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;advertised_port&quot;</span><span class="o">:</span> <span class="mi">9985</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="log">
+<h2>log.*<a class="headerlink" href="#log" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">log.*</span></code> settings are to configure logging.</p>
+<p><strong>Example</strong></p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;log&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;file&quot;</span><span class="o">:</span> <span class="s2">&quot;/var/log/bigchaindb.log&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;error_file&quot;</span><span class="o">:</span> <span class="s2">&quot;/var/log/bigchaindb-errors.log&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;level_console&quot;</span><span class="o">:</span> <span class="s2">&quot;info&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;level_logfile&quot;</span><span class="o">:</span> <span class="s2">&quot;info&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;datefmt_console&quot;</span><span class="o">:</span> <span class="s2">&quot;%Y-%m-%d %H:%M:%S&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;datefmt_logfile&quot;</span><span class="o">:</span> <span class="s2">&quot;%Y-%m-%d %H:%M:%S&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fmt_console&quot;</span><span class="o">:</span> <span class="s2">&quot;%(asctime)s [%(levelname)s] (%(name)s) %(message)s&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fmt_logfile&quot;</span><span class="o">:</span> <span class="s2">&quot;%(asctime)s [%(levelname)s] (%(name)s) %(message)s&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;granular_levels&quot;</span><span class="o">:</span> <span class="p">{}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Default values</strong></p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;log&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;file&quot;</span><span class="o">:</span> <span class="s2">&quot;~/bigchaindb.log&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;error_file&quot;</span><span class="o">:</span> <span class="s2">&quot;~/bigchaindb-errors.log&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;level_console&quot;</span><span class="o">:</span> <span class="s2">&quot;info&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;level_logfile&quot;</span><span class="o">:</span> <span class="s2">&quot;info&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;datefmt_console&quot;</span><span class="o">:</span> <span class="s2">&quot;%Y-%m-%d %H:%M:%S&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;datefmt_logfile&quot;</span><span class="o">:</span> <span class="s2">&quot;%Y-%m-%d %H:%M:%S&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fmt_logfile&quot;</span><span class="o">:</span> <span class="s2">&quot;[%(asctime)s] [%(levelname)s] (%(name)s) %(message)s (%(processName)-10s - pid: %(process)d)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;fmt_console&quot;</span><span class="o">:</span> <span class="s2">&quot;[%(asctime)s] [%(levelname)s] (%(name)s) %(message)s (%(processName)-10s - pid: %(process)d)&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;granular_levels&quot;</span><span class="o">:</span> <span class="p">{}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="log-file">
+<h3>log.file<a class="headerlink" href="#log-file" title="Permalink to this headline">¶</a></h3>
+<p>The full path to the file where logs should be written.
+The user running <code class="docutils literal notranslate"><span class="pre">bigchaindb</span></code> must have write access to the
+specified path.</p>
+<p><strong>Log rotation:</strong> Log files have a size limit of about 200 MB
+and will be rotated up to five times.
+For example, if <code class="docutils literal notranslate"><span class="pre">log.file</span></code> is set to <code class="docutils literal notranslate"><span class="pre">&quot;~/bigchain.log&quot;</span></code>, then
+logs would always be written to <code class="docutils literal notranslate"><span class="pre">bigchain.log</span></code>. Each time the file
+<code class="docutils literal notranslate"><span class="pre">bigchain.log</span></code> reaches 200 MB it will be closed and renamed
+<code class="docutils literal notranslate"><span class="pre">bigchain.log.1</span></code>. If <code class="docutils literal notranslate"><span class="pre">bigchain.log.1</span></code> and <code class="docutils literal notranslate"><span class="pre">bigchain.log.2</span></code> already exist they
+would be renamed <code class="docutils literal notranslate"><span class="pre">bigchain.log.2</span></code> and <code class="docutils literal notranslate"><span class="pre">bigchain.log.3</span></code>. This pattern would be
+applied up to <code class="docutils literal notranslate"><span class="pre">bigchain.log.5</span></code> after which <code class="docutils literal notranslate"><span class="pre">bigchain.log.5</span></code> would be
+overwritten by <code class="docutils literal notranslate"><span class="pre">bigchain.log.4</span></code>, thus ending the rotation cycle of whatever
+logs were in <code class="docutils literal notranslate"><span class="pre">bigchain.log.5</span></code>.</p>
+</div>
+<div class="section" id="log-error-file">
+<h3>log.error_file<a class="headerlink" href="#log-error-file" title="Permalink to this headline">¶</a></h3>
+<p>Similar to <code class="docutils literal notranslate"><span class="pre">log.file</span></code> (see above), this is the
+full path to the file where error logs should be written.</p>
+</div>
+<div class="section" id="log-level-console">
+<h3>log.level_console<a class="headerlink" href="#log-level-console" title="Permalink to this headline">¶</a></h3>
+<p>The log level used to log to the console. Possible allowed values are the ones
+defined by <a class="reference external" href="https://docs.python.org/3.6/library/logging.html#levels">Python</a>,
+but case-insensitive for the sake of convenience:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&quot;critical&quot;, &quot;error&quot;, &quot;warning&quot;, &quot;info&quot;, &quot;debug&quot;, &quot;notset&quot;
+</pre></div>
+</div>
+</div>
+<div class="section" id="log-level-logfile">
+<h3>log.level_logfile<a class="headerlink" href="#log-level-logfile" title="Permalink to this headline">¶</a></h3>
+<p>The log level used to log to the log file. Possible allowed values are the ones
+defined by <a class="reference external" href="https://docs.python.org/3.6/library/logging.html#levels">Python</a>,
+but case-insensitive for the sake of convenience:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&quot;critical&quot;, &quot;error&quot;, &quot;warning&quot;, &quot;info&quot;, &quot;debug&quot;, &quot;notset&quot;
+</pre></div>
+</div>
+</div>
+<div class="section" id="log-datefmt-console">
+<h3>log.datefmt_console<a class="headerlink" href="#log-datefmt-console" title="Permalink to this headline">¶</a></h3>
+<p>The format string for the date/time portion of a message, when logged to the
+console.</p>
+<p>For more information on how to construct the format string please consult the
+table under <a class="reference external" href="https://docs.python.org/3.6/library/time.html#time.strftime">Python’s documentation of time.strftime(format[, t])</a>.</p>
+</div>
+<div class="section" id="log-datefmt-logfile">
+<h3>log.datefmt_logfile<a class="headerlink" href="#log-datefmt-logfile" title="Permalink to this headline">¶</a></h3>
+<p>The format string for the date/time portion of a message, when logged to a log
+file.</p>
+<p>For more information on how to construct the format string please consult the
+table under <a class="reference external" href="https://docs.python.org/3.6/library/time.html#time.strftime">Python’s documentation of time.strftime(format[, t])</a>.</p>
+</div>
+<div class="section" id="log-fmt-console">
+<h3>log.fmt_console<a class="headerlink" href="#log-fmt-console" title="Permalink to this headline">¶</a></h3>
+<p>A string used to format the log messages when logged to the console.</p>
+<p>For more information on possible formatting options please consult Python’s
+documentation on
+<a class="reference external" href="https://docs.python.org/3.6/library/logging.html#logrecord-attributes">LogRecord attributes</a>.</p>
+</div>
+<div class="section" id="log-fmt-logfile">
+<h3>log.fmt_logfile<a class="headerlink" href="#log-fmt-logfile" title="Permalink to this headline">¶</a></h3>
+<p>A string used to format the log messages when logged to a log file.</p>
+<p>For more information on possible formatting options please consult Python’s
+documentation on
+<a class="reference external" href="https://docs.python.org/3.6/library/logging.html#logrecord-attributes">LogRecord attributes</a>.</p>
+</div>
+<div class="section" id="log-granular-levels">
+<h3>log.granular_levels<a class="headerlink" href="#log-granular-levels" title="Permalink to this headline">¶</a></h3>
+<p>Log levels for BigchainDB’s modules. This can be useful to control the log
+level of specific parts of the application. As an example, if you wanted the
+logging of the <code class="docutils literal notranslate"><span class="pre">core.py</span></code> module to be more verbose, you would set the
+configuration shown in the example below.</p>
+<p><strong>Example</strong></p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;log&quot;</span><span class="o">:</span> <span class="p">{</span>
+        <span class="s2">&quot;granular_levels&quot;</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s2">&quot;bichaindb.core&quot;</span><span class="o">:</span> <span class="s2">&quot;debug&quot;</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><strong>Default value</strong></p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">{}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="tendermint">
+<h2>tendermint.*<a class="headerlink" href="#tendermint" title="Permalink to this headline">¶</a></h2>
+<p>The settings with names of the form <code class="docutils literal notranslate"><span class="pre">tendermint.*</span></code> tell BigchainDB Server
+where it can connect to the node’s Tendermint instance.</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">tendermint.host</span></code> is the hostname (FQDN)/IP address of the Tendermint instance.</li>
+<li><code class="docutils literal notranslate"><span class="pre">tendermint.port</span></code> is self-explanatory.</li>
+</ul>
+<p><strong>Example using environment variables</strong></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>export BIGCHAINDB_TENDERMINT_HOST=tendermint
+export BIGCHAINDB_TENDERMINT_PORT=26657
+</pre></div>
+</div>
+<p><strong>Default values</strong></p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;tendermint&quot;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&quot;host&quot;</span><span class="o">:</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;port&quot;</span><span class="o">:</span> <span class="mi">26657</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="bigchaindb-cli.html" class="btn btn-neutral float-right" title="Command Line Interface (CLI)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Settings &amp; CLI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

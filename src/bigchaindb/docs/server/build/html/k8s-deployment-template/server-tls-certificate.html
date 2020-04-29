@@ -1,0 +1,318 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>How to Generate a Server Certificate for MongoDB &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="How to Generate a Client Certificate for MongoDB" href="client-tls-certificate.html" />
+    <link rel="prev" title="How to Set Up a Self-Signed Certificate Authority" href="ca-installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../simple-deployment-template/index.html">Simple Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Kubernetes Deployment Template</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="workflow.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ca-installation.html">How to Set Up a Self-Signed Certificate Authority</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">How to Generate a Server Certificate for MongoDB</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#step-1-install-configure-easyrsa">Step 1: Install &amp; Configure Easy–RSA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-2-create-the-server-private-key-and-csr">Step 2: Create the Server Private Key and CSR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-3-get-the-server-certificate-signed">Step 3: Get the Server Certificate Signed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-4-generate-the-consolidated-server-pem-file">Step 4: Generate the Consolidated Server PEM File</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="client-tls-certificate.html">How to Generate a Client Certificate for MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revoke-tls-certificate.html">How to Revoke an SSL/TLS Certificate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="template-kubernetes-azure.html">Template: Deploy a Kubernetes Cluster on Azure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node-on-kubernetes.html">Kubernetes Template: Deploy a Single BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node-config-map-and-secrets.html">How to Configure a BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="log-analytics.html">Log Analytics on Azure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cloud-manager.html">Configure MongoDB Cloud Manager for Monitoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="easy-rsa.html">How to Install &amp; Configure Easy-RSA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upgrade-on-kubernetes.html">Kubernetes Template: Upgrade all Software in a BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bigchaindb-network-on-kubernetes.html">Kubernetes Template: Deploying a BigchainDB network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tectonic-azure.html">Walkthrough: Deploy a Kubernetes Cluster on Azure using Tectonic by CoreOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshoot.html">Cluster Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html">Architecture of a BigchainDB Node Running in a Kubernetes Cluster</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Kubernetes Deployment Template</a> &raquo;</li>
+        
+      <li>How to Generate a Server Certificate for MongoDB</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/k8s-deployment-template/server-tls-certificate.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="how-to-generate-a-server-certificate-for-mongodb">
+<span id="id1"></span><h1>How to Generate a Server Certificate for MongoDB<a class="headerlink" href="#how-to-generate-a-server-certificate-for-mongodb" title="Permalink to this headline">¶</a></h1>
+<p>This page enumerates the steps <em>we</em> use to generate a
+server certificate for a MongoDB instance.
+A server certificate is also referred to as a “member certificate”
+in the MongoDB documentation.
+We use Easy-RSA.</p>
+<div class="section" id="step-1-install-configure-easyrsa">
+<h2>Step 1: Install &amp; Configure Easy–RSA<a class="headerlink" href="#step-1-install-configure-easyrsa" title="Permalink to this headline">¶</a></h2>
+<p>First create a directory for the server certificate (member cert) and cd into it:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="n">member</span><span class="o">-</span><span class="n">cert</span>
+
+<span class="n">cd</span> <span class="n">member</span><span class="o">-</span><span class="n">cert</span>
+</pre></div>
+</div>
+<p>Then <a class="reference internal" href="easy-rsa.html#how-to-install-and-configure-easyrsa"><span class="std std-ref">install and configure Easy-RSA in that directory</span></a>.</p>
+</div>
+<div class="section" id="step-2-create-the-server-private-key-and-csr">
+<h2>Step 2: Create the Server Private Key and CSR<a class="headerlink" href="#step-2-create-the-server-private-key-and-csr" title="Permalink to this headline">¶</a></h2>
+<p>You can create the server private key and certificate signing request (CSR)
+by going into the directory <code class="docutils literal notranslate"><span class="pre">member-cert/easy-rsa-3.0.1/easyrsa3</span></code>
+and using something like:</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Please make sure you are fullfilling the requirements for <a class="reference external" href="https://docs.mongodb.com/manual/tutorial/configure-x509-member-authentication">MongoDB server/member certificates</a>.</p>
+</div>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">easyrsa</span> <span class="n">init</span><span class="o">-</span><span class="n">pki</span>
+
+<span class="o">./</span><span class="n">easyrsa</span> <span class="o">--</span><span class="n">req</span><span class="o">-</span><span class="n">cn</span><span class="o">=</span><span class="n">mdb</span><span class="o">-</span><span class="n">instance</span><span class="o">-</span><span class="mi">0</span> <span class="o">--</span><span class="n">subject</span><span class="o">-</span><span class="n">alt</span><span class="o">-</span><span class="n">name</span><span class="o">=</span><span class="n">DNS</span><span class="p">:</span><span class="n">localhost</span><span class="p">,</span><span class="n">DNS</span><span class="p">:</span><span class="n">mdb</span><span class="o">-</span><span class="n">instance</span><span class="o">-</span><span class="mi">0</span> <span class="n">gen</span><span class="o">-</span><span class="n">req</span> <span class="n">mdb</span><span class="o">-</span><span class="n">instance</span><span class="o">-</span><span class="mi">0</span> <span class="n">nopass</span>
+</pre></div>
+</div>
+<p>You should replace the Common Name (<code class="docutils literal notranslate"><span class="pre">mdb-instance-0</span></code> above) with the correct name for <em>your</em> MongoDB instance in the network, e.g. <code class="docutils literal notranslate"><span class="pre">mdb-instance-5</span></code> or <code class="docutils literal notranslate"><span class="pre">mdb-instance-12</span></code>. (This name is decided by the organization managing the network.)</p>
+<p>You will be prompted to enter the Distinguished Name (DN) information for this certificate.
+For each field, you can accept the default value [in brackets] by pressing Enter.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Don’t accept the default value of OU (<code class="docutils literal notranslate"><span class="pre">IT</span></code>). Instead, enter the value <code class="docutils literal notranslate"><span class="pre">MongoDB-Instance</span></code>.</p>
+</div>
+<p>Aside: You need to provide the <code class="docutils literal notranslate"><span class="pre">DNS:localhost</span></code> SAN during certificate generation
+for using the <code class="docutils literal notranslate"><span class="pre">localhost</span> <span class="pre">exception</span></code> in the MongoDB instance.
+All certificates can have this attribute without compromising security as the
+<code class="docutils literal notranslate"><span class="pre">localhost</span> <span class="pre">exception</span></code> works only the first time.</p>
+</div>
+<div class="section" id="step-3-get-the-server-certificate-signed">
+<h2>Step 3: Get the Server Certificate Signed<a class="headerlink" href="#step-3-get-the-server-certificate-signed" title="Permalink to this headline">¶</a></h2>
+<p>The CSR file created in the last step
+should be located in <code class="docutils literal notranslate"><span class="pre">pki/reqs/mdb-instance-0.req</span></code>
+(where the integer <code class="docutils literal notranslate"><span class="pre">0</span></code> may be different for you).
+You need to send it to the organization managing the BigchainDB network
+so that they can use their CA
+to sign the request.
+(The managing organization should already have a self-signed CA.)</p>
+<p>If you are the admin of the managing organization’s self-signed CA,
+then you can import the CSR and use Easy-RSA to sign it.
+Go to your <code class="docutils literal notranslate"><span class="pre">bdb-node-ca/easy-rsa-3.0.1/easyrsa3/</span></code>
+directory and do something like:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">easyrsa</span> <span class="n">import</span><span class="o">-</span><span class="n">req</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">mdb</span><span class="o">-</span><span class="n">instance</span><span class="o">-</span><span class="mf">0.</span><span class="n">req</span> <span class="n">mdb</span><span class="o">-</span><span class="n">instance</span><span class="o">-</span><span class="mi">0</span>
+
+<span class="o">./</span><span class="n">easyrsa</span> <span class="o">--</span><span class="n">subject</span><span class="o">-</span><span class="n">alt</span><span class="o">-</span><span class="n">name</span><span class="o">=</span><span class="n">DNS</span><span class="p">:</span><span class="n">localhost</span><span class="p">,</span><span class="n">DNS</span><span class="p">:</span><span class="n">mdb</span><span class="o">-</span><span class="n">instance</span><span class="o">-</span><span class="mi">0</span> <span class="n">sign</span><span class="o">-</span><span class="n">req</span> <span class="n">server</span> <span class="n">mdb</span><span class="o">-</span><span class="n">instance</span><span class="o">-</span><span class="mi">0</span>
+</pre></div>
+</div>
+<p>Once you have signed it, you can send the signed certificate
+and the CA certificate back to the requestor.
+The files are <code class="docutils literal notranslate"><span class="pre">pki/issued/mdb-instance-0.crt</span></code> and <code class="docutils literal notranslate"><span class="pre">pki/ca.crt</span></code>.</p>
+</div>
+<div class="section" id="step-4-generate-the-consolidated-server-pem-file">
+<h2>Step 4: Generate the Consolidated Server PEM File<a class="headerlink" href="#step-4-generate-the-consolidated-server-pem-file" title="Permalink to this headline">¶</a></h2>
+<p>MongoDB requires a single, consolidated file containing both the public and
+private keys.</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">mdb</span><span class="o">-</span><span class="n">instance</span><span class="o">-</span><span class="mf">0.</span><span class="n">crt</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">mdb</span><span class="o">-</span><span class="n">instance</span><span class="o">-</span><span class="mf">0.</span><span class="n">key</span> <span class="o">&gt;</span> <span class="n">mdb</span><span class="o">-</span><span class="n">instance</span><span class="o">-</span><span class="mf">0.</span><span class="n">pem</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="client-tls-certificate.html" class="btn btn-neutral float-right" title="How to Generate a Client Certificate for MongoDB" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="ca-installation.html" class="btn btn-neutral float-left" title="How to Set Up a Self-Signed Certificate Authority" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

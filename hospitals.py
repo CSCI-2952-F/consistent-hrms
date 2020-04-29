@@ -137,6 +137,7 @@ def print_help():
     for cmd, desc in PROXIED_COMMANDS.items():
         print_cmd_help(cmd, desc)
     print_cmd_help('web', 'Opens the frontend URL in a browser')
+    print_cmd_help('build_networks', 'Creates docker networks for discovery, sagas, bigchain')
     print_cmd_help('help', 'Display this help message')
 
 

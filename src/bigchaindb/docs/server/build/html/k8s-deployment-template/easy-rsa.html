@@ -1,0 +1,320 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>How to Install &amp; Configure Easy-RSA &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Kubernetes Template: Upgrade all Software in a BigchainDB Node" href="upgrade-on-kubernetes.html" />
+    <link rel="prev" title="Configure MongoDB Cloud Manager for Monitoring" href="cloud-manager.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../simple-deployment-template/index.html">Simple Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Kubernetes Deployment Template</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="workflow.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ca-installation.html">How to Set Up a Self-Signed Certificate Authority</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server-tls-certificate.html">How to Generate a Server Certificate for MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client-tls-certificate.html">How to Generate a Client Certificate for MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revoke-tls-certificate.html">How to Revoke an SSL/TLS Certificate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="template-kubernetes-azure.html">Template: Deploy a Kubernetes Cluster on Azure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node-on-kubernetes.html">Kubernetes Template: Deploy a Single BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node-config-map-and-secrets.html">How to Configure a BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="log-analytics.html">Log Analytics on Azure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cloud-manager.html">Configure MongoDB Cloud Manager for Monitoring</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">How to Install &amp; Configure Easy-RSA</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#step-1-install-easy-rsa-dependencies">Step 1: Install Easy-RSA Dependencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-2-install-easy-rsa">Step 2: Install Easy-RSA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-3-customize-the-easy-rsa-configuration">Step 3: Customize the Easy-RSA Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-4-maybe-edit-x509-types-server">Step 4: Maybe Edit x509-types/server</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="upgrade-on-kubernetes.html">Kubernetes Template: Upgrade all Software in a BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bigchaindb-network-on-kubernetes.html">Kubernetes Template: Deploying a BigchainDB network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tectonic-azure.html">Walkthrough: Deploy a Kubernetes Cluster on Azure using Tectonic by CoreOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshoot.html">Cluster Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html">Architecture of a BigchainDB Node Running in a Kubernetes Cluster</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Kubernetes Deployment Template</a> &raquo;</li>
+        
+      <li>How to Install &amp; Configure Easy-RSA</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/k8s-deployment-template/easy-rsa.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="how-to-install-configure-easy-rsa">
+<span id="how-to-install-and-configure-easyrsa"></span><h1>How to Install &amp; Configure Easy-RSA<a class="headerlink" href="#how-to-install-configure-easy-rsa" title="Permalink to this headline">¶</a></h1>
+<p>We use
+<a class="reference external" href="https://community.openvpn.net/openvpn/wiki/EasyRSA3-OpenVPN-Howto">Easy-RSA version 3</a>, a
+wrapper over complex <code class="docutils literal notranslate"><span class="pre">openssl</span></code> commands.
+<a class="reference external" href="https://github.com/OpenVPN/easy-rsa/releases">Easy-RSA is available on GitHub</a> and licensed under GPLv2.</p>
+<div class="section" id="step-1-install-easy-rsa-dependencies">
+<h2>Step 1: Install Easy-RSA Dependencies<a class="headerlink" href="#step-1-install-easy-rsa-dependencies" title="Permalink to this headline">¶</a></h2>
+<p>The only dependency for Easy-RSA v3 is <code class="docutils literal notranslate"><span class="pre">openssl</span></code>,
+which is available from the <code class="docutils literal notranslate"><span class="pre">openssl</span></code> package on Ubuntu and other
+Debian-based operating systems, i.e. you can install it using:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">update</span>
+
+<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">openssl</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="step-2-install-easy-rsa">
+<h2>Step 2: Install Easy-RSA<a class="headerlink" href="#step-2-install-easy-rsa" title="Permalink to this headline">¶</a></h2>
+<p>Make sure you’re in the directory where you want Easy-RSA to live,
+then download it and extract it within that directory:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">OpenVPN</span><span class="o">/</span><span class="n">easy</span><span class="o">-</span><span class="n">rsa</span><span class="o">/</span><span class="n">archive</span><span class="o">/</span><span class="mf">3.0</span><span class="o">.</span><span class="mf">1.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+
+<span class="n">tar</span> <span class="n">xzvf</span> <span class="mf">3.0</span><span class="o">.</span><span class="mf">1.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+
+<span class="n">rm</span> <span class="mf">3.0</span><span class="o">.</span><span class="mf">1.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+</pre></div>
+</div>
+<p>There should now be a directory named <code class="docutils literal notranslate"><span class="pre">easy-rsa-3.0.1</span></code>
+in your current directory.</p>
+</div>
+<div class="section" id="step-3-customize-the-easy-rsa-configuration">
+<h2>Step 3: Customize the Easy-RSA Configuration<a class="headerlink" href="#step-3-customize-the-easy-rsa-configuration" title="Permalink to this headline">¶</a></h2>
+<p>We now create a config file named <code class="docutils literal notranslate"><span class="pre">vars</span></code>
+by copying the existing <code class="docutils literal notranslate"><span class="pre">vars.example</span></code> file
+and then editing it.
+You should change the
+country, province, city, org and email
+to the correct values for your organisation.
+(Note: The country, province, city, org and email are part of
+the <a class="reference external" href="https://en.wikipedia.org/wiki/X.509#Certificates">Distinguished Name</a> (DN).)
+The comments in the file explain what each of the variables mean.</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">easy</span><span class="o">-</span><span class="n">rsa</span><span class="o">-</span><span class="mf">3.0</span><span class="o">.</span><span class="mi">1</span><span class="o">/</span><span class="n">easyrsa3</span>
+
+<span class="n">cp</span> <span class="nb">vars</span><span class="o">.</span><span class="n">example</span> <span class="nb">vars</span>
+
+<span class="n">echo</span> <span class="s1">&#39;set_var EASYRSA_DN &quot;org&quot;&#39;</span> <span class="o">&gt;&gt;</span> <span class="nb">vars</span>
+<span class="n">echo</span> <span class="s1">&#39;set_var EASYRSA_KEY_SIZE 4096&#39;</span> <span class="o">&gt;&gt;</span> <span class="nb">vars</span>
+
+<span class="n">echo</span> <span class="s1">&#39;set_var EASYRSA_REQ_COUNTRY &quot;DE&quot;&#39;</span> <span class="o">&gt;&gt;</span> <span class="nb">vars</span>
+<span class="n">echo</span> <span class="s1">&#39;set_var EASYRSA_REQ_PROVINCE &quot;Berlin&quot;&#39;</span> <span class="o">&gt;&gt;</span> <span class="nb">vars</span>
+<span class="n">echo</span> <span class="s1">&#39;set_var EASYRSA_REQ_CITY &quot;Berlin&quot;&#39;</span> <span class="o">&gt;&gt;</span> <span class="nb">vars</span>
+<span class="n">echo</span> <span class="s1">&#39;set_var EASYRSA_REQ_ORG &quot;BigchainDB GmbH&quot;&#39;</span> <span class="o">&gt;&gt;</span> <span class="nb">vars</span>
+<span class="n">echo</span> <span class="s1">&#39;set_var EASYRSA_REQ_OU &quot;IT&quot;&#39;</span> <span class="o">&gt;&gt;</span> <span class="nb">vars</span>
+<span class="n">echo</span> <span class="s1">&#39;set_var EASYRSA_REQ_EMAIL &quot;devs@bigchaindb.com&quot;&#39;</span> <span class="o">&gt;&gt;</span> <span class="nb">vars</span>
+</pre></div>
+</div>
+<p>Note: Later, when building a CA or generating a certificate signing request, you will be prompted to enter a value for the OU (or to accept the default). You should change the default OU from <code class="docutils literal notranslate"><span class="pre">IT</span></code> to one of the following, as appropriate:
+<code class="docutils literal notranslate"><span class="pre">ROOT-CA</span></code>,
+<code class="docutils literal notranslate"><span class="pre">MongoDB-Instance</span></code>, <code class="docutils literal notranslate"><span class="pre">BigchainDB-Instance</span></code>, <code class="docutils literal notranslate"><span class="pre">MongoDB-Mon-Instance</span></code> or
+<code class="docutils literal notranslate"><span class="pre">MongoDB-Backup-Instance</span></code>.
+To understand why, see <a class="reference external" href="https://docs.mongodb.com/manual/tutorial/configure-x509-client-authentication/">the MongoDB Manual</a>.
+There are reminders to do this in the relevant docs.</p>
+</div>
+<div class="section" id="step-4-maybe-edit-x509-types-server">
+<h2>Step 4: Maybe Edit x509-types/server<a class="headerlink" href="#step-4-maybe-edit-x509-types-server" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>Only do this step if you are setting up a self-signed CA.</p>
+<p class="last">Edit the file <code class="docutils literal notranslate"><span class="pre">x509-types/server</span></code> and change
+<code class="docutils literal notranslate"><span class="pre">extendedKeyUsage</span> <span class="pre">=</span> <span class="pre">serverAuth</span></code> to
+<code class="docutils literal notranslate"><span class="pre">extendedKeyUsage</span> <span class="pre">=</span> <span class="pre">serverAuth,clientAuth</span></code>.
+See <a class="reference external" href="https://docs.mongodb.com/manual/core/security-x.509/">the MongoDB documentation about x.509 authentication</a> to understand why.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="upgrade-on-kubernetes.html" class="btn btn-neutral float-right" title="Kubernetes Template: Upgrade all Software in a BigchainDB Node" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="cloud-manager.html" class="btn btn-neutral float-left" title="Configure MongoDB Cloud Manager for Monitoring" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

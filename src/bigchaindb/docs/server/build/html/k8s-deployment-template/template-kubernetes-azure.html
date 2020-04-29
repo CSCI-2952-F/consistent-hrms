@@ -1,0 +1,452 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Template: Deploy a Kubernetes Cluster on Azure &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Kubernetes Template: Deploy a Single BigchainDB Node" href="node-on-kubernetes.html" />
+    <link rel="prev" title="How to Revoke an SSL/TLS Certificate" href="revoke-tls-certificate.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../simple-deployment-template/index.html">Simple Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Kubernetes Deployment Template</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="workflow.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ca-installation.html">How to Set Up a Self-Signed Certificate Authority</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server-tls-certificate.html">How to Generate a Server Certificate for MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client-tls-certificate.html">How to Generate a Client Certificate for MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revoke-tls-certificate.html">How to Revoke an SSL/TLS Certificate</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Template: Deploy a Kubernetes Cluster on Azure</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#step-1-get-a-pay-as-you-go-azure-subscription">Step 1: Get a Pay-As-You-Go Azure Subscription</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-2-create-an-ssh-key-pair">Step 2: Create an SSH Key Pair</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-3-deploy-an-azure-container-service-acs">Step 3: Deploy an Azure Container Service (ACS)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#trouble-with-the-service-principal-then-read-this">Trouble with the Service Principal? Then Read This!</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#optional-ssh-to-your-new-kubernetes-cluster-nodes">Optional: SSH to Your New Kubernetes Cluster Nodes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#optional-delete-the-kubernetes-cluster">Optional: Delete the Kubernetes Cluster</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#optional-delete-the-resource-group">Optional: Delete the Resource Group</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="node-on-kubernetes.html">Kubernetes Template: Deploy a Single BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node-config-map-and-secrets.html">How to Configure a BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="log-analytics.html">Log Analytics on Azure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cloud-manager.html">Configure MongoDB Cloud Manager for Monitoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="easy-rsa.html">How to Install &amp; Configure Easy-RSA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upgrade-on-kubernetes.html">Kubernetes Template: Upgrade all Software in a BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bigchaindb-network-on-kubernetes.html">Kubernetes Template: Deploying a BigchainDB network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tectonic-azure.html">Walkthrough: Deploy a Kubernetes Cluster on Azure using Tectonic by CoreOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshoot.html">Cluster Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html">Architecture of a BigchainDB Node Running in a Kubernetes Cluster</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Kubernetes Deployment Template</a> &raquo;</li>
+        
+      <li>Template: Deploy a Kubernetes Cluster on Azure</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/k8s-deployment-template/template-kubernetes-azure.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="template-deploy-a-kubernetes-cluster-on-azure">
+<h1>Template: Deploy a Kubernetes Cluster on Azure<a class="headerlink" href="#template-deploy-a-kubernetes-cluster-on-azure" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">A highly-available Kubernetes cluster requires at least five virtual machines
+(three for the master and two for your app’s containers).
+Therefore we don’t recommend using Kubernetes to run a BigchainDB node
+if that’s the only thing the Kubernetes cluster will be running.
+Instead, see our <a class="reference internal" href="../simple-deployment-template/index.html#simple-deployment-template"><span class="std std-ref">Simple Deployment Template</span></a>.
+If your organization already <em>has</em> a big Kubernetes cluster running many containers,
+and your organization has people who know Kubernetes,
+then this Kubernetes deployment template might be helpful.</p>
+</div>
+<p>A BigchainDB node can be run inside a <a class="reference external" href="https://kubernetes.io/">Kubernetes</a>
+cluster.
+This page describes one way to deploy a Kubernetes cluster on Azure.</p>
+<div class="section" id="step-1-get-a-pay-as-you-go-azure-subscription">
+<span id="get-a-pay-as-you-go-azure-subscription"></span><h2>Step 1: Get a Pay-As-You-Go Azure Subscription<a class="headerlink" href="#step-1-get-a-pay-as-you-go-azure-subscription" title="Permalink to this headline">¶</a></h2>
+<p>Microsoft Azure has a Free Trial subscription (at the time of writing),
+but it’s too limited to run an advanced BigchainDB node.
+Sign up for a Pay-As-You-Go Azure subscription
+via <a class="reference external" href="https://azure.microsoft.com">the Azure website</a>.</p>
+<p>You may find that you have to sign up for a Free Trial subscription first.
+That’s okay: you can have many subscriptions.</p>
+</div>
+<div class="section" id="step-2-create-an-ssh-key-pair">
+<span id="create-an-ssh-key-pair"></span><h2>Step 2: Create an SSH Key Pair<a class="headerlink" href="#step-2-create-an-ssh-key-pair" title="Permalink to this headline">¶</a></h2>
+<p>You’ll want an SSH key pair so you’ll be able to SSH
+to the virtual machines that you’ll deploy in the next step.
+(If you already have an SSH key pair, you <em>could</em> reuse it,
+but it’s probably a good idea to make a new SSH key pair
+for your Kubernetes VMs and nothing else.)</p>
+<p>See the
+<a class="reference internal" href="../appendices/generate-key-pair-for-ssh.html"><span class="doc">page about how to generate a key pair for SSH</span></a>.</p>
+</div>
+<div class="section" id="step-3-deploy-an-azure-container-service-acs">
+<h2>Step 3: Deploy an Azure Container Service (ACS)<a class="headerlink" href="#step-3-deploy-an-azure-container-service-acs" title="Permalink to this headline">¶</a></h2>
+<p>It’s <em>possible</em> to deploy an Azure Container Service (ACS)
+from the <a class="reference external" href="https://portal.azure.com">Azure Portal</a>
+(i.e. online in your web browser)
+but it’s actually easier to do it using the Azure
+Command-Line Interface (CLI).</p>
+<p>Microsoft has <a class="reference external" href="https://docs.microsoft.com/en-us/cli/azure/install-az-cli2">instructions to install the Azure CLI 2.0
+on most common operating systems</a>.
+Do that.</p>
+<p>If you already <em>have</em> the Azure CLI installed, you may want to update it.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last"><code class="docutils literal notranslate"><span class="pre">az</span> <span class="pre">component</span> <span class="pre">update</span></code> isn’t supported if you installed the CLI using some of Microsoft’s provided installation instructions. See <a class="reference external" href="https://docs.microsoft.com/en-us/cli/azure/install-az-cli2">the Microsoft docs for update instructions</a>.</p>
+</div>
+<p>Next, login to your account using:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ az login
+</pre></div>
+</div>
+<p>It will tell you to open a web page and to copy a code to that page.</p>
+<p>If the login is a success, you will see some information
+about all your subscriptions, including the one that is currently
+enabled (<code class="docutils literal notranslate"><span class="pre">&quot;state&quot;:</span> <span class="pre">&quot;Enabled&quot;</span></code>). If the wrong one is enabled,
+you can switch to the right one using:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ az account set --subscription &lt;subscription name or ID&gt;
+</pre></div>
+</div>
+<p>Next, you will have to pick the Azure data center location
+where you’d like to deploy your cluster.
+You can get a list of all available locations using:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ az account list-locations
+</pre></div>
+</div>
+<p>Next, create an Azure “resource group” to contain all the
+resources (virtual machines, subnets, etc.) associated
+with your soon-to-be-deployed cluster. You can name it
+whatever you like but avoid fancy characters because they may
+confuse some software.</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ az group create --name &lt;resource group name&gt; --location &lt;location name&gt;
+</pre></div>
+</div>
+<p>Example location names are <code class="docutils literal notranslate"><span class="pre">koreacentral</span></code> and <code class="docutils literal notranslate"><span class="pre">westeurope</span></code>.</p>
+<p>Finally, you can deploy an ACS using something like:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ az acs create --name &lt;a made-up cluster name&gt; \
+--resource-group &lt;name of resource group created earlier&gt; \
+--master-count 3 \
+--agent-count 3 \
+--admin-username ubuntu \
+--agent-vm-size Standard_L4s \
+--dns-prefix &lt;make up a name&gt; \
+--ssh-key-value ~/.ssh/&lt;name&gt;.pub \
+--orchestrator-type kubernetes \
+--debug --output json
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>The <a class="reference external" href="https://docs.microsoft.com/en-us/cli/azure/acs?view=azure-cli-latest#az_acs_create">Azure documentation</a>
+has a list of all <code class="docutils literal notranslate"><span class="pre">az</span> <span class="pre">acs</span> <span class="pre">create</span></code> options.
+You might prefer a smaller agent VM size, for example.
+You can also get a list of the options using:</p>
+<div class="code bash last highlight-default notranslate"><div class="highlight"><pre><span></span>$ az acs create --help
+</pre></div>
+</div>
+</div>
+<p>It takes a few minutes for all the resources to deploy.
+You can watch the progress in the <a class="reference external" href="https://portal.azure.com">Azure Portal</a>:
+go to <strong>Resource groups</strong> (with the blue cube icon)
+and click on the one you created
+to see all the resources in it.</p>
+<div class="section" id="trouble-with-the-service-principal-then-read-this">
+<h3>Trouble with the Service Principal? Then Read This!<a class="headerlink" href="#trouble-with-the-service-principal-then-read-this" title="Permalink to this headline">¶</a></h3>
+<p>If the <code class="docutils literal notranslate"><span class="pre">az</span> <span class="pre">acs</span> <span class="pre">create</span></code> command fails with an error message including the text,
+“The Service Principal in ServicePrincipalProfile could not be validated”,
+then we found you can prevent that by creating a Service Principal ahead of time
+and telling <code class="docutils literal notranslate"><span class="pre">az</span> <span class="pre">acs</span> <span class="pre">create</span></code> to use that one. (It’s supposed to create one,
+but sometimes that fails, I guess.)</p>
+<p>Create a new resource group, even if you created one before. They’re free anyway:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ az login
+$ az group create --name &lt;new resource group name&gt; \
+                  --location &lt;Azure region like westeurope&gt;
+</pre></div>
+</div>
+<p>Note the <code class="docutils literal notranslate"><span class="pre">id</span></code> in the output. It looks like
+<code class="docutils literal notranslate"><span class="pre">&quot;/subscriptions/369284be-0104-421a-8488-1aeac0caecbb/resourceGroups/examplerg&quot;</span></code>.
+It can be copied into the next command.
+Create a Service Principal using:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ az ad sp create-for-rbac --role=&quot;Contributor&quot; \
+--scopes=&lt;id value copied from above, including the double quotes on the ends&gt;
+</pre></div>
+</div>
+<p>Note the <code class="docutils literal notranslate"><span class="pre">appId</span></code> and <code class="docutils literal notranslate"><span class="pre">password</span></code>.
+Put those in a new <code class="docutils literal notranslate"><span class="pre">az</span> <span class="pre">acs</span> <span class="pre">create</span></code> command like above, with two new options added:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ az acs create ... \
+--service-principal &lt;appId&gt; \
+--client-secret &lt;password&gt;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="optional-ssh-to-your-new-kubernetes-cluster-nodes">
+<span id="ssh-to-your-new-kubernetes-cluster-nodes"></span><h2>Optional: SSH to Your New Kubernetes Cluster Nodes<a class="headerlink" href="#optional-ssh-to-your-new-kubernetes-cluster-nodes" title="Permalink to this headline">¶</a></h2>
+<p>You can SSH to one of the just-deployed Kubernetes “master” nodes
+(virtual machines) using:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ ssh -i ~/.ssh/&lt;name&gt; ubuntu@&lt;master-ip-address-or-fqdn&gt;
+</pre></div>
+</div>
+<p>where you can get the IP address or FQDN
+of a master node from the Azure Portal. For example:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ ssh -i ~/.ssh/mykey123 ubuntu@mydnsprefix.westeurope.cloudapp.azure.com
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">All the master nodes are accessible behind the <em>same</em> public IP address and
+FQDN. You connect to one of the masters randomly based on the load balancing
+policy.</p>
+</div>
+<p>The “agent” nodes shouldn’t get public IP addresses or externally accessible
+FQDNs, so you can’t SSH to them <em>directly</em>,
+but you can first SSH to the master
+and then SSH to an agent from there using their hostname.
+To do that, you could
+copy your SSH key pair to the master (a bad idea),
+or use SSH agent forwarding (better).
+To do the latter, do the following on the machine you used
+to SSH to the master:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ echo -e &quot;Host &lt;FQDN of the cluster from Azure Portal&gt;\n  ForwardAgent yes&quot; &gt;&gt; ~/.ssh/config
+</pre></div>
+</div>
+<p>To verify that SSH agent forwarding works properly,
+SSH to the one of the master nodes and do:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ echo &quot;$SSH_AUTH_SOCK&quot;
+</pre></div>
+</div>
+<p>If you get an empty response,
+then SSH agent forwarding hasn’t been set up correctly.
+If you get a non-empty response,
+then SSH agent forwarding should work fine
+and you can SSH to one of the agent nodes (from a master)
+using:</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ ssh ubuntu@k8s-agent-4AC80E97-0
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">k8s-agent-4AC80E97-0</span></code> is the name
+of a Kubernetes agent node in your Kubernetes cluster.
+You will have to replace it by the name
+of an agent node in your cluster.</p>
+</div>
+<div class="section" id="optional-delete-the-kubernetes-cluster">
+<h2>Optional: Delete the Kubernetes Cluster<a class="headerlink" href="#optional-delete-the-kubernetes-cluster" title="Permalink to this headline">¶</a></h2>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ az acs delete \
+--name &lt;ACS cluster name&gt; \
+--resource-group &lt;name of resource group containing the cluster&gt;
+</pre></div>
+</div>
+</div>
+<div class="section" id="optional-delete-the-resource-group">
+<h2>Optional: Delete the Resource Group<a class="headerlink" href="#optional-delete-the-resource-group" title="Permalink to this headline">¶</a></h2>
+<p>CAUTION: You might end up deleting resources other than the ACS cluster.</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span>$ az group delete \
+--name &lt;name of resource group containing the cluster&gt;
+</pre></div>
+</div>
+<p>Next, you can <a class="reference internal" href="node-on-kubernetes.html"><span class="doc">run a BigchainDB node/cluster(BFT)</span></a>
+on your new Kubernetes cluster.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="node-on-kubernetes.html" class="btn btn-neutral float-right" title="Kubernetes Template: Deploy a Single BigchainDB Node" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="revoke-tls-certificate.html" class="btn btn-neutral float-left" title="How to Revoke an SSL/TLS Certificate" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

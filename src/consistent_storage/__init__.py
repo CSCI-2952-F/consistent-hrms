@@ -6,6 +6,7 @@ from nameko.web.handlers import http
 
 from consistent_storage.centraldb import CentralDBStorageBackend
 from consistent_storage.sagas import SagasBackend
+from consistent_storage.bigchain import BigchaindbBackend
 from lib.consistent_storage import BaseStorageBackend
 
 BACKEND = os.getenv('CONSISTENT_STORAGE_BACKEND', 'sagas')
@@ -33,7 +34,11 @@ class ConsistentStorageProxy:
             self.backend = SagasBackend(grpc_addr)
 
         elif BACKEND == 'bigchain':
-            raise NotImplementedError()
+            bdb_root_url = os.getenv('BIGCHAIN_ROOT_URL')
+            if not bdb_root_url:
+                raise Exception('BIGCHAIN_ROOT_URL not set')
+
+            self.backend = BigchaindbBackend(bdb_root_url)
 
         elif BACKEND == 'centraldb':
             grpc_addr = os.getenv('CENTRALDB_GRPC_ADDR')
@@ -55,14 +60,14 @@ class ConsistentStorageProxy:
         Fetches a key from consistent storage.
 
         Arguments:
-            key {str} -- Key to fetch.
+            key {str} -- Key to fetch. Patient's UUIF
 
         Returns:
             dict --  Returns a dictionary as follows:
 
             {
                 'exists': [bool],
-                'value': [str or NoneType],
+                'value': [str or NoneType],  # Patient's public key
                 'is_owner': [bool],
                 'owner': [str],
             }
@@ -79,8 +84,8 @@ class ConsistentStorageProxy:
         Fails if the key is already present and stored by another owner.
 
         Arguments:
-            key {str} -- Key to store.
-            value {str} -- Value to store.
+            key {str} -- Key to store. Patient's UUID
+            value {str} -- Value to store. Patients's public key
 
         Returns:
             dict --  Returns a dictionary as follows:

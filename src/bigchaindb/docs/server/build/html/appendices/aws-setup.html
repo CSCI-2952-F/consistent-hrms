@@ -1,0 +1,291 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Basic AWS Setup &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Generate a Key Pair for SSH" href="generate-key-pair-for-ssh.html" />
+    <link rel="prev" title="Cryptography" href="cryptography.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../simple-deployment-template/index.html">Simple Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../k8s-deployment-template/index.html">Kubernetes Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Appendices</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="json-serialization.html">JSON Serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cryptography.html">Cryptography</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Basic AWS Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#get-an-aws-account">Get an AWS Account</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#install-the-aws-command-line-interface">Install the AWS Command-Line Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-an-aws-access-key">Create an AWS Access Key</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#generate-an-rsa-key-pair-for-ssh">Generate an RSA Key Pair for SSH</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#send-the-public-key-to-aws">Send the Public Key to AWS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="generate-key-pair-for-ssh.html">Generate a Key Pair for SSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="firewall-notes.html">Notes for Firewall Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ntp-notes.html">Notes on NTP Daemon Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="licenses.html">Licenses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="all-in-one-bigchaindb.html">Run BigchainDB with all-in-one Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="log-rotation.html">Logging and Log Rotation</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Appendices</a> &raquo;</li>
+        
+      <li>Basic AWS Setup</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/appendices/aws-setup.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <!---
+Copyright © 2020 Interplanetary Database Association e.V.,
+BigchainDB and IPDB software contributors.
+SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
+Code is Apache-2.0 and docs are CC-BY-4.0
+---><div class="section" id="basic-aws-setup">
+<h1>Basic AWS Setup<a class="headerlink" href="#basic-aws-setup" title="Permalink to this headline">¶</a></h1>
+<p>Before you can deploy anything on AWS, you must do a few things.</p>
+<div class="section" id="get-an-aws-account">
+<h2>Get an AWS Account<a class="headerlink" href="#get-an-aws-account" title="Permalink to this headline">¶</a></h2>
+<p>If you don’t already have an AWS account, you can <a class="reference external" href="https://aws.amazon.com/">sign up for one for free at aws.amazon.com</a>.</p>
+</div>
+<div class="section" id="install-the-aws-command-line-interface">
+<h2>Install the AWS Command-Line Interface<a class="headerlink" href="#install-the-aws-command-line-interface" title="Permalink to this headline">¶</a></h2>
+<p>To install the AWS Command-Line Interface (CLI), just do:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>pip install awscli
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-an-aws-access-key">
+<h2>Create an AWS Access Key<a class="headerlink" href="#create-an-aws-access-key" title="Permalink to this headline">¶</a></h2>
+<p>The next thing you’ll need is AWS access keys (access key ID and secret access key). If you don’t have those, see <a class="reference external" href="https://docs.aws.amazon.com/general/latest/gr/aws-sec-cred-types.html#access-keys-and-secret-access-keys">the AWS documentation about access keys</a>.</p>
+<p>You should also pick a default AWS region name (e.g. <code class="docutils literal notranslate"><span class="pre">eu-central-1</span></code>). The AWS documentation has <a class="reference external" href="http://docs.aws.amazon.com/general/latest/gr/rande.html#ec2_region">a list of them</a>.</p>
+<p>Once you’ve got your AWS access key, and you’ve picked a default AWS region name, go to a terminal session and enter:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>aws configure
+</pre></div>
+</div>
+<p>and answer the four questions. For example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>AWS Access Key ID [None]: AKIAIOSFODNN7EXAMPLE
+AWS Secret Access Key [None]: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+Default region name [None]: eu-central-1
+Default output format [None]: [Press Enter]
+</pre></div>
+</div>
+<p>This writes two files: <code class="docutils literal notranslate"><span class="pre">~/.aws/credentials</span></code> and <code class="docutils literal notranslate"><span class="pre">~/.aws/config</span></code>. AWS tools and packages look for those files.</p>
+</div>
+<div class="section" id="generate-an-rsa-key-pair-for-ssh">
+<h2>Generate an RSA Key Pair for SSH<a class="headerlink" href="#generate-an-rsa-key-pair-for-ssh" title="Permalink to this headline">¶</a></h2>
+<p>Eventually, you’ll have one or more instances (virtual machines) running on AWS and you’ll want to SSH to them. To do that, you need a public/private key pair. The public key will be sent to AWS, and you can tell AWS to put it in any instances you provision there. You’ll keep the private key on your local workstation.</p>
+<p>See the <a class="reference internal" href="generate-key-pair-for-ssh.html"><span class="doc">page about how to generate a key pair for SSH</span></a>.</p>
+</div>
+<div class="section" id="send-the-public-key-to-aws">
+<h2>Send the Public Key to AWS<a class="headerlink" href="#send-the-public-key-to-aws" title="Permalink to this headline">¶</a></h2>
+<p>To send the public key to AWS, use the AWS Command-Line Interface:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>aws ec2 import-key-pair \
+--key-name &quot;&lt;key-name&gt;&quot; \
+--public-key-material file://~/.ssh/&lt;key-name&gt;.pub
+</pre></div>
+</div>
+<p>If you’re curious why there’s a <code class="docutils literal notranslate"><span class="pre">file://</span></code> in front of the path to the public key, see issue <a class="reference external" href="https://github.com/aws/aws-cli/issues/41">aws/aws-cli#41 on GitHub</a>.</p>
+<p>If you want to verify that your key pair was imported by AWS, go to <a class="reference external" href="https://console.aws.amazon.com/ec2/v2/home">the Amazon EC2 console</a>, select the region you gave above when you did <code class="docutils literal notranslate"><span class="pre">aws</span> <span class="pre">configure</span></code> (e.g. eu-central-1), click on <strong>Key Pairs</strong> in the left sidebar, and check that <code class="docutils literal notranslate"><span class="pre">&lt;key-name&gt;</span></code> is listed.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="generate-key-pair-for-ssh.html" class="btn btn-neutral float-right" title="Generate a Key Pair for SSH" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="cryptography.html" class="btn btn-neutral float-left" title="Cryptography" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

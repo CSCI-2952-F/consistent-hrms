@@ -1,0 +1,636 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bigchaindb.backend.query &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simple-deployment-template/index.html">Simple Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../k8s-deployment-template/index.html">Kubernetes Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>bigchaindb.backend.query</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bigchaindb.backend.query</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright © 2020 Interplanetary Database Association e.V.,</span>
+<span class="c1"># BigchainDB and IPDB software contributors.</span>
+<span class="c1"># SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)</span>
+<span class="c1"># Code is Apache-2.0 and docs are CC-BY-4.0</span>
+
+<span class="sd">&quot;&quot;&quot;Query interfaces for backends.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">singledispatch</span>
+
+<span class="kn">from</span> <span class="nn">bigchaindb.backend.exceptions</span> <span class="kn">import</span> <span class="n">OperationError</span>
+
+
+<div class="viewcode-block" id="store_asset"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.store_asset">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">store_asset</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">asset</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Write an asset to the asset table.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        asset (dict): the asset.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The result of the operation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="store_assets"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.store_assets">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">store_assets</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">assets</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Write a list of assets to the assets table.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        assets (list): a list of assets to write.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The database response.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="store_metadatas"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.store_metadatas">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">store_metadatas</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">metadata</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Write a list of metadata to metadata table.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        metadata (list): list of metadata.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The result of the operation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="store_transactions"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.store_transactions">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">store_transactions</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">signed_transactions</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Store the list of transactions.&quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="get_transaction"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.get_transaction">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">get_transaction</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">transaction_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a transaction from the transactions table.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        transaction_id (str): the id of the transaction.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The result of the operation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="get_transactions"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.get_transactions">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">get_transactions</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">transaction_ids</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get transactions from the transactions table.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        transaction_ids (list): list of transaction ids to fetch</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The result of the operation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="get_asset"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.get_asset">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">get_asset</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">asset_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a transaction from the transactions table.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        asset_id (str): the id of the asset</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The result of the operation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="get_spent"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.get_spent">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">get_spent</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">transaction_id</span><span class="p">,</span> <span class="n">condition_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Check if a `txid` was already used as an input.</span>
+
+<span class="sd">    A transaction can be used as an input for another transaction. Bigchain</span>
+<span class="sd">    needs to make sure that a given `txid` is only used once.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        transaction_id (str): The id of the transaction.</span>
+<span class="sd">        condition_id (int): The index of the condition in the respective</span>
+<span class="sd">            transaction.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The transaction that used the `txid` as an input else `None`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="get_spending_transactions"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.get_spending_transactions">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">get_spending_transactions</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return transactions which spend given inputs</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        inputs (list): list of {txid, output}</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Iterator of (block_ids, transaction) for transactions that</span>
+<span class="sd">        spend given inputs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="get_owned_ids"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.get_owned_ids">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">get_owned_ids</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Retrieve a list of `txids` that can we used has inputs.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        owner (str): base58 encoded public key.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Iterator of (block_id, transaction) for transactions</span>
+<span class="sd">        that list given owner in conditions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="get_block"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.get_block">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">get_block</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">block_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a block from the bigchain table.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        block_id (str): block id of the block to get</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        block (dict): the block or `None`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="get_block_with_transaction"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.get_block_with_transaction">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">get_block_with_transaction</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">txid</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a block containing transaction id `txid`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        txid (str): id of transaction to be searched.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        block_id (int): the block id or `None`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="get_metadata"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.get_metadata">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">get_metadata</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">transaction_ids</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a list of metadata from the metadata table.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        transaction_ids (list): a list of ids for the metadata to be retrieved from</span>
+<span class="sd">        the database.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        metadata (list): the list of returned metadata.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="get_assets"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.get_assets">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">get_assets</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">asset_ids</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get a list of assets from the assets table.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        asset_ids (list): a list of ids for the assets to be retrieved from</span>
+<span class="sd">        the database.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        assets (list): the list of returned assets.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="get_txids_filtered"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.get_txids_filtered">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">get_txids_filtered</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">asset_id</span><span class="p">,</span> <span class="n">operation</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return all transactions for a particular asset id and optional operation.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        asset_id (str): ID of transaction that defined the asset</span>
+<span class="sd">        operation (str) (optional): Operation to filter on</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="text_search"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.text_search">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">text_search</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">search</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s1">&#39;english&#39;</span><span class="p">,</span> <span class="n">case_sensitive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">diacritic_sensitive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">text_score</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return all the assets that match the text search.</span>
+
+<span class="sd">    The results are sorted by text score.</span>
+<span class="sd">    For more information about the behavior of text search on MongoDB see</span>
+<span class="sd">    https://docs.mongodb.com/manual/reference/operator/query/text/#behavior</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        search (str): Text search string to query the text index</span>
+<span class="sd">        language (str, optional): The language for the search and the rules for</span>
+<span class="sd">            stemmer and tokenizer. If the language is ``None`` text search uses</span>
+<span class="sd">            simple tokenization and no stemming.</span>
+<span class="sd">        case_sensitive (bool, optional): Enable or disable case sensitive</span>
+<span class="sd">            search.</span>
+<span class="sd">        diacritic_sensitive (bool, optional): Enable or disable case sensitive</span>
+<span class="sd">            diacritic search.</span>
+<span class="sd">        text_score (bool, optional): If ``True`` returns the text score with</span>
+<span class="sd">            each document.</span>
+<span class="sd">        limit (int, optional): Limit the number of returned documents.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        :obj:`list` of :obj:`dict`: a list of assets</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        OperationError: If the backend does not support text search</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="n">OperationError</span><span class="p">(</span><span class="s1">&#39;This query is only supported when running &#39;</span>
+                         <span class="s1">&#39;BigchainDB with MongoDB as the backend.&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_latest_block"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.get_latest_block">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">get_latest_block</span><span class="p">(</span><span class="n">conn</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the latest commited block i.e. block with largest height&quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="store_block"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.store_block">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">store_block</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">block</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Write a new block to the `blocks` table</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        block (dict): block with current height and block hash.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The result of the operation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="store_unspent_outputs"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.store_unspent_outputs">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">store_unspent_outputs</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">unspent_outputs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Store unspent outputs in ``utxo_set`` table.&quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="delete_unspent_outputs"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.delete_unspent_outputs">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">delete_unspent_outputs</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">unspent_outputs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Delete unspent outputs in ``utxo_set`` table.&quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="delete_transactions"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.delete_transactions">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">delete_transactions</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">txn_ids</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Delete transactions from database</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        txn_ids (list): list of transaction ids</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The result of the operation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="get_unspent_outputs"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.get_unspent_outputs">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">get_unspent_outputs</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Retrieves unspent outputs.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        query (dict): An optional parameter to filter the result set.</span>
+<span class="sd">            Defaults to ``None``, which means that all UTXO records</span>
+<span class="sd">            will be returned.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Generator yielding unspent outputs (UTXO set) according to the</span>
+<span class="sd">        given query.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="store_pre_commit_state"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.store_pre_commit_state">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">store_pre_commit_state</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Store pre-commit state.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        state (dict): pre-commit state.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The result of the operation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="get_pre_commit_state"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.get_pre_commit_state">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">get_pre_commit_state</span><span class="p">(</span><span class="n">connection</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get pre-commit state.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Document representing the pre-commit state.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="store_validator_set"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.store_validator_set">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">store_validator_set</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">validator_update</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Store updated validator set&quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="delete_validator_set"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.delete_validator_set">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">delete_validator_set</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Delete the validator set at the given height.&quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="store_election"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.store_election">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">store_election</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">election_id</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">is_concluded</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Store election record&quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="store_elections"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.store_elections">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">store_elections</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">elections</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Store election records in bulk&quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="delete_elections"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.delete_elections">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">delete_elections</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Delete all election records at the given height&quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="get_validator_set"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.get_validator_set">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">get_validator_set</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get validator set for a given `height`, if `height` is not specified</span>
+<span class="sd">    then return the latest validator set</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="get_election"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.get_election">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">get_election</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">election_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return the election record</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="get_asset_tokens_for_public_key"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.get_asset_tokens_for_public_key">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">get_asset_tokens_for_public_key</span><span class="p">(</span><span class="n">connection</span><span class="p">,</span> <span class="n">asset_id</span><span class="p">,</span> <span class="n">public_key</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Retrieve a list of tokens of type `asset_id` that are owned by the `public_key`.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        asset_id (str): Id of the token.</span>
+<span class="sd">        public_key (str): base58 encoded public key</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        Iterator of transaction that list given owner in conditions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="store_abci_chain"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.store_abci_chain">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">store_abci_chain</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">chain_id</span><span class="p">,</span> <span class="n">is_synced</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create or update an ABCI chain at the given height.</span>
+<span class="sd">    Usually invoked in the beginning of the ABCI communications (height=0)</span>
+<span class="sd">    or when ABCI client (like Tendermint) is migrated (any height).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        is_synced: True if the chain is known by both ABCI client and server</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="delete_abci_chain"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.delete_abci_chain">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">delete_abci_chain</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Delete the ABCI chain at the given height.&quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="get_latest_abci_chain"><a class="viewcode-back" href="../../../code-reference/backend.html#bigchaindb.backend.query.get_latest_abci_chain">[docs]</a><span class="nd">@singledispatch</span>
+<span class="k">def</span> <span class="nf">get_latest_abci_chain</span><span class="p">(</span><span class="n">conn</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Returns the ABCI chain stored at the biggest height, if any,</span>
+<span class="sd">    None otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

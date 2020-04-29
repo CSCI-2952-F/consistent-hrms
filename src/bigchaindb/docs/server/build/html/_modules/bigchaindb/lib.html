@@ -1,0 +1,720 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bigchaindb.lib &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../simple-deployment-template/index.html">Simple Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../k8s-deployment-template/index.html">Kubernetes Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>bigchaindb.lib</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bigchaindb.lib</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright © 2020 Interplanetary Database Association e.V.,</span>
+<span class="c1"># BigchainDB and IPDB software contributors.</span>
+<span class="c1"># SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)</span>
+<span class="c1"># Code is Apache-2.0 and docs are CC-BY-4.0</span>
+
+<span class="sd">&quot;&quot;&quot;Module containing main contact points with Tendermint and</span>
+<span class="sd">MongoDB.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span> <span class="nn">uuid</span> <span class="kn">import</span> <span class="n">uuid4</span>
+
+<span class="kn">import</span> <span class="nn">rapidjson</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">sha3_256</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="c1"># NOTE: neeeded for Python &lt; 3.6</span>
+    <span class="kn">from</span> <span class="nn">sha3</span> <span class="kn">import</span> <span class="n">sha3_256</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="kn">import</span> <span class="nn">bigchaindb</span>
+<span class="kn">from</span> <span class="nn">bigchaindb</span> <span class="kn">import</span> <span class="n">backend</span><span class="p">,</span> <span class="n">config_utils</span><span class="p">,</span> <span class="n">fastquery</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.models</span> <span class="kn">import</span> <span class="n">Transaction</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.common.exceptions</span> <span class="kn">import</span> <span class="p">(</span><span class="n">SchemaValidationError</span><span class="p">,</span>
+                                          <span class="n">ValidationError</span><span class="p">,</span>
+                                          <span class="n">DoubleSpend</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.common.transaction_mode_types</span> <span class="kn">import</span> <span class="p">(</span><span class="n">BROADCAST_TX_COMMIT</span><span class="p">,</span>
+                                                      <span class="n">BROADCAST_TX_ASYNC</span><span class="p">,</span>
+                                                      <span class="n">BROADCAST_TX_SYNC</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.tendermint_utils</span> <span class="kn">import</span> <span class="n">encode_transaction</span><span class="p">,</span> <span class="n">merkleroot</span>
+<span class="kn">from</span> <span class="nn">bigchaindb</span> <span class="kn">import</span> <span class="n">exceptions</span> <span class="k">as</span> <span class="n">core_exceptions</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.validation</span> <span class="kn">import</span> <span class="n">BaseValidationRules</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="BigchainDB"><a class="viewcode-back" href="../../code-reference/the-bigchaindb-class.html#bigchaindb.BigchainDB">[docs]</a><span class="k">class</span> <span class="nc">BigchainDB</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Bigchain API</span>
+
+<span class="sd">    Create, read, sign, write transactions to the database</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">connection</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialize the Bigchain instance</span>
+
+<span class="sd">        A Bigchain instance has several configuration parameters (e.g. host).</span>
+<span class="sd">        If a parameter value is passed as an argument to the Bigchain</span>
+<span class="sd">        __init__ method, then that is the value it will have.</span>
+<span class="sd">        Otherwise, the parameter value will come from an environment variable.</span>
+<span class="sd">        If that environment variable isn&#39;t set, then the value</span>
+<span class="sd">        will come from the local configuration file. And if that variable</span>
+<span class="sd">        isn&#39;t in the local configuration file, then the parameter will have</span>
+<span class="sd">        its default value (defined in bigchaindb.__init__).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            connection (:class:`~bigchaindb.backend.connection.Connection`):</span>
+<span class="sd">                A connection to the database.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config_utils</span><span class="o">.</span><span class="n">autoconfigure</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode_commit</span> <span class="o">=</span> <span class="n">BROADCAST_TX_COMMIT</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode_list</span> <span class="o">=</span> <span class="p">(</span><span class="n">BROADCAST_TX_ASYNC</span><span class="p">,</span>
+                          <span class="n">BROADCAST_TX_SYNC</span><span class="p">,</span>
+                          <span class="bp">self</span><span class="o">.</span><span class="n">mode_commit</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tendermint_host</span> <span class="o">=</span> <span class="n">bigchaindb</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;tendermint&#39;</span><span class="p">][</span><span class="s1">&#39;host&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tendermint_port</span> <span class="o">=</span> <span class="n">bigchaindb</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;tendermint&#39;</span><span class="p">][</span><span class="s1">&#39;port&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span> <span class="o">=</span> <span class="s1">&#39;http://</span><span class="si">{}</span><span class="s1">:</span><span class="si">{}</span><span class="s1">/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tendermint_host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tendermint_port</span><span class="p">)</span>
+
+        <span class="n">validationPlugin</span> <span class="o">=</span> <span class="n">bigchaindb</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;validation_plugin&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">validationPlugin</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">validation</span> <span class="o">=</span> <span class="n">config_utils</span><span class="o">.</span><span class="n">load_validation_plugin</span><span class="p">(</span><span class="n">validationPlugin</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">validation</span> <span class="o">=</span> <span class="n">BaseValidationRules</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span> <span class="o">=</span> <span class="n">connection</span> <span class="k">if</span> <span class="n">connection</span> <span class="k">else</span> <span class="n">backend</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="o">**</span><span class="n">bigchaindb</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database&#39;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="BigchainDB.post_transaction"><a class="viewcode-back" href="../../code-reference/the-bigchaindb-class.html#bigchaindb.BigchainDB.post_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">post_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Submit a valid transaction to the mempool.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">mode</span> <span class="ow">or</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode_list</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">(</span><span class="s1">&#39;Mode must be one of the following </span><span class="si">{}</span><span class="s1">.&#39;</span>
+                                  <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mode_list</span><span class="p">)))</span>
+
+        <span class="n">tx_dict</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">tx_dict</span> <span class="k">if</span> <span class="n">transaction</span><span class="o">.</span><span class="n">tx_dict</span> <span class="k">else</span> <span class="n">transaction</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="n">mode</span><span class="p">,</span>
+            <span class="s1">&#39;jsonrpc&#39;</span><span class="p">:</span> <span class="s1">&#39;2.0&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">encode_transaction</span><span class="p">(</span><span class="n">tx_dict</span><span class="p">)],</span>
+            <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid4</span><span class="p">())</span>
+        <span class="p">}</span>
+        <span class="c1"># TODO: handle connection errors!</span>
+        <span class="k">return</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BigchainDB.write_transaction"><a class="viewcode-back" href="../../code-reference/the-bigchaindb-class.html#bigchaindb.BigchainDB.write_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">write_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
+        <span class="c1"># This method offers backward compatibility with the Web API.</span>
+        <span class="sd">&quot;&quot;&quot;Submit a valid transaction to the mempool.&quot;&quot;&quot;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">post_transaction</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_process_post_response</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">(),</span> <span class="n">mode</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_process_post_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">mode</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+        <span class="n">error</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">status_code</span> <span class="o">=</span> <span class="mi">500</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="s1">&#39;Internal Error&#39;</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="s1">&#39;Tx already exists in cache&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">status_code</span> <span class="o">=</span> <span class="mi">400</span>
+
+            <span class="k">return</span> <span class="p">(</span><span class="n">status_code</span><span class="p">,</span> <span class="n">message</span> <span class="o">+</span> <span class="s1">&#39; - &#39;</span> <span class="o">+</span> <span class="n">data</span><span class="p">)</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode_commit</span><span class="p">:</span>
+            <span class="n">check_tx_code</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;check_tx&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;code&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">deliver_tx_code</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;deliver_tx&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;code&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">error_code</span> <span class="o">=</span> <span class="n">check_tx_code</span> <span class="ow">or</span> <span class="n">deliver_tx_code</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">error_code</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;code&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">error_code</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="s1">&#39;Transaction validation failed&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="mi">202</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">store_bulk_transactions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transactions</span><span class="p">):</span>
+        <span class="n">txns</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">assets</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">txn_metadatas</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">transactions</span><span class="p">:</span>
+            <span class="n">transaction</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">tx_dict</span> <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">tx_dict</span> <span class="k">else</span> <span class="n">rapidjson</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">rapidjson</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()))</span>
+            <span class="k">if</span> <span class="n">transaction</span><span class="p">[</span><span class="s1">&#39;operation&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">t</span><span class="o">.</span><span class="n">CREATE</span><span class="p">:</span>
+                <span class="n">asset</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;asset&#39;</span><span class="p">)</span>
+                <span class="n">asset</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transaction</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+                <span class="n">assets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">asset</span><span class="p">)</span>
+
+            <span class="n">metadata</span> <span class="o">=</span> <span class="n">transaction</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;metadata&#39;</span><span class="p">)</span>
+            <span class="n">txn_metadatas</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">transaction</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span>
+                                  <span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="n">metadata</span><span class="p">})</span>
+            <span class="n">txns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">store_metadatas</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">txn_metadatas</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">assets</span><span class="p">:</span>
+            <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">store_assets</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">assets</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">store_transactions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">txns</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">delete_transactions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">txs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">delete_transactions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">txs</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BigchainDB.update_utxoset"><a class="viewcode-back" href="../../code-reference/the-bigchaindb-class.html#bigchaindb.BigchainDB.update_utxoset">[docs]</a>    <span class="k">def</span> <span class="nf">update_utxoset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Update the UTXO set given ``transaction``. That is, remove</span>
+<span class="sd">        the outputs that the given ``transaction`` spends, and add the</span>
+<span class="sd">        outputs that the given ``transaction`` creates.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            transaction (:obj:`~bigchaindb.models.Transaction`): A new</span>
+<span class="sd">                transaction incoming into the system for which the UTXO</span>
+<span class="sd">                set needs to be updated.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">spent_outputs</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">spent_output</span> <span class="k">for</span> <span class="n">spent_output</span> <span class="ow">in</span> <span class="n">transaction</span><span class="o">.</span><span class="n">spent_outputs</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">spent_outputs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">delete_unspent_outputs</span><span class="p">(</span><span class="o">*</span><span class="n">spent_outputs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">store_unspent_outputs</span><span class="p">(</span>
+            <span class="o">*</span><span class="p">[</span><span class="n">utxo</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span> <span class="k">for</span> <span class="n">utxo</span> <span class="ow">in</span> <span class="n">transaction</span><span class="o">.</span><span class="n">unspent_outputs</span><span class="p">]</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="BigchainDB.store_unspent_outputs"><a class="viewcode-back" href="../../code-reference/the-bigchaindb-class.html#bigchaindb.BigchainDB.store_unspent_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">store_unspent_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">unspent_outputs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Store the given ``unspent_outputs`` (utxos).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            *unspent_outputs (:obj:`tuple` of :obj:`dict`): Variable</span>
+<span class="sd">                length tuple or list of unspent outputs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">unspent_outputs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">store_unspent_outputs</span><span class="p">(</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="o">*</span><span class="n">unspent_outputs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BigchainDB.get_utxoset_merkle_root"><a class="viewcode-back" href="../../code-reference/the-bigchaindb-class.html#bigchaindb.BigchainDB.get_utxoset_merkle_root">[docs]</a>    <span class="k">def</span> <span class="nf">get_utxoset_merkle_root</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the merkle root of the utxoset. This implies that</span>
+<span class="sd">        the utxoset is first put into a merkle tree.</span>
+
+<span class="sd">        For now, the merkle tree and its root will be computed each</span>
+<span class="sd">        time. This obviously is not efficient and a better approach</span>
+<span class="sd">        that limits the repetition of the same computation when</span>
+<span class="sd">        unnecesary should be sought. For instance, future optimizations</span>
+<span class="sd">        could simply re-compute the branches of the tree that were</span>
+<span class="sd">        affected by a change.</span>
+
+<span class="sd">        The transaction hash (id) and output index should be sufficient</span>
+<span class="sd">        to uniquely identify a utxo, and consequently only that</span>
+<span class="sd">        information from a utxo record is needed to compute the merkle</span>
+<span class="sd">        root. Hence, each node of the merkle tree should contain the</span>
+<span class="sd">        tuple (txid, output_index).</span>
+
+<span class="sd">        .. important:: The leaves of the tree will need to be sorted in</span>
+<span class="sd">            some kind of lexicographical order.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: Merkle root in hexadecimal form.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">utxoset</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get_unspent_outputs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">)</span>
+        <span class="c1"># TODO Once ready, use the already pre-computed utxo_hash field.</span>
+        <span class="c1"># See common/transactions.py for details.</span>
+        <span class="n">hashes</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">sha3_256</span><span class="p">(</span>
+                <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">utxo</span><span class="p">[</span><span class="s1">&#39;transaction_id&#39;</span><span class="p">],</span> <span class="n">utxo</span><span class="p">[</span><span class="s1">&#39;output_index&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span> <span class="k">for</span> <span class="n">utxo</span> <span class="ow">in</span> <span class="n">utxoset</span>
+        <span class="p">]</span>
+        <span class="c1"># TODO Notice the sorted call!</span>
+        <span class="k">return</span> <span class="n">merkleroot</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">hashes</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BigchainDB.get_unspent_outputs"><a class="viewcode-back" href="../../code-reference/the-bigchaindb-class.html#bigchaindb.BigchainDB.get_unspent_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">get_unspent_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the utxoset.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            generator of unspent_outputs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">cursor</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get_unspent_outputs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">record</span> <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">cursor</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BigchainDB.delete_unspent_outputs"><a class="viewcode-back" href="../../code-reference/the-bigchaindb-class.html#bigchaindb.BigchainDB.delete_unspent_outputs">[docs]</a>    <span class="k">def</span> <span class="nf">delete_unspent_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">unspent_outputs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Deletes the given ``unspent_outputs`` (utxos).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            *unspent_outputs (:obj:`tuple` of :obj:`dict`): Variable</span>
+<span class="sd">                length tuple or list of unspent outputs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">unspent_outputs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">delete_unspent_outputs</span><span class="p">(</span>
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="o">*</span><span class="n">unspent_outputs</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">is_committed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_id</span><span class="p">):</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get_transaction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">transaction_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transaction_id</span><span class="p">):</span>
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get_transaction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">transaction_id</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">transaction</span><span class="p">:</span>
+            <span class="n">asset</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get_asset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">transaction_id</span><span class="p">)</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get_metadata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="p">[</span><span class="n">transaction_id</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">asset</span><span class="p">:</span>
+                <span class="n">transaction</span><span class="p">[</span><span class="s1">&#39;asset&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">asset</span>
+
+            <span class="k">if</span> <span class="s1">&#39;metadata&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">transaction</span><span class="p">:</span>
+                <span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">metadata</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="n">metadata</span><span class="p">:</span>
+                    <span class="n">metadata</span> <span class="o">=</span> <span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;metadata&#39;</span><span class="p">)</span>
+
+                <span class="n">transaction</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;metadata&#39;</span><span class="p">:</span> <span class="n">metadata</span><span class="p">})</span>
+
+            <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">transaction</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">transaction</span>
+
+    <span class="k">def</span> <span class="nf">get_transactions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">txn_ids</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get_transactions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">txn_ids</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BigchainDB.get_transactions_filtered"><a class="viewcode-back" href="../../code-reference/the-bigchaindb-class.html#bigchaindb.BigchainDB.get_transactions_filtered">[docs]</a>    <span class="k">def</span> <span class="nf">get_transactions_filtered</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asset_id</span><span class="p">,</span> <span class="n">operation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">last_tx</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a list of transactions filtered on some criteria</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">txids</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get_txids_filtered</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">asset_id</span><span class="p">,</span>
+                                                 <span class="n">operation</span><span class="p">,</span> <span class="n">last_tx</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">txid</span> <span class="ow">in</span> <span class="n">txids</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_transaction</span><span class="p">(</span><span class="n">txid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BigchainDB.get_outputs_filtered"><a class="viewcode-back" href="../../code-reference/the-bigchaindb-class.html#bigchaindb.BigchainDB.get_outputs_filtered">[docs]</a>    <span class="k">def</span> <span class="nf">get_outputs_filtered</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owner</span><span class="p">,</span> <span class="n">spent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a list of output links filtered on some criteria</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            owner (str): base58 encoded public_key.</span>
+<span class="sd">            spent (bool): If ``True`` return only the spent outputs. If</span>
+<span class="sd">                          ``False`` return only unspent outputs. If spent is</span>
+<span class="sd">                          not specified (``None``) return all outputs.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            :obj:`list` of TransactionLink: list of ``txid`` s and ``output`` s</span>
+<span class="sd">            pointing to another transaction&#39;s condition</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fastquery</span><span class="o">.</span><span class="n">get_outputs_by_public_key</span><span class="p">(</span><span class="n">owner</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">spent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">outputs</span>
+        <span class="k">elif</span> <span class="n">spent</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fastquery</span><span class="o">.</span><span class="n">filter_unspent_outputs</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">spent</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fastquery</span><span class="o">.</span><span class="n">filter_spent_outputs</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">get_spent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">txid</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">current_transactions</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="n">transactions</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get_spent</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">txid</span><span class="p">,</span>
+                                               <span class="n">output</span><span class="p">)</span>
+        <span class="n">transactions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">transactions</span><span class="p">)</span> <span class="k">if</span> <span class="n">transactions</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">transactions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">core_exceptions</span><span class="o">.</span><span class="n">CriticalDoubleSpend</span><span class="p">(</span>
+                <span class="s1">&#39;`</span><span class="si">{}</span><span class="s1">` was spent more than once. There is a problem&#39;</span>
+                <span class="s1">&#39; with the chain&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">txid</span><span class="p">))</span>
+
+        <span class="n">current_spent_transactions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ctxn</span> <span class="ow">in</span> <span class="n">current_transactions</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">ctxn_input</span> <span class="ow">in</span> <span class="n">ctxn</span><span class="o">.</span><span class="n">inputs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ctxn_input</span><span class="o">.</span><span class="n">fulfills</span> <span class="ow">and</span>\
+                   <span class="n">ctxn_input</span><span class="o">.</span><span class="n">fulfills</span><span class="o">.</span><span class="n">txid</span> <span class="o">==</span> <span class="n">txid</span> <span class="ow">and</span>\
+                   <span class="n">ctxn_input</span><span class="o">.</span><span class="n">fulfills</span><span class="o">.</span><span class="n">output</span> <span class="o">==</span> <span class="n">output</span><span class="p">:</span>
+                    <span class="n">current_spent_transactions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ctxn</span><span class="p">)</span>
+
+        <span class="n">transaction</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">transactions</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">current_spent_transactions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">DoubleSpend</span><span class="p">(</span><span class="s1">&#39;tx &quot;</span><span class="si">{}</span><span class="s1">&quot; spends inputs twice&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">txid</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">transactions</span><span class="p">:</span>
+            <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="o">.</span><span class="n">from_db</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transactions</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">current_spent_transactions</span><span class="p">:</span>
+            <span class="n">transaction</span> <span class="o">=</span> <span class="n">current_spent_transactions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">transaction</span>
+
+<div class="viewcode-block" id="BigchainDB.store_block"><a class="viewcode-back" href="../../code-reference/the-bigchaindb-class.html#bigchaindb.BigchainDB.store_block">[docs]</a>    <span class="k">def</span> <span class="nf">store_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a new block.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">store_block</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">block</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BigchainDB.get_latest_block"><a class="viewcode-back" href="../../code-reference/the-bigchaindb-class.html#bigchaindb.BigchainDB.get_latest_block">[docs]</a>    <span class="k">def</span> <span class="nf">get_latest_block</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the block with largest height.&quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get_latest_block</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BigchainDB.get_block"><a class="viewcode-back" href="../../code-reference/the-bigchaindb-class.html#bigchaindb.BigchainDB.get_block">[docs]</a>    <span class="k">def</span> <span class="nf">get_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the block with the specified `block_id`.</span>
+
+<span class="sd">        Returns the block corresponding to `block_id` or None if no match is</span>
+<span class="sd">        found.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            block_id (int): block id of the block to get.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">block</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get_block</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">block_id</span><span class="p">)</span>
+        <span class="n">latest_block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_latest_block</span><span class="p">()</span>
+        <span class="n">latest_block_height</span> <span class="o">=</span> <span class="n">latest_block</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">latest_block</span> <span class="k">else</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">block</span> <span class="ow">and</span> <span class="n">block_id</span> <span class="o">&gt;</span> <span class="n">latest_block_height</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="n">block_id</span><span class="p">,</span>
+                  <span class="s1">&#39;transactions&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+
+        <span class="k">if</span> <span class="n">block</span><span class="p">:</span>
+            <span class="n">transactions</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get_transactions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">block</span><span class="p">[</span><span class="s1">&#39;transactions&#39;</span><span class="p">])</span>
+            <span class="n">result</span><span class="p">[</span><span class="s1">&#39;transactions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">Transaction</span><span class="o">.</span><span class="n">from_db</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transactions</span><span class="p">)]</span>
+
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="BigchainDB.get_block_containing_tx"><a class="viewcode-back" href="../../code-reference/the-bigchaindb-class.html#bigchaindb.BigchainDB.get_block_containing_tx">[docs]</a>    <span class="k">def</span> <span class="nf">get_block_containing_tx</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">txid</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve the list of blocks (block ids) containing a</span>
+<span class="sd">           transaction with transaction id `txid`</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            txid (str): transaction id of the transaction to query</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Block id list (list(int))</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">blocks</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get_block_with_transaction</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">txid</span><span class="p">))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">blocks</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s1">&#39;Transaction id </span><span class="si">%s</span><span class="s1"> exists in multiple blocks&#39;</span><span class="p">,</span> <span class="n">txid</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">block</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="BigchainDB.validate_transaction"><a class="viewcode-back" href="../../code-reference/the-bigchaindb-class.html#bigchaindb.BigchainDB.validate_transaction">[docs]</a>    <span class="k">def</span> <span class="nf">validate_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx</span><span class="p">,</span> <span class="n">current_transactions</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="sd">&quot;&quot;&quot;Validate a transaction against the current status of the database.&quot;&quot;&quot;</span>
+
+        <span class="n">transaction</span> <span class="o">=</span> <span class="n">tx</span>
+
+        <span class="c1"># CLEANUP: The conditional below checks for transaction in dict format.</span>
+        <span class="c1"># It would be better to only have a single format for the transaction</span>
+        <span class="c1"># throught the code base.</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">transaction</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">transaction</span> <span class="o">=</span> <span class="n">Transaction</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">tx</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">SchemaValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Invalid transaction schema: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">__cause__</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Invalid transaction (</span><span class="si">%s</span><span class="s1">): </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="n">transaction</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_transactions</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">is_valid_transaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tx</span><span class="p">,</span> <span class="n">current_transactions</span><span class="o">=</span><span class="p">[]):</span>
+        <span class="c1"># NOTE: the function returns the Transaction object in case</span>
+        <span class="c1"># the transaction is valid</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_transaction</span><span class="p">(</span><span class="n">tx</span><span class="p">,</span> <span class="n">current_transactions</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Invalid transaction (</span><span class="si">%s</span><span class="s1">): </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="BigchainDB.text_search"><a class="viewcode-back" href="../../code-reference/the-bigchaindb-class.html#bigchaindb.BigchainDB.text_search">[docs]</a>    <span class="k">def</span> <span class="nf">text_search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">search</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="s1">&#39;assets&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return an iterator of assets that match the text search</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            search (str): Text search string to query the text index</span>
+<span class="sd">            limit (int, optional): Limit the number of returned documents.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            iter: An iterator of assets that match the text search.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">text_search</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">search</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span>
+                                         <span class="n">table</span><span class="o">=</span><span class="n">table</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BigchainDB.get_assets"><a class="viewcode-back" href="../../code-reference/the-bigchaindb-class.html#bigchaindb.BigchainDB.get_assets">[docs]</a>    <span class="k">def</span> <span class="nf">get_assets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">asset_ids</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a list of assets that match the asset_ids</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            asset_ids (:obj:`list` of :obj:`str`): A list of asset_ids to</span>
+<span class="sd">                retrieve from the database.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: The list of assets returned from the database.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get_assets</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">asset_ids</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BigchainDB.get_metadata"><a class="viewcode-back" href="../../code-reference/the-bigchaindb-class.html#bigchaindb.BigchainDB.get_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">get_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">txn_ids</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a list of metadata that match the transaction ids (txn_ids)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            txn_ids (:obj:`list` of :obj:`str`): A list of txn_ids to</span>
+<span class="sd">                retrieve from the database.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: The list of metadata returned from the database.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get_metadata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">txn_ids</span><span class="p">)</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">fastquery</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">fastquery</span><span class="o">.</span><span class="n">FastQuery</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_validator_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get_validator_set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_validators</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_validator_change</span><span class="p">(</span><span class="n">height</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[]</span> <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">result</span><span class="p">[</span><span class="s1">&#39;validators&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">get_election</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">election_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get_election</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">election_id</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_pre_commit_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get_pre_commit_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">store_pre_commit_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">store_pre_commit_state</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BigchainDB.store_validator_set"><a class="viewcode-back" href="../../code-reference/the-bigchaindb-class.html#bigchaindb.BigchainDB.store_validator_set">[docs]</a>    <span class="k">def</span> <span class="nf">store_validator_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">validators</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Store validator set at a given `height`.</span>
+<span class="sd">           NOTE: If the validator set already exists at that `height` then an</span>
+<span class="sd">           exception will be raised.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">store_validator_set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="n">height</span><span class="p">,</span>
+                                                                   <span class="s1">&#39;validators&#39;</span><span class="p">:</span> <span class="n">validators</span><span class="p">})</span></div>
+
+    <span class="k">def</span> <span class="nf">delete_validator_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">delete_validator_set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">store_abci_chain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">chain_id</span><span class="p">,</span> <span class="n">is_synced</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">store_abci_chain</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span>
+                                              <span class="n">chain_id</span><span class="p">,</span> <span class="n">is_synced</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">delete_abci_chain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">delete_abci_chain</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_latest_abci_chain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get_latest_abci_chain</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BigchainDB.migrate_abci_chain"><a class="viewcode-back" href="../../code-reference/the-bigchaindb-class.html#bigchaindb.BigchainDB.migrate_abci_chain">[docs]</a>    <span class="k">def</span> <span class="nf">migrate_abci_chain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate and record a new ABCI chain ID. New blocks are not</span>
+<span class="sd">        accepted until we receive an InitChain ABCI request with</span>
+<span class="sd">        the matching chain ID and validator set.</span>
+
+<span class="sd">        Chain ID is generated based on the current chain and height.</span>
+<span class="sd">        `chain-X` =&gt; `chain-X-migrated-at-height-5`.</span>
+<span class="sd">        `chain-X-migrated-at-height-5` =&gt; `chain-X-migrated-at-height-21`.</span>
+
+<span class="sd">        If there is no known chain (we are at genesis), the function returns.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">latest_chain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_latest_abci_chain</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">latest_chain</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">block</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_latest_block</span><span class="p">()</span>
+
+        <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;-migrated-at-height-&#39;</span>
+        <span class="n">chain_id</span> <span class="o">=</span> <span class="n">latest_chain</span><span class="p">[</span><span class="s1">&#39;chain_id&#39;</span><span class="p">]</span>
+        <span class="n">block_height_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">block</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">])</span>
+        <span class="n">new_chain_id</span> <span class="o">=</span> <span class="n">chain_id</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">suffix</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">suffix</span> <span class="o">+</span> <span class="n">block_height_str</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">store_abci_chain</span><span class="p">(</span><span class="n">block</span><span class="p">[</span><span class="s1">&#39;height&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">new_chain_id</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">store_election</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">election_id</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">is_concluded</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">store_election</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">election_id</span><span class="p">,</span>
+                                            <span class="n">height</span><span class="p">,</span> <span class="n">is_concluded</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">store_elections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">elections</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">store_elections</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">elections</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">delete_elections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">height</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">backend</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">delete_elections</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span></div>
+
+
+<span class="n">Block</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;Block&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;app_hash&#39;</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span><span class="p">,</span> <span class="s1">&#39;transactions&#39;</span><span class="p">))</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

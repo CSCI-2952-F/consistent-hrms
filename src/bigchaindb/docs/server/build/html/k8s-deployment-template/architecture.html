@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Architecture of a BigchainDB Node Running in a Kubernetes Cluster &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Release Notes" href="../release-notes.html" />
+    <link rel="prev" title="Cluster Troubleshooting" href="troubleshoot.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../simple-deployment-template/index.html">Simple Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Kubernetes Deployment Template</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="workflow.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ca-installation.html">How to Set Up a Self-Signed Certificate Authority</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server-tls-certificate.html">How to Generate a Server Certificate for MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client-tls-certificate.html">How to Generate a Client Certificate for MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revoke-tls-certificate.html">How to Revoke an SSL/TLS Certificate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="template-kubernetes-azure.html">Template: Deploy a Kubernetes Cluster on Azure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node-on-kubernetes.html">Kubernetes Template: Deploy a Single BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node-config-map-and-secrets.html">How to Configure a BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="log-analytics.html">Log Analytics on Azure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cloud-manager.html">Configure MongoDB Cloud Manager for Monitoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="easy-rsa.html">How to Install &amp; Configure Easy-RSA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upgrade-on-kubernetes.html">Kubernetes Template: Upgrade all Software in a BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bigchaindb-network-on-kubernetes.html">Kubernetes Template: Deploying a BigchainDB network</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tectonic-azure.html">Walkthrough: Deploy a Kubernetes Cluster on Azure using Tectonic by CoreOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshoot.html">Cluster Troubleshooting</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Architecture of a BigchainDB Node Running in a Kubernetes Cluster</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bigchaindb-node">BigchainDB Node</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nginx-entrypoint-and-gateway">NGINX: Entrypoint and Gateway</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#openresty-api-management-authentication-and-authorization">OpenResty: API Management, Authentication and Authorization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mongodb-standalone">MongoDB: Standalone</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tendermint-bft-consensus-engine">Tendermint: BFT consensus engine</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Kubernetes Deployment Template</a> &raquo;</li>
+        
+      <li>Architecture of a BigchainDB Node Running in a Kubernetes Cluster</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/k8s-deployment-template/architecture.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="architecture-of-a-bigchaindb-node-running-in-a-kubernetes-cluster">
+<h1>Architecture of a BigchainDB Node Running in a Kubernetes Cluster<a class="headerlink" href="#architecture-of-a-bigchaindb-node-running-in-a-kubernetes-cluster" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">A highly-available Kubernetes cluster requires at least five virtual machines
+(three for the master and two for your app’s containers).
+Therefore we don’t recommend using Kubernetes to run a BigchainDB node
+if that’s the only thing the Kubernetes cluster will be running.
+Instead, see our <a class="reference internal" href="../simple-deployment-template/index.html#simple-deployment-template"><span class="std std-ref">Simple Deployment Template</span></a>.
+If your organization already <em>has</em> a big Kubernetes cluster running many containers,
+and your organization has people who know Kubernetes,
+then this Kubernetes deployment template might be helpful.</p>
+</div>
+<p>If you deploy a BigchainDB node into a Kubernetes cluster
+as described in these docs, it will include:</p>
+<ul class="simple">
+<li>NGINX, OpenResty, BigchainDB, MongoDB and Tendermint
+<a class="reference external" href="https://kubernetes.io/docs/concepts/services-networking/service/">Kubernetes Services</a>.</li>
+<li>NGINX, OpenResty, BigchainDB and MongoDB Monitoring Agent
+<a class="reference external" href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/">Kubernetes Deployments</a>.</li>
+<li>MongoDB and Tendermint <a class="reference external" href="https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/">Kubernetes StatefulSets</a>.</li>
+<li>Third party services like <a class="reference external" href="https://3scale.net">3scale</a>,
+<a class="reference external" href="https://cloud.mongodb.com">MongoDB Cloud Manager</a> and the
+<a class="reference external" href="https://docs.microsoft.com/en-us/azure/operations-management-suite/">Azure Operations Management Suite</a>.</li>
+</ul>
+<div class="section" id="bigchaindb-node">
+<span id="id1"></span><h2>BigchainDB Node<a class="headerlink" href="#bigchaindb-node" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal image-reference" href="../_images/aafig-9a592ed24a98d20934bfe610d93b536495018d4e.svg"><img alt="../_images/aafig-9a592ed24a98d20934bfe610d93b536495018d4e.svg" height="1560.0" src="../_images/aafig-9a592ed24a98d20934bfe610d93b536495018d4e.svg" width="1910.0" /></a>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The arrows in the diagram represent the client-server communication. For
+example, A–&gt;B implies that A initiates the connection to B.
+It does not represent the flow of data; the communication channel is always
+fully duplex.</p>
+</div>
+</div>
+<div class="section" id="nginx-entrypoint-and-gateway">
+<h2>NGINX: Entrypoint and Gateway<a class="headerlink" href="#nginx-entrypoint-and-gateway" title="Permalink to this headline">¶</a></h2>
+<p>We use an NGINX as HTTP proxy on port 443 (configurable) at the cloud
+entrypoint for:</p>
+<ol class="arabic simple">
+<li>Rate Limiting: We configure NGINX to allow only a certain number of requests
+(configurable) which prevents DoS attacks.</li>
+<li>HTTPS Termination: The HTTPS connection does not carry through all the way
+to BigchainDB and terminates at NGINX for now.</li>
+<li>Request Routing: For HTTPS connections on port 443 (or the configured BigchainDB public api port),
+the connection is proxied to:<ol class="arabic">
+<li>OpenResty Service if it is a POST request.</li>
+<li>BigchainDB Service if it is a GET request.</li>
+</ol>
+</li>
+</ol>
+<p>We use an NGINX TCP proxy on port 27017 (configurable) at the cloud
+entrypoint for:</p>
+<ol class="arabic simple">
+<li>Rate Limiting: We configure NGINX to allow only a certain number of requests
+(configurable) which prevents DoS attacks.</li>
+<li>Request Routing: For connections on port 27017 (or the configured MongoDB
+public api port), the connection is proxied to the MongoDB Service.</li>
+</ol>
+</div>
+<div class="section" id="openresty-api-management-authentication-and-authorization">
+<h2>OpenResty: API Management, Authentication and Authorization<a class="headerlink" href="#openresty-api-management-authentication-and-authorization" title="Permalink to this headline">¶</a></h2>
+<p>We use <a class="reference external" href="https://openresty.org/">OpenResty</a> to perform authorization checks
+with 3scale using the <code class="docutils literal notranslate"><span class="pre">app_id</span></code> and <code class="docutils literal notranslate"><span class="pre">app_key</span></code> headers in the HTTP request.</p>
+<p>OpenResty is NGINX plus a bunch of other
+<a class="reference external" href="https://openresty.org/en/components.html">components</a>. We primarily depend
+on the LuaJIT compiler to execute the functions to authenticate the <code class="docutils literal notranslate"><span class="pre">app_id</span></code>
+and <code class="docutils literal notranslate"><span class="pre">app_key</span></code> with the 3scale backend.</p>
+</div>
+<div class="section" id="mongodb-standalone">
+<h2>MongoDB: Standalone<a class="headerlink" href="#mongodb-standalone" title="Permalink to this headline">¶</a></h2>
+<p>We use MongoDB as the backend database for BigchainDB.</p>
+<p>We achieve security by avoiding DoS attacks at the NGINX proxy layer and by
+ensuring that MongoDB has TLS enabled for all its connections.</p>
+</div>
+<div class="section" id="tendermint-bft-consensus-engine">
+<h2>Tendermint: BFT consensus engine<a class="headerlink" href="#tendermint-bft-consensus-engine" title="Permalink to this headline">¶</a></h2>
+<p>We use Tendermint as the backend consensus engine for BFT replication of BigchainDB.
+In a multi-node deployment, Tendermint nodes/peers communicate with each other via
+the public ports exposed by the NGINX gateway.</p>
+<p>We use port <strong>9986</strong> (configurable) to allow tendermint nodes to access the public keys
+of the peers and port <strong>26656</strong> (configurable) for the rest of the communications between
+the peers.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../release-notes.html" class="btn btn-neutral float-right" title="Release Notes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="troubleshoot.html" class="btn btn-neutral float-left" title="Cluster Troubleshooting" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

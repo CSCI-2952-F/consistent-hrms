@@ -1,0 +1,319 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>BigchainDB 문서 &mdash; BigchainDB  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="배포 - 준비" href="production-ready_kor.html" />
+    <link rel="prev" title="BigchainDB, Privacy and Private Data" href="../private-data.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BigchainDB
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">BigchainDB Docs Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../production-ready.html">Production-Ready?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../terminology.html">Terminology</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../decentralized.html">How BigchainDB is Decentralized</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../diversity.html">Kinds of Node Diversity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../immutable.html">How BigchainDB is Immutable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../bft.html">BigchainDB and Byzantine Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../query.html">Querying BigchainDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assets.html">How BigchainDB is Good for Asset Registrations &amp; Transfers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../smart-contracts.html">BigchainDB and Smart Contracts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../transaction-concepts.html">Transaction Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../store-files.html">How to Store Files in BigchainDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../permissions.html">Permissions in BigchainDB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../private-data.html">BigchainDB, Privacy and Private Data</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/projects/server/en/latest/data-models/index.html">Data Models</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">BigchainDB 문서</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="#id4">BigchainDB에 대한 추가 정보</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">BigchainDB Docs Home</a></li>
+<li class="toctree-l3"><a class="reference internal" href="production-ready_kor.html">배포 - 준비</a></li>
+<li class="toctree-l3"><a class="reference internal" href="terminology_kor.html">용어</a></li>
+<li class="toctree-l3"><a class="reference internal" href="decentralized_kor.html">BigchainDB 분산 방식</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diversity-ko.html">노드 다양성의 종류</a></li>
+<li class="toctree-l3"><a class="reference internal" href="immutable-ko.html">어떻게 BigchainDB는 불변성을 갖는가</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bft-ko.html">BigchainDB와 Byzantine Fault Tolerance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="query-ko.html">BigchainDB 쿼리</a></li>
+<li class="toctree-l3"><a class="reference internal" href="assets_ko.html">BigchainDB가 자산 등록 및 전송에 적합한 방법</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smart-contracts_ko.html">BigchainDB 및 스마트계약</a></li>
+<li class="toctree-l3"><a class="reference internal" href="transaction-concepts_ko.html">트랜잭션 개념</a></li>
+<li class="toctree-l3"><a class="reference internal" href="store-files_ko.html">BigchainDB에 파일을 저장하는 방법</a></li>
+<li class="toctree-l3"><a class="reference internal" href="permissions-ko.html">BigchainDB 사용 권한</a></li>
+<li class="toctree-l3"><a class="reference internal" href="private-data-ko.html">BigchainDB, 개인정보 및 개인 데이터</a></li>
+<li class="toctree-l3"><a class="reference external" href="https://docs.bigchaindb.com/projects/server/en/latest/data-models/index.html">Data Models</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BigchainDB</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>BigchainDB 문서</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/korean/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="bigchaindb">
+<h1>BigchainDB 문서<a class="headerlink" href="#bigchaindb" title="Permalink to this headline">¶</a></h1>
+<p>블록체인 데이터베이스인 BigchainDB를 만나보세요.</p>
+<p><a class="reference external" href="https://github.com/bigchaindb/bigchaindb/blob/master/docs/root/source/korean/decentralized_kor.md">분산형</a>, <a class="reference external" href="https://github.com/bigchaindb/bigchaindb/blob/master/docs/root/source/korean/immutable-ko.md">불변성</a> 및 <a class="reference external" href="https://github.com/bigchaindb/bigchaindb/blob/master/docs/root/source/korean/assets_ko.md">자산에 대한 네이티브 지원</a> 을 포함한 일부 데이터베이스 특성들과 블록체인 특성을 가지고 있습니다.</p>
+<p>높은 수준에서, 사용자는 BigchainDB HTTP API를 사용하는 BigchainDB 네트워크(노드 집합) 또는 BigchainDB 파이썬 드라이버와 같은 API용 래퍼로 통신할 수 있습니다. 각 BigchainDB 노드는 BigchainDB Server 및 다양한 다른 소프트웨어를 실행합니다. 더 자세한 사항은 용어 페이지에서 이러한 용어 중 일부를 설명합니다.</p>
+<style media="screen" type="text/css">
+.button {
+  border-top: 1px solid #96d1f8;
+  background: #65a9d7;
+  background: -webkit-gradient(linear, left top, left bottom, from(#3e779d), to(#65a9d7));
+  background: -webkit-linear-gradient(top, #3e779d, #65a9d7);
+  background: -moz-linear-gradient(top, #3e779d, #65a9d7);
+  background: -ms-linear-gradient(top, #3e779d, #65a9d7);
+  background: -o-linear-gradient(top, #3e779d, #65a9d7);
+  padding: 8.5px 17px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+  -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+  box-shadow: rgba(0,0,0,1) 0 1px 0;
+  text-shadow: rgba(0,0,0,.4) 0 1px 0;
+  color: white;
+  font-size: 16px;
+  font-family: Arial, Sans-Serif;
+  text-decoration: none;
+  vertical-align: middle;
+}
+.button:hover {
+  border-top-color: #28597a;
+  background: #28597a;
+  color: #ccc;
+}
+.button:active {
+  border-top-color: #1b435e;
+  background: #1b435e;
+}
+a.button:visited {
+  color: white
+}
+.buttondiv {
+  margin-bottom: 1.5em;
+}
+</style>
+
+<div class="buttondiv">
+  <a class="button" href="http://bigchaindb.com/http-api">HTTP API 문서</a>
+</div>
+<div class="buttondiv">
+  <a class="button" href="http://docs.bigchaindb.com/projects/contributing/en/latest/index.html">BigchainDB에 기여하는 법</a>
+</div>
+<div class="buttondiv">
+  <a class="button" href="http://docs.bigchaindb.com/projects/py-driver/en/latest/index.html">파이썬 드라이버 문서</a>
+</div>
+<div class="buttondiv">
+  <a class="button" href="https://docs.bigchaindb.com/projects/js-driver/en/latest/index.html">자바스크립트 드라이버 문서</a>
+</div>
+<div class="buttondiv">
+  <a class="button" href="http://docs.bigchaindb.com/projects/server/en/latest/index.html">서버 문서</a>
+</div>
+<div class="buttondiv">
+  <a class="button" href="http://docs.bigchaindb.com/projects/server/en/latest/quickstart.html">서버 빠른 시작</a>
+</div><div class="section" id="id4">
+<h2>BigchainDB에 대한 추가 정보<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">BigchainDB Docs Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="production-ready_kor.html">배포 - 준비</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terminology_kor.html">용어</a></li>
+<li class="toctree-l1"><a class="reference internal" href="decentralized_kor.html">BigchainDB 분산 방식</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diversity-ko.html">노드 다양성의 종류</a></li>
+<li class="toctree-l1"><a class="reference internal" href="immutable-ko.html">어떻게 BigchainDB는 불변성을 갖는가</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bft-ko.html">BigchainDB와 Byzantine Fault Tolerance</a></li>
+<li class="toctree-l1"><a class="reference internal" href="query-ko.html">BigchainDB 쿼리</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assets_ko.html">BigchainDB가 자산 등록 및 전송에 적합한 방법</a></li>
+<li class="toctree-l1"><a class="reference internal" href="smart-contracts_ko.html">BigchainDB 및 스마트계약</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transaction-concepts_ko.html">트랜잭션 개념</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store-files_ko.html">BigchainDB에 파일을 저장하는 방법</a></li>
+<li class="toctree-l1"><a class="reference internal" href="permissions-ko.html">BigchainDB 사용 권한</a></li>
+<li class="toctree-l1"><a class="reference internal" href="private-data-ko.html">BigchainDB, 개인정보 및 개인 데이터</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/projects/server/en/latest/data-models/index.html">Data Models</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="production-ready_kor.html" class="btn btn-neutral float-right" title="배포 - 준비" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../private-data.html" class="btn btn-neutral float-left" title="BigchainDB, Privacy and Private Data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

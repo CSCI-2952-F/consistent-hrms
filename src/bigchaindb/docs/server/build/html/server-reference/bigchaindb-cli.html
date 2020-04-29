@@ -1,0 +1,409 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Command Line Interface (CLI) &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="The HTTP Client-Server API" href="../http-client-server-api.html" />
+    <link rel="prev" title="Configuration Settings" href="configuration.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../simple-deployment-template/index.html">Simple Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Settings &amp; CLI</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="configuration.html">Configuration Settings</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Command Line Interface (CLI)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bigchaindb-help">bigchaindb --help</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bigchaindb-version">bigchaindb --version</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bigchaindb-configure">bigchaindb configure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bigchaindb-show-config">bigchaindb show-config</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bigchaindb-init">bigchaindb init</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bigchaindb-drop">bigchaindb drop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bigchaindb-start">bigchaindb start</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#options">Options</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#bigchaindb-election">bigchaindb election</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#election-new">election new</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#election-approve">election approve</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#election-show">election show</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#bigchaindb-tendermint-version">bigchaindb tendermint-version</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../k8s-deployment-template/index.html">Kubernetes Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Settings &amp; CLI</a> &raquo;</li>
+        
+      <li>Command Line Interface (CLI)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/server-reference/bigchaindb-cli.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <!---
+Copyright © 2020 Interplanetary Database Association e.V.,
+BigchainDB and IPDB software contributors.
+SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)
+Code is Apache-2.0 and docs are CC-BY-4.0
+---><div class="section" id="command-line-interface-cli">
+<h1>Command Line Interface (CLI)<a class="headerlink" href="#command-line-interface-cli" title="Permalink to this headline">¶</a></h1>
+<p>The command-line command to interact with BigchainDB Server is <code class="docutils literal notranslate"><span class="pre">bigchaindb</span></code>.</p>
+<div class="section" id="bigchaindb-help">
+<h2>bigchaindb --help<a class="headerlink" href="#bigchaindb-help" title="Permalink to this headline">¶</a></h2>
+<p>Show help for the <code class="docutils literal notranslate"><span class="pre">bigchaindb</span></code> command. <code class="docutils literal notranslate"><span class="pre">bigchaindb</span> <span class="pre">-h</span></code> does the same thing.</p>
+</div>
+<div class="section" id="bigchaindb-version">
+<h2>bigchaindb --version<a class="headerlink" href="#bigchaindb-version" title="Permalink to this headline">¶</a></h2>
+<p>Show the version number. <code class="docutils literal notranslate"><span class="pre">bigchaindb</span> <span class="pre">-v</span></code> does the same thing.</p>
+</div>
+<div class="section" id="bigchaindb-configure">
+<h2>bigchaindb configure<a class="headerlink" href="#bigchaindb-configure" title="Permalink to this headline">¶</a></h2>
+<p>Generate a local configuration file (which can be used to set some or all <a class="reference internal" href="configuration.html"><span class="doc">BigchainDB node configuration settings</span></a>). It will ask you for the values of some configuration settings.
+If you press Enter for a value, it will use the default value.</p>
+<p>At this point, only one database backend is supported: <code class="docutils literal notranslate"><span class="pre">localmongodb</span></code>.</p>
+<p>If you use the <code class="docutils literal notranslate"><span class="pre">-c</span></code> command-line option, it will generate the file at the specified path:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>bigchaindb -c path/to/new_config.json configure localmongodb
+</pre></div>
+</div>
+<p>If you don’t use the <code class="docutils literal notranslate"><span class="pre">-c</span></code> command-line option, the file will be written to <code class="docutils literal notranslate"><span class="pre">$HOME/.bigchaindb</span></code> (the default location where BigchainDB looks for a config file, if one isn’t specified).</p>
+<p>If you use the <code class="docutils literal notranslate"><span class="pre">-y</span></code> command-line option, then there won’t be any interactive prompts: it will use the default values for all the configuration settings.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>bigchaindb -y configure localmongodb
+</pre></div>
+</div>
+</div>
+<div class="section" id="bigchaindb-show-config">
+<h2>bigchaindb show-config<a class="headerlink" href="#bigchaindb-show-config" title="Permalink to this headline">¶</a></h2>
+<p>Show the values of the <a class="reference internal" href="configuration.html"><span class="doc">BigchainDB node configuration settings</span></a>.</p>
+</div>
+<div class="section" id="bigchaindb-init">
+<h2>bigchaindb init<a class="headerlink" href="#bigchaindb-init" title="Permalink to this headline">¶</a></h2>
+<p>Create a backend database (local MongoDB), all database tables/collections,
+various backend database indexes, and the genesis block.</p>
+</div>
+<div class="section" id="bigchaindb-drop">
+<h2>bigchaindb drop<a class="headerlink" href="#bigchaindb-drop" title="Permalink to this headline">¶</a></h2>
+<p>Drop (erase) the backend database (the local MongoDB database used by this node).
+You will be prompted to make sure.
+If you want to force-drop the database (i.e. skipping the yes/no prompt), then use <code class="docutils literal notranslate"><span class="pre">bigchaindb</span> <span class="pre">-y</span> <span class="pre">drop</span></code></p>
+</div>
+<div class="section" id="bigchaindb-start">
+<h2>bigchaindb start<a class="headerlink" href="#bigchaindb-start" title="Permalink to this headline">¶</a></h2>
+<p>Start BigchainDB. It always begins by trying a <code class="docutils literal notranslate"><span class="pre">bigchaindb</span> <span class="pre">init</span></code> first. See the documentation for <code class="docutils literal notranslate"><span class="pre">bigchaindb</span> <span class="pre">init</span></code>.
+The database initialization step is optional and can be skipped by passing the <code class="docutils literal notranslate"><span class="pre">--no-init</span></code> flag, i.e. <code class="docutils literal notranslate"><span class="pre">bigchaindb</span> <span class="pre">start</span> <span class="pre">--no-init</span></code>.</p>
+<div class="section" id="options">
+<h3>Options<a class="headerlink" href="#options" title="Permalink to this headline">¶</a></h3>
+<p>The log level for the console can be set via the option <code class="docutils literal notranslate"><span class="pre">--log-level</span></code> or its
+abbreviation <code class="docutils literal notranslate"><span class="pre">-l</span></code>. Example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ bigchaindb --log-level INFO start
+</pre></div>
+</div>
+<p>The allowed levels are <code class="docutils literal notranslate"><span class="pre">DEBUG</span></code>, <code class="docutils literal notranslate"><span class="pre">INFO</span></code>, <code class="docutils literal notranslate"><span class="pre">WARNING</span></code>, <code class="docutils literal notranslate"><span class="pre">ERROR</span></code>, and <code class="docutils literal notranslate"><span class="pre">CRITICAL</span></code>.
+For an explanation regarding these levels please consult the
+<a class="reference external" href="https://docs.python.org/3.6/library/logging.html#levels">Logging Levels</a>
+section of Python’s documentation.</p>
+<p>For a more fine-grained control over the logging configuration you can use the
+configuration file as documented under
+<a class="reference internal" href="configuration.html"><span class="doc">Configuration Settings</span></a>.</p>
+</div>
+</div>
+<div class="section" id="bigchaindb-election">
+<h2>bigchaindb election<a class="headerlink" href="#bigchaindb-election" title="Permalink to this headline">¶</a></h2>
+<p>Manage elections to govern the BigchainDB network. The specifics of the election process are defined in <a class="reference external" href="https://github.com/bigchaindb/BEPs/tree/master/18">BEP-18</a>.</p>
+<p>Election management is broken into several subcommands. Below is the command line syntax for each of them.</p>
+<div class="section" id="election-new">
+<h3>election new<a class="headerlink" href="#election-new" title="Permalink to this headline">¶</a></h3>
+<p>Create a new election which proposes a change to the BigchainDB network.</p>
+<p>If the command succeeds, it will post an election transaction and output <code class="docutils literal notranslate"><span class="pre">election_id</span></code>.</p>
+<p>The election proposal consists of vote tokens allocated to every current validator proportional to his voting power. Validators spend their votes to approve the election using the <a class="reference external" href="#election-approve">election-approve command</a>.</p>
+<p>Every election has a type. Currently supported types are <code class="docutils literal notranslate"><span class="pre">upsert-validator</span></code> and <code class="docutils literal notranslate"><span class="pre">chain-migration</span></code>. Their transaction operations are <code class="docutils literal notranslate"><span class="pre">VALIDATOR_ELECTION</span></code> and <code class="docutils literal notranslate"><span class="pre">CHAIN_MIGRATION</span></code> accordingly. See below for how to create an election of a particular type.</p>
+<p>Note that elections can only be proposed and approved by existing validators.</p>
+<div class="section" id="election-new-upsert-validator">
+<h4>election new upsert-validator<a class="headerlink" href="#election-new-upsert-validator" title="Permalink to this headline">¶</a></h4>
+<p>Create an election to add, update, or remove a validator.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ bigchaindb election new upsert-validator &lt;public-key&gt; &lt;power&gt; &lt;node-id&gt; --private-key &lt;path-to-the-private-key&gt;
+</pre></div>
+</div>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">&lt;public-key&gt;</span></code> is the public key of the node to be added/updated/removed. The encoding and type of the key have to match those specified in <code class="docutils literal notranslate"><span class="pre">genesis.json</span></code> in the supported Tendermint version.</li>
+<li><code class="docutils literal notranslate"><span class="pre">&lt;power&gt;</span></code> is the new power for the validator. To remove the validator, set the power to <code class="docutils literal notranslate"><span class="pre">0</span></code>.</li>
+<li><code class="docutils literal notranslate"><span class="pre">&lt;node-id&gt;</span></code> is the node identifier from Tendermint. A node operator can learn his node identifier by executing <code class="docutils literal notranslate"><span class="pre">tendermint</span> <span class="pre">show_node_id</span></code>.</li>
+<li><code class="docutils literal notranslate"><span class="pre">&lt;path-to-the-private-key&gt;</span></code> is the path to the private key of the validator who proposes the election. Tendermint places it at  <code class="docutils literal notranslate"><span class="pre">.tendermint/config/priv_validator.json</span></code>.</li>
+</ul>
+<p>Example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ bigchaindb election new upsert-validator <span class="nv">HHG0IQRybpT6nJMIWWFWhMczCLHt6xcm7eP52GnGuPY</span><span class="o">=</span> <span class="m">1</span> fb7140f03a4ffad899fabbbf655b97e0321add66 --private-key /home/user/.tendermint/config/priv_validator.json
+<span class="o">[</span>SUCCESS<span class="o">]</span> Submitted proposal with id: 04a067582cf03eba2b53b82e4adb5ece424474cbd4f7183780855a93ac5e3caa
+</pre></div>
+</div>
+<p>A successful execution of the above command does not imply the validator set has been updated but rather the proposal has been accepted by the network.
+Once <code class="docutils literal notranslate"><span class="pre">election_id</span></code> has been generated, the proposer should share it with other validators of the network (e.g. via email) and ask them to approve the proposal.</p>
+<p>Note that election proposers do not automatically approve elections by proposing them.</p>
+<p>For more details about how validator set changes work, refer to <a class="reference external" href="https://github.com/bigchaindb/BEPs/tree/master/21">BEP-21</a>.</p>
+</div>
+<div class="section" id="election-new-chain-migration">
+<h4>election new chain-migration<a class="headerlink" href="#election-new-chain-migration" title="Permalink to this headline">¶</a></h4>
+<p>Create an election to halt block production, to coordinate on making a Tendermint upgrade with a backwards-incompatible chain.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ bigchaindb election new chain-migration --private-key &lt;path-to-the-private-key&gt;
+</pre></div>
+</div>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">&lt;path-to-the-private-key&gt;</span></code> is the path to the private key of the validator who proposes the election. Tendermint places it at  <code class="docutils literal notranslate"><span class="pre">.tendermint/config/priv_validator.json</span></code>.</li>
+</ul>
+<p>Example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ bigchaindb election new migration --private-key /home/user/.tendermint/config/priv_validator.json
+<span class="o">[</span>SUCCESS<span class="o">]</span> Submitted proposal with id: 04a067582cf03eba2b53b82e4adb5ece424474cbd4f7183780855a93ac5e3caa
+</pre></div>
+</div>
+<p>Concluded chain migration elections halt block production at whichever block height they are approved.
+Afterwards, validators are supposed to upgrade Tendermint, set new <code class="docutils literal notranslate"><span class="pre">chain_id</span></code>, <code class="docutils literal notranslate"><span class="pre">app_hash</span></code>, and <code class="docutils literal notranslate"><span class="pre">validators</span></code> (to learn these values, use the <a class="reference external" href="#election-show">election show</a> command) in <code class="docutils literal notranslate"><span class="pre">genesis.json</span></code>, make and save a MongoDB dump, and restart the system.</p>
+<p>For more details about how chain migrations work, refer to <a class="reference external" href="https://github.com/bigchaindb/BEPs/tree/master/42">Type 3 scenarios in BEP-42</a>.</p>
+</div>
+</div>
+<div class="section" id="election-approve">
+<h3>election approve<a class="headerlink" href="#election-approve" title="Permalink to this headline">¶</a></h3>
+<p>Approve an election by voting for it. The command places a <code class="docutils literal notranslate"><span class="pre">VOTE</span></code> transaction, spending all of the validator’s vote tokens to the election address.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ bigchaindb election approve &lt;election-id&gt; --private-key &lt;path-to-the-private-key&gt;
+</pre></div>
+</div>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">election-id</span></code> is the election identifier the approval is given for.</li>
+<li><code class="docutils literal notranslate"><span class="pre">&lt;path-to-the-private-key&gt;</span></code> is the path to the private key of the validator who votes for the election. Tendermint places it at  <code class="docutils literal notranslate"><span class="pre">.tendermint/config/priv_validator.json</span></code>.</li>
+</ul>
+<p>Example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ bigchaindb election approve 04a067582cf03eba2b53b82e4adb5ece424474cbd4f7183780855a93ac5e3caa --private-key /home/user/.tendermint/config/priv_validator.json
+<span class="o">[</span>SUCCESS<span class="o">]</span> Your vote has been submitted
+</pre></div>
+</div>
+<p>Once a proposal has been approved by the sufficient amount of validators (contributing more than <code class="docutils literal notranslate"><span class="pre">2/3</span></code> of the total voting power), the proposed change is applied to the network.</p>
+</div>
+<div class="section" id="election-show">
+<h3>election show<a class="headerlink" href="#election-show" title="Permalink to this headline">¶</a></h3>
+<p>Retrieves the information about elections.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ bigchaindb election show &lt;election-id&gt;
+
+<span class="nv">status</span><span class="o">=</span>&lt;status&gt;
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">status</span></code> has three possible values:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">ongoing</span></code>, if the election can be concluded but has not yet collected enough votes,</li>
+<li><code class="docutils literal notranslate"><span class="pre">concluded</span></code>, if the election has been concluded,</li>
+<li><code class="docutils literal notranslate"><span class="pre">inconclusive</span></code>, if the validator set changed while the election was in process, rendering it undecidable.</li>
+</ul>
+<p>After a chain migration is concluded, the <code class="docutils literal notranslate"><span class="pre">show</span></code> command also outputs <code class="docutils literal notranslate"><span class="pre">chain_id</span></code>, <code class="docutils literal notranslate"><span class="pre">app_hash</span></code>, and <code class="docutils literal notranslate"><span class="pre">validators</span></code> for <code class="docutils literal notranslate"><span class="pre">genesis.json</span></code> of the new chain.</p>
+</div>
+</div>
+<div class="section" id="bigchaindb-tendermint-version">
+<h2>bigchaindb tendermint-version<a class="headerlink" href="#bigchaindb-tendermint-version" title="Permalink to this headline">¶</a></h2>
+<p>Show the Tendermint versions supported by BigchainDB server.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ bigchaindb tendermint-version
+<span class="o">{</span>
+    <span class="s2">&quot;description&quot;</span>: <span class="s2">&quot;BigchainDB supports the following Tendermint version(s)&quot;</span>,
+    <span class="s2">&quot;tendermint&quot;</span>: <span class="o">[</span>
+        <span class="s2">&quot;0.22.8&quot;</span>
+    <span class="o">]</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../http-client-server-api.html" class="btn btn-neutral float-right" title="The HTTP Client-Server API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="configuration.html" class="btn btn-neutral float-left" title="Configuration Settings" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

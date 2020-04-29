@@ -1,0 +1,604 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bigchaindb.commands.bigchaindb &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simple-deployment-template/index.html">Simple Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../k8s-deployment-template/index.html">Kubernetes Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>bigchaindb.commands.bigchaindb</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for bigchaindb.commands.bigchaindb</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright © 2020 Interplanetary Database Association e.V.,</span>
+<span class="c1"># BigchainDB and IPDB software contributors.</span>
+<span class="c1"># SPDX-License-Identifier: (Apache-2.0 AND CC-BY-4.0)</span>
+<span class="c1"># Code is Apache-2.0 and docs are CC-BY-4.0</span>
+
+<span class="sd">&quot;&quot;&quot;Implementation of the `bigchaindb` command,</span>
+<span class="sd">the command-line interface (CLI) for BigchainDB Server.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">bigchaindb.core</span> <span class="kn">import</span> <span class="n">rollback</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.migrations.chain_migration_election</span> <span class="kn">import</span> <span class="n">ChainMigrationElection</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.utils</span> <span class="kn">import</span> <span class="n">load_node_key</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.common.transaction_mode_types</span> <span class="kn">import</span> <span class="n">BROADCAST_TX_COMMIT</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.common.exceptions</span> <span class="kn">import</span> <span class="p">(</span><span class="n">DatabaseDoesNotExist</span><span class="p">,</span>
+                                          <span class="n">ValidationError</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.elections.vote</span> <span class="kn">import</span> <span class="n">Vote</span>
+<span class="kn">import</span> <span class="nn">bigchaindb</span>
+<span class="kn">from</span> <span class="nn">bigchaindb</span> <span class="kn">import</span> <span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">ValidatorElection</span><span class="p">,</span>
+                        <span class="n">BigchainDB</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.backend</span> <span class="kn">import</span> <span class="n">schema</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.commands</span> <span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.commands.utils</span> <span class="kn">import</span> <span class="p">(</span><span class="n">configure_bigchaindb</span><span class="p">,</span>
+                                       <span class="n">input_on_stderr</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.log</span> <span class="kn">import</span> <span class="n">setup_logging</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.tendermint_utils</span> <span class="kn">import</span> <span class="n">public_key_from_base64</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.commands.election_types</span> <span class="kn">import</span> <span class="n">elections</span>
+<span class="kn">from</span> <span class="nn">bigchaindb.version</span> <span class="kn">import</span> <span class="n">__tm_supported_versions__</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="c1"># Note about printing:</span>
+<span class="c1">#   We try to print to stdout for results of a command that may be useful to</span>
+<span class="c1">#   someone (or another program). Strictly informational text, or errors,</span>
+<span class="c1">#   should be printed to stderr.</span>
+
+
+<div class="viewcode-block" id="run_show_config"><a class="viewcode-back" href="../../../code-reference/commands.html#bigchaindb.commands.bigchaindb.run_show_config">[docs]</a><span class="nd">@configure_bigchaindb</span>
+<span class="k">def</span> <span class="nf">run_show_config</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Show the current configuration&quot;&quot;&quot;</span>
+    <span class="c1"># TODO Proposal: remove the &quot;hidden&quot; configuration. Only show config. If</span>
+    <span class="c1"># the system needs to be configured, then display information on how to</span>
+    <span class="c1"># configure the system.</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">bigchaindb</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+    <span class="k">del</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIGURED&#39;</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="run_configure"><a class="viewcode-back" href="../../../code-reference/commands.html#bigchaindb.commands.bigchaindb.run_configure">[docs]</a><span class="nd">@configure_bigchaindb</span>
+<span class="k">def</span> <span class="nf">run_configure</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Run a script to configure the current node.&quot;&quot;&quot;</span>
+    <span class="n">config_path</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">config</span> <span class="ow">or</span> <span class="n">bigchaindb</span><span class="o">.</span><span class="n">config_utils</span><span class="o">.</span><span class="n">CONFIG_DEFAULT_PATH</span>
+
+    <span class="n">config_file_exists</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1"># if the config path is `-` then it&#39;s stdout</span>
+    <span class="k">if</span> <span class="n">config_path</span> <span class="o">!=</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
+        <span class="n">config_file_exists</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">config_file_exists</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">yes</span><span class="p">:</span>
+        <span class="n">want</span> <span class="o">=</span> <span class="n">input_on_stderr</span><span class="p">(</span><span class="s1">&#39;Config file `</span><span class="si">{}</span><span class="s1">` exists, do you want to &#39;</span>
+                               <span class="s1">&#39;override it? (cannot be undone) [y/N]: &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">config_path</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">want</span> <span class="o">!=</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span>
+            <span class="k">return</span>
+
+    <span class="n">conf</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">bigchaindb</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+
+    <span class="c1"># select the correct config defaults based on the backend</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Generating default configuration for backend </span><span class="si">{}</span><span class="s1">&#39;</span>
+          <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">backend</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="n">database_keys</span> <span class="o">=</span> <span class="n">bigchaindb</span><span class="o">.</span><span class="n">_database_keys_map</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">backend</span><span class="p">]</span>
+    <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;database&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bigchaindb</span><span class="o">.</span><span class="n">_database_map</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">backend</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">yes</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;bind&#39;</span><span class="p">,</span> <span class="p">):</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;server&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+            <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;server&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">input_on_stderr</span><span class="p">(</span><span class="s1">&#39;API Server </span><span class="si">{}</span><span class="s1">? (default `</span><span class="si">{}</span><span class="s1">`): &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">),</span> <span class="n">val</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;scheme&#39;</span><span class="p">,</span> <span class="s1">&#39;host&#39;</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">):</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;wsserver&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+            <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;wsserver&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">input_on_stderr</span><span class="p">(</span><span class="s1">&#39;WebSocket Server </span><span class="si">{}</span><span class="s1">? (default `</span><span class="si">{}</span><span class="s1">`): &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">),</span> <span class="n">val</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">database_keys</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;database&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+            <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;database&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">input_on_stderr</span><span class="p">(</span><span class="s1">&#39;Database </span><span class="si">{}</span><span class="s1">? (default `</span><span class="si">{}</span><span class="s1">`): &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">),</span> <span class="n">val</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;host&#39;</span><span class="p">,</span> <span class="s1">&#39;port&#39;</span><span class="p">):</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;tendermint&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+            <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;tendermint&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">input_on_stderr</span><span class="p">(</span><span class="s1">&#39;Tendermint </span><span class="si">{}</span><span class="s1">? (default `</span><span class="si">{}</span><span class="s1">`)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">val</span><span class="p">),</span> <span class="n">val</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">config_path</span> <span class="o">!=</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
+        <span class="n">bigchaindb</span><span class="o">.</span><span class="n">config_utils</span><span class="o">.</span><span class="n">write_config</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Configuration written to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">config_path</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Ready to go!&#39;</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="run_election"><a class="viewcode-back" href="../../../code-reference/commands.html#bigchaindb.commands.bigchaindb.run_election">[docs]</a><span class="nd">@configure_bigchaindb</span>
+<span class="k">def</span> <span class="nf">run_election</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Initiate and manage elections&quot;&quot;&quot;</span>
+
+    <span class="n">b</span> <span class="o">=</span> <span class="n">BigchainDB</span><span class="p">()</span>
+
+    <span class="c1"># Call the function specified by args.action, as defined above</span>
+    <span class="nb">globals</span><span class="p">()[</span><span class="sa">f</span><span class="s1">&#39;run_election_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">action</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">](</span><span class="n">args</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">run_election_new</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">bigchain</span><span class="p">):</span>
+    <span class="n">election_type</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">election_type</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+    <span class="nb">globals</span><span class="p">()[</span><span class="sa">f</span><span class="s1">&#39;run_election_new_</span><span class="si">{</span><span class="n">election_type</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">](</span><span class="n">args</span><span class="p">,</span> <span class="n">bigchain</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">create_new_election</span><span class="p">(</span><span class="n">sk</span><span class="p">,</span> <span class="n">bigchain</span><span class="p">,</span> <span class="n">election_class</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">load_node_key</span><span class="p">(</span><span class="n">sk</span><span class="p">)</span>
+        <span class="n">voters</span> <span class="o">=</span> <span class="n">election_class</span><span class="o">.</span><span class="n">recipients</span><span class="p">(</span><span class="n">bigchain</span><span class="p">)</span>
+        <span class="n">election</span> <span class="o">=</span> <span class="n">election_class</span><span class="o">.</span><span class="n">generate</span><span class="p">([</span><span class="n">key</span><span class="o">.</span><span class="n">public_key</span><span class="p">],</span>
+                                           <span class="n">voters</span><span class="p">,</span>
+                                           <span class="n">data</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span><span class="o">.</span><span class="n">sign</span><span class="p">([</span><span class="n">key</span><span class="o">.</span><span class="n">private_key</span><span class="p">])</span>
+        <span class="n">election</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">bigchain</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">fd_404</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">fd_404</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">bigchain</span><span class="o">.</span><span class="n">write_transaction</span><span class="p">(</span><span class="n">election</span><span class="p">,</span> <span class="n">BROADCAST_TX_COMMIT</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">resp</span> <span class="o">==</span> <span class="p">(</span><span class="mi">202</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;[SUCCESS] Submitted proposal with id: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">election</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">election</span><span class="o">.</span><span class="n">id</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Failed to commit election proposal&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="run_election_new_upsert_validator"><a class="viewcode-back" href="../../../code-reference/commands.html#bigchaindb.commands.bigchaindb.run_election_new_upsert_validator">[docs]</a><span class="k">def</span> <span class="nf">run_election_new_upsert_validator</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">bigchain</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Initiates an election to add/update/remove a validator to an existing BigchainDB network</span>
+
+<span class="sd">    :param args: dict</span>
+<span class="sd">        args = {</span>
+<span class="sd">        &#39;public_key&#39;: the public key of the proposed peer, (str)</span>
+<span class="sd">        &#39;power&#39;: the proposed validator power for the new peer, (str)</span>
+<span class="sd">        &#39;node_id&#39;: the node_id of the new peer (str)</span>
+<span class="sd">        &#39;sk&#39;: the path to the private key of the node calling the election (str)</span>
+<span class="sd">        }</span>
+<span class="sd">    :param bigchain: an instance of BigchainDB</span>
+<span class="sd">    :return: election_id or `False` in case of failure</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">new_validator</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;public_key&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">public_key_from_base64</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">public_key</span><span class="p">),</span>
+                       <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;ed25519-base16&#39;</span><span class="p">},</span>
+        <span class="s1">&#39;power&#39;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">power</span><span class="p">,</span>
+        <span class="s1">&#39;node_id&#39;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">node_id</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">create_new_election</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">sk</span><span class="p">,</span> <span class="n">bigchain</span><span class="p">,</span> <span class="n">ValidatorElection</span><span class="p">,</span> <span class="n">new_validator</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="run_election_new_chain_migration"><a class="viewcode-back" href="../../../code-reference/commands.html#bigchaindb.commands.bigchaindb.run_election_new_chain_migration">[docs]</a><span class="k">def</span> <span class="nf">run_election_new_chain_migration</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">bigchain</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Initiates an election to halt block production</span>
+
+<span class="sd">    :param args: dict</span>
+<span class="sd">        args = {</span>
+<span class="sd">        &#39;sk&#39;: the path to the private key of the node calling the election (str)</span>
+<span class="sd">        }</span>
+<span class="sd">    :param bigchain: an instance of BigchainDB</span>
+<span class="sd">    :return: election_id or `False` in case of failure</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">return</span> <span class="n">create_new_election</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">sk</span><span class="p">,</span> <span class="n">bigchain</span><span class="p">,</span> <span class="n">ChainMigrationElection</span><span class="p">,</span> <span class="p">{})</span></div>
+
+
+<div class="viewcode-block" id="run_election_approve"><a class="viewcode-back" href="../../../code-reference/commands.html#bigchaindb.commands.bigchaindb.run_election_approve">[docs]</a><span class="k">def</span> <span class="nf">run_election_approve</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">bigchain</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Approve an election</span>
+
+<span class="sd">    :param args: dict</span>
+<span class="sd">        args = {</span>
+<span class="sd">        &#39;election_id&#39;: the election_id of the election (str)</span>
+<span class="sd">        &#39;sk&#39;: the path to the private key of the signer (str)</span>
+<span class="sd">        }</span>
+<span class="sd">    :param bigchain: an instance of BigchainDB</span>
+<span class="sd">    :return: success log message or `False` in case of error</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">key</span> <span class="o">=</span> <span class="n">load_node_key</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">sk</span><span class="p">)</span>
+    <span class="n">tx</span> <span class="o">=</span> <span class="n">bigchain</span><span class="o">.</span><span class="n">get_transaction</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">election_id</span><span class="p">)</span>
+    <span class="n">voting_powers</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">amount</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">tx</span><span class="o">.</span><span class="n">outputs</span> <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">public_key</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">public_keys</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">voting_powers</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">voting_power</span> <span class="o">=</span> <span class="n">voting_powers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;The key you provided does not match any of the eligible voters in this election.&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tx</span><span class="o">.</span><span class="n">to_inputs</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">public_key</span> <span class="ow">in</span> <span class="n">i</span><span class="o">.</span><span class="n">owners_before</span><span class="p">]</span>
+    <span class="n">election_pub_key</span> <span class="o">=</span> <span class="n">ValidatorElection</span><span class="o">.</span><span class="n">to_public_key</span><span class="p">(</span><span class="n">tx</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+    <span class="n">approval</span> <span class="o">=</span> <span class="n">Vote</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span>
+                             <span class="p">[([</span><span class="n">election_pub_key</span><span class="p">],</span> <span class="n">voting_power</span><span class="p">)],</span>
+                             <span class="n">tx</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">sign</span><span class="p">([</span><span class="n">key</span><span class="o">.</span><span class="n">private_key</span><span class="p">])</span>
+    <span class="n">approval</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">bigchain</span><span class="p">)</span>
+
+    <span class="n">resp</span> <span class="o">=</span> <span class="n">bigchain</span><span class="o">.</span><span class="n">write_transaction</span><span class="p">(</span><span class="n">approval</span><span class="p">,</span> <span class="n">BROADCAST_TX_COMMIT</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">resp</span> <span class="o">==</span> <span class="p">(</span><span class="mi">202</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;[SUCCESS] Your vote has been submitted&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">approval</span><span class="o">.</span><span class="n">id</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Failed to commit vote&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="run_election_show"><a class="viewcode-back" href="../../../code-reference/commands.html#bigchaindb.commands.bigchaindb.run_election_show">[docs]</a><span class="k">def</span> <span class="nf">run_election_show</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">bigchain</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Retrieves information about an election</span>
+
+<span class="sd">    :param args: dict</span>
+<span class="sd">        args = {</span>
+<span class="sd">        &#39;election_id&#39;: the transaction_id for an election (str)</span>
+<span class="sd">        }</span>
+<span class="sd">    :param bigchain: an instance of BigchainDB</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">election</span> <span class="o">=</span> <span class="n">bigchain</span><span class="o">.</span><span class="n">get_transaction</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">election_id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">election</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No election found with election_id </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">election_id</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">election</span><span class="o">.</span><span class="n">show_election</span><span class="p">(</span><span class="n">bigchain</span><span class="p">)</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">response</span></div>
+
+
+<span class="k">def</span> <span class="nf">_run_init</span><span class="p">():</span>
+    <span class="n">bdb</span> <span class="o">=</span> <span class="n">bigchaindb</span><span class="o">.</span><span class="n">BigchainDB</span><span class="p">()</span>
+
+    <span class="n">schema</span><span class="o">.</span><span class="n">init_database</span><span class="p">(</span><span class="n">connection</span><span class="o">=</span><span class="n">bdb</span><span class="o">.</span><span class="n">connection</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="run_init"><a class="viewcode-back" href="../../../code-reference/commands.html#bigchaindb.commands.bigchaindb.run_init">[docs]</a><span class="nd">@configure_bigchaindb</span>
+<span class="k">def</span> <span class="nf">run_init</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Initialize the database&quot;&quot;&quot;</span>
+    <span class="n">_run_init</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="run_drop"><a class="viewcode-back" href="../../../code-reference/commands.html#bigchaindb.commands.bigchaindb.run_drop">[docs]</a><span class="nd">@configure_bigchaindb</span>
+<span class="k">def</span> <span class="nf">run_drop</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Drop the database&quot;&quot;&quot;</span>
+    <span class="n">dbname</span> <span class="o">=</span> <span class="n">bigchaindb</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;database&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">yes</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">input_on_stderr</span><span class="p">(</span><span class="s1">&#39;Do you want to drop `</span><span class="si">{}</span><span class="s1">` database? [y/n]: &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dbname</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">response</span> <span class="o">!=</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span>
+            <span class="k">return</span>
+
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">schema</span><span class="o">.</span><span class="n">drop_database</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">dbname</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">DatabaseDoesNotExist</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cannot drop &#39;</span><span class="si">{name}</span><span class="s2">&#39;. The database does not exist.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">dbname</span><span class="p">),</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">run_recover</span><span class="p">(</span><span class="n">b</span><span class="p">):</span>
+    <span class="n">rollback</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="run_start"><a class="viewcode-back" href="../../../code-reference/commands.html#bigchaindb.commands.bigchaindb.run_start">[docs]</a><span class="nd">@configure_bigchaindb</span>
+<span class="k">def</span> <span class="nf">run_start</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Start the processes to run the node&quot;&quot;&quot;</span>
+
+    <span class="c1"># Configure Logging</span>
+    <span class="n">setup_logging</span><span class="p">()</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;BigchainDB Version </span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">bigchaindb</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+    <span class="n">run_recover</span><span class="p">(</span><span class="n">bigchaindb</span><span class="o">.</span><span class="n">lib</span><span class="o">.</span><span class="n">BigchainDB</span><span class="p">())</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">skip_initialize_database</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Initializing database&#39;</span><span class="p">)</span>
+        <span class="n">_run_init</span><span class="p">()</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Starting BigchainDB main process.&#39;</span><span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">bigchaindb.start</span> <span class="kn">import</span> <span class="n">start</span>
+    <span class="n">start</span><span class="p">(</span><span class="n">args</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="run_tendermint_version"><a class="viewcode-back" href="../../../code-reference/commands.html#bigchaindb.commands.bigchaindb.run_tendermint_version">[docs]</a><span class="k">def</span> <span class="nf">run_tendermint_version</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Show the supported Tendermint version(s)&quot;&quot;&quot;</span>
+    <span class="n">supported_tm_ver</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;BigchainDB supports the following Tendermint version(s)&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;tendermint&#39;</span><span class="p">:</span> <span class="n">__tm_supported_versions__</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">supported_tm_ver</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span></div>
+
+
+<span class="k">def</span> <span class="nf">create_parser</span><span class="p">():</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Control your BigchainDB node.&#39;</span><span class="p">,</span>
+        <span class="n">parents</span><span class="o">=</span><span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">base_parser</span><span class="p">])</span>
+
+    <span class="c1"># all the commands are contained in the subparsers object,</span>
+    <span class="c1"># the command selected by the user will be stored in `args.command`</span>
+    <span class="c1"># that is used by the `main` function to select which other</span>
+    <span class="c1"># function to call.</span>
+    <span class="n">subparsers</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Commands&#39;</span><span class="p">,</span>
+                                       <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;command&#39;</span><span class="p">)</span>
+
+    <span class="c1"># parser for writing a config file</span>
+    <span class="n">config_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;configure&#39;</span><span class="p">,</span>
+                                          <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Prepare the config file.&#39;</span><span class="p">)</span>
+
+    <span class="n">config_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;backend&#39;</span><span class="p">,</span>
+                               <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;localmongodb&#39;</span><span class="p">],</span>
+                               <span class="n">default</span><span class="o">=</span><span class="s1">&#39;localmongodb&#39;</span><span class="p">,</span>
+                               <span class="n">const</span><span class="o">=</span><span class="s1">&#39;localmongodb&#39;</span><span class="p">,</span>
+                               <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span>
+                               <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The backend to use. It can only be &#39;</span>
+                               <span class="s1">&#39;&quot;localmongodb&quot;, currently.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># parser for managing elections</span>
+    <span class="n">election_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;election&#39;</span><span class="p">,</span>
+                                            <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Manage elections.&#39;</span><span class="p">)</span>
+
+    <span class="n">election_subparser</span> <span class="o">=</span> <span class="n">election_parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Action&#39;</span><span class="p">,</span>
+                                                        <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;action&#39;</span><span class="p">)</span>
+
+    <span class="n">new_election_parser</span> <span class="o">=</span> <span class="n">election_subparser</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;new&#39;</span><span class="p">,</span>
+                                                        <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Calls a new election.&#39;</span><span class="p">)</span>
+
+    <span class="n">new_election_subparser</span> <span class="o">=</span> <span class="n">new_election_parser</span><span class="o">.</span><span class="n">add_subparsers</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Election_Type&#39;</span><span class="p">,</span>
+                                                                <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;election_type&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Parser factory for each type of new election, so we get a bunch of commands that look like this:</span>
+    <span class="c1"># election new &lt;some_election_type&gt; &lt;args&gt;...</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">elections</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span>
+        <span class="n">generic_parser</span> <span class="o">=</span> <span class="n">new_election_subparser</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;help&#39;</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">kwargs</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">generic_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="n">approve_election_parser</span> <span class="o">=</span> <span class="n">election_subparser</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;approve&#39;</span><span class="p">,</span>
+                                                            <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Approve the election.&#39;</span><span class="p">)</span>
+    <span class="n">approve_election_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;election_id&#39;</span><span class="p">,</span>
+                                         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The election_id of the election.&#39;</span><span class="p">)</span>
+    <span class="n">approve_election_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--private-key&#39;</span><span class="p">,</span>
+                                         <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;sk&#39;</span><span class="p">,</span>
+                                         <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to the private key of the election initiator.&#39;</span><span class="p">)</span>
+
+    <span class="n">show_election_parser</span> <span class="o">=</span> <span class="n">election_subparser</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;show&#39;</span><span class="p">,</span>
+                                                         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Provides information about an election.&#39;</span><span class="p">)</span>
+
+    <span class="n">show_election_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;election_id&#39;</span><span class="p">,</span>
+                                      <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The transaction id of the election you wish to query.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># parsers for showing/exporting config values</span>
+    <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;show-config&#39;</span><span class="p">,</span>
+                          <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Show the current configuration&#39;</span><span class="p">)</span>
+
+    <span class="c1"># parser for database-level commands</span>
+    <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;init&#39;</span><span class="p">,</span>
+                          <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Init the database&#39;</span><span class="p">)</span>
+
+    <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;drop&#39;</span><span class="p">,</span>
+                          <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Drop the database&#39;</span><span class="p">)</span>
+
+    <span class="c1"># parser for starting BigchainDB</span>
+    <span class="n">start_parser</span> <span class="o">=</span> <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">,</span>
+                                         <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Start BigchainDB&#39;</span><span class="p">)</span>
+
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--no-init&#39;</span><span class="p">,</span>
+                              <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;skip_initialize_database&#39;</span><span class="p">,</span>
+                              <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                              <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+                              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Skip database initialization&#39;</span><span class="p">)</span>
+
+    <span class="n">subparsers</span><span class="o">.</span><span class="n">add_parser</span><span class="p">(</span><span class="s1">&#39;tendermint-version&#39;</span><span class="p">,</span>
+                          <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Show the Tendermint supported versions&#39;</span><span class="p">)</span>
+
+    <span class="n">start_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--experimental-parallel-validation&#39;</span><span class="p">,</span>
+                              <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;experimental_parallel_validation&#39;</span><span class="p">,</span>
+                              <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                              <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+                              <span class="n">help</span><span class="o">=</span><span class="s1">&#39;💀 EXPERIMENTAL: parallelize validation for better throughput 💀&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">utils</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">create_parser</span><span class="p">(),</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="nb">globals</span><span class="p">())</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

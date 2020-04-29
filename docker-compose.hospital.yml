@@ -115,6 +115,8 @@ services:
     environment:
       - CONSISTENT_STORAGE_BACKEND=${CONSISTENT_STORAGE_BACKEND:-sagas}
       - SAGAS_GRPC_ADDR=sagas:8080
+      - BIGCHAIN_ROOT_URL=http://bigchaindb:9984
+      - HOSPITAL_NAME_SLUG=${HOSPITAL_NAME_SLUG}
       - CENTRALDB_GRPC_ADDR=centraldb:8080
     depends_on:
       - sagas

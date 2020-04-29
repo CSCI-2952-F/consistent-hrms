@@ -1,5 +1,6 @@
 grpcio
 nameko
 protobuf
+bigchaindb_driver
 pycryptodome
 rsa

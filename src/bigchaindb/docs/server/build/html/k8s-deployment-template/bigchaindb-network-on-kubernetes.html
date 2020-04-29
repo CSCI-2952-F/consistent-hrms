@@ -1,0 +1,727 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Kubernetes Template: Deploying a BigchainDB network &mdash; BigchainDB Server 2.2.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Walkthrough: Deploy a Kubernetes Cluster on Azure using Tectonic by CoreOS" href="tectonic-azure.html" />
+    <link rel="prev" title="Kubernetes Template: Upgrade all Software in a BigchainDB Node" href="upgrade-on-kubernetes.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> BigchainDB Server
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                2.2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference external" href="https://docs.bigchaindb.com/en/latest/index.html">← Back to All BigchainDB Docs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../production-nodes/index.html">Production Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../networks.html">BigchainDB Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../simple-deployment-template/index.html">Simple Deployment Template</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dev-and-test/index.html">Develop &amp; Test BigchainDB Server</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../server-reference/index.html">Settings &amp; CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../http-client-server-api.html">The HTTP Client-Server API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../events/index.html">The Events API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../drivers-clients/index.html">Drivers &amp; Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-models/index.html">Data Models</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Kubernetes Deployment Template</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="workflow.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ca-installation.html">How to Set Up a Self-Signed Certificate Authority</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server-tls-certificate.html">How to Generate a Server Certificate for MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="client-tls-certificate.html">How to Generate a Client Certificate for MongoDB</a></li>
+<li class="toctree-l2"><a class="reference internal" href="revoke-tls-certificate.html">How to Revoke an SSL/TLS Certificate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="template-kubernetes-azure.html">Template: Deploy a Kubernetes Cluster on Azure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node-on-kubernetes.html">Kubernetes Template: Deploy a Single BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="node-config-map-and-secrets.html">How to Configure a BigchainDB Node</a></li>
+<li class="toctree-l2"><a class="reference internal" href="log-analytics.html">Log Analytics on Azure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cloud-manager.html">Configure MongoDB Cloud Manager for Monitoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="easy-rsa.html">How to Install &amp; Configure Easy-RSA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="upgrade-on-kubernetes.html">Kubernetes Template: Upgrade all Software in a BigchainDB Node</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Kubernetes Template: Deploying a BigchainDB network</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#terminology-used">Terminology Used</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#edit-config-yaml-and-secret-yaml">Edit config.yaml and secret.yaml</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#single-site-single-azure-kubernetes-cluster">Single Site: Single Azure Kubernetes Cluster</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multi-site-multiple-azure-kubernetes-clusters">Multi Site: Multiple Azure Kubernetes Clusters</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#deploy-kubernetes-services">Deploy Kubernetes Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#only-for-multi-site-deployments">Only for multi site deployments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#start-nginx-kubernetes-deployments">Start NGINX Kubernetes deployments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deploy-kubernetes-storageclasses-for-mongodb-and-bigchaindb">Deploy Kubernetes StorageClasses for MongoDB and BigchainDB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deploy-kubernetes-persistentvolumeclaims-for-mongodb-and-bigchaindb">Deploy Kubernetes PersistentVolumeClaims for MongoDB and BigchainDB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deploy-mongodb-kubernetes-statefulset">Deploy MongoDB Kubernetes StatefulSet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configure-users-and-access-control-for-mongodb">Configure Users and Access Control for MongoDB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#start-kubernetes-statefulset-for-bigchaindb">Start Kubernetes StatefulSet for BigchainDB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#start-kubernetes-deployment-for-mongodb-monitoring-agent">Start Kubernetes Deployment for MongoDB Monitoring Agent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#start-kubernetes-deployment-for-openresty">Start Kubernetes Deployment for OpenResty</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#verify-and-test">Verify and Test</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tectonic-azure.html">Walkthrough: Deploy a Kubernetes Cluster on Azure using Tectonic by CoreOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="troubleshoot.html">Cluster Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture.html">Architecture of a BigchainDB Node Running in a Kubernetes Cluster</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../code-reference/index.html">Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendices/index.html">Appendices</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">BigchainDB Server</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Kubernetes Deployment Template</a> &raquo;</li>
+        
+      <li>Kubernetes Template: Deploying a BigchainDB network</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/k8s-deployment-template/bigchaindb-network-on-kubernetes.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="kubernetes-template-deploying-a-bigchaindb-network">
+<span id="kubernetes-template-deploy-bigchaindb-network"></span><h1>Kubernetes Template: Deploying a BigchainDB network<a class="headerlink" href="#kubernetes-template-deploying-a-bigchaindb-network" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">A highly-available Kubernetes cluster requires at least five virtual machines
+(three for the master and two for your app’s containers).
+Therefore we don’t recommend using Kubernetes to run a BigchainDB node
+if that’s the only thing the Kubernetes cluster will be running.
+Instead, see our <a class="reference internal" href="../simple-deployment-template/index.html#simple-deployment-template"><span class="std std-ref">Simple Deployment Template</span></a>.
+If your organization already <em>has</em> a big Kubernetes cluster running many containers,
+and your organization has people who know Kubernetes,
+then this Kubernetes deployment template might be helpful.</p>
+</div>
+<p>This page describes how to deploy a static BigchainDB + Tendermint network.</p>
+<p>If you want to deploy a stand-alone BigchainDB node in a BigchainDB cluster,
+or a stand-alone BigchainDB node,
+then see <a class="reference internal" href="node-on-kubernetes.html"><span class="doc">the page about that</span></a>.</p>
+<p>We can use this guide to deploy a BigchainDB network in the following scenarios:</p>
+<ul class="simple">
+<li>Single Azure Kubernetes Site.</li>
+<li>Multiple Azure Kubernetes Sites (Geographically dispersed).</li>
+</ul>
+<div class="section" id="terminology-used">
+<h2>Terminology Used<a class="headerlink" href="#terminology-used" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">BigchainDB</span> <span class="pre">node</span></code> is a set of Kubernetes components that join together to
+form a BigchainDB single node. Please refer to the <a class="reference internal" href="architecture.html"><span class="doc">architecture diagram</span></a>
+for more details.</p>
+<p><code class="docutils literal notranslate"><span class="pre">BigchainDB</span> <span class="pre">network</span></code> will refer to a collection of nodes working together
+to form a network.</p>
+<p>Below, we refer to multiple files by their directory and filename,
+such as <code class="docutils literal notranslate"><span class="pre">bigchaindb/bigchaindb-ext-conn-svc.yaml</span></code>. Those files are located in the
+<a class="reference external" href="https://github.com/bigchaindb/bigchaindb/">bigchaindb/bigchaindb repository on GitHub</a> in the <code class="docutils literal notranslate"><span class="pre">k8s/</span></code> directory.
+Make sure you’re getting those files from the appropriate Git branch on
+GitHub, i.e. the branch for the version of BigchainDB that your BigchainDB
+cluster is using.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This deployment strategy is currently used for testing purposes only,
+operated by a single stakeholder or tightly coupled stakeholders.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Currently, we only support a static set of participants in the network.
+Once a BigchainDB network is started with a certain number of validators
+and a genesis file. Users cannot add new validator nodes dynamically.
+You can track the progress of this funtionality on our
+<a class="reference external" href="https://github.com/bigchaindb/bigchaindb/milestones">github repository</a>.</p>
+</div>
+</div>
+<div class="section" id="prerequisites">
+<span id="pre-reqs-bdb-network"></span><h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<p>The deployment methodology is similar to one covered with <a class="reference internal" href="node-on-kubernetes.html"><span class="doc">Kubernetes Template: Deploy a Single BigchainDB Node</span></a>, but
+we need to tweak some configurations depending on your choice of deployment.</p>
+<p>The operator needs to follow some consistent naming convention for all the components
+covered <a class="reference internal" href="workflow.html#things-each-node-operator-must-do"><span class="std std-ref">here</span></a>.</p>
+<p>Lets assume we are deploying a 4 node cluster, your naming conventions could look like this:</p>
+<div class="code highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;MongoDB&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;mdb-instance-1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mdb-instance-2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mdb-instance-3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mdb-instance-4&quot;</span>
+  <span class="p">],</span>
+  <span class="s2">&quot;BigchainDB&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;bdb-instance-1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bdb-instance-2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bdb-instance-3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;bdb-instance-4&quot;</span>
+  <span class="p">],</span>
+  <span class="s2">&quot;NGINX&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;ngx-instance-1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ngx-instance-2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ngx-instance-3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ngx-instance-4&quot;</span>
+  <span class="p">],</span>
+  <span class="s2">&quot;OpenResty&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;openresty-instance-1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;openresty-instance-2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;openresty-instance-3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;openresty-instance-4&quot;</span>
+  <span class="p">],</span>
+  <span class="s2">&quot;MongoDB_Monitoring_Agent&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;mdb-mon-instance-1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mdb-mon-instance-2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mdb-mon-instance-3&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;mdb-mon-instance-4&quot;</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Blockchain Genesis ID and Time will be shared across all nodes.</p>
+</div>
+<div class="section" id="edit-config-yaml-and-secret-yaml">
+<h3>Edit config.yaml and secret.yaml<a class="headerlink" href="#edit-config-yaml-and-secret-yaml" title="Permalink to this headline">¶</a></h3>
+<p>Make N(number of nodes) copies of <code class="docutils literal notranslate"><span class="pre">configuration/config-map.yaml</span></code> and <code class="docutils literal notranslate"><span class="pre">configuration/secret.yaml</span></code>.</p>
+<div class="code text highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># For config-map.yaml</span>
+<span class="n">config</span><span class="o">-</span><span class="nb">map</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mf">1.</span><span class="n">yaml</span>
+<span class="n">config</span><span class="o">-</span><span class="nb">map</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mf">2.</span><span class="n">yaml</span>
+<span class="n">config</span><span class="o">-</span><span class="nb">map</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mf">3.</span><span class="n">yaml</span>
+<span class="n">config</span><span class="o">-</span><span class="nb">map</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mf">4.</span><span class="n">yaml</span>
+
+<span class="c1"># For secret.yaml</span>
+<span class="n">secret</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mf">1.</span><span class="n">yaml</span>
+<span class="n">secret</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mf">2.</span><span class="n">yaml</span>
+<span class="n">secret</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mf">3.</span><span class="n">yaml</span>
+<span class="n">secret</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mf">4.</span><span class="n">yaml</span>
+</pre></div>
+</div>
+<p>Edit the data values as described in <a class="reference internal" href="node-config-map-and-secrets.html"><span class="doc">this document</span></a>, based
+on the naming convention described <a class="reference internal" href="#pre-reqs-bdb-network"><span class="std std-ref">above</span></a>.</p>
+<p><strong>Only for single site deployments</strong>: Since all the configuration files use the
+same ConfigMap and Secret Keys i.e.
+<code class="docutils literal notranslate"><span class="pre">metadata.name</span> <span class="pre">-&gt;</span> <span class="pre">vars,</span> <span class="pre">bdb-config</span> <span class="pre">and</span> <span class="pre">tendermint-config</span></code> and
+<code class="docutils literal notranslate"><span class="pre">metadata.name</span> <span class="pre">-&gt;</span> <span class="pre">cloud-manager-credentials,</span> <span class="pre">mdb-certs,</span> <span class="pre">mdb-mon-certs,</span> <span class="pre">bdb-certs,</span></code>
+<code class="docutils literal notranslate"><span class="pre">https-certs,</span> <span class="pre">three-scale-credentials,</span> <span class="pre">ca-auth</span></code> respectively, each file
+will overwrite the configuration of the previously deployed one.
+We want each node to have its own unique configurations.
+One way to go about it is that, using the
+<a class="reference internal" href="#pre-reqs-bdb-network"><span class="std std-ref">naming convention above</span></a> we edit the ConfigMap and Secret keys.</p>
+<div class="code text highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># For config-map-node-1.yaml</span>
+<span class="n">metadata</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="nb">vars</span> <span class="o">-&gt;</span> <span class="nb">vars</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span>
+<span class="n">metadata</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">bdb</span><span class="o">-</span><span class="n">config</span> <span class="o">-&gt;</span> <span class="n">bdb</span><span class="o">-</span><span class="n">config</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span>
+<span class="n">metadata</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">tendermint</span><span class="o">-</span><span class="n">config</span> <span class="o">-&gt;</span> <span class="n">tendermint</span><span class="o">-</span><span class="n">config</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span>
+
+<span class="c1"># For secret-node-1.yaml</span>
+<span class="n">metadata</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">cloud</span><span class="o">-</span><span class="n">manager</span><span class="o">-</span><span class="n">credentials</span> <span class="o">-&gt;</span> <span class="n">cloud</span><span class="o">-</span><span class="n">manager</span><span class="o">-</span><span class="n">credentials</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span>
+<span class="n">metadata</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">mdb</span><span class="o">-</span><span class="n">certs</span> <span class="o">-&gt;</span> <span class="n">mdb</span><span class="o">-</span><span class="n">certs</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span>
+<span class="n">metadata</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">mdb</span><span class="o">-</span><span class="n">mon</span><span class="o">-</span><span class="n">certs</span> <span class="o">-&gt;</span> <span class="n">mdb</span><span class="o">-</span><span class="n">mon</span><span class="o">-</span><span class="n">certs</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span>
+<span class="n">metadata</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">bdb</span><span class="o">-</span><span class="n">certs</span> <span class="o">-&gt;</span> <span class="n">bdb</span><span class="o">-</span><span class="n">certs</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span>
+<span class="n">metadata</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">https</span><span class="o">-</span><span class="n">certs</span> <span class="o">-&gt;</span> <span class="n">https</span><span class="o">-</span><span class="n">certs</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span>
+<span class="n">metadata</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">threescale</span><span class="o">-</span><span class="n">credentials</span> <span class="o">-&gt;</span> <span class="n">threescale</span><span class="o">-</span><span class="n">credentials</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span>
+<span class="n">metadata</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">ca</span><span class="o">-</span><span class="n">auth</span> <span class="o">-&gt;</span> <span class="n">ca</span><span class="o">-</span><span class="n">auth</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span>
+
+<span class="c1"># Repeat for the remaining files.</span>
+</pre></div>
+</div>
+<p>Deploy all your configuration maps and secrets.</p>
+<div class="code bash highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">kubectl</span> <span class="n">apply</span> <span class="o">-</span><span class="n">f</span> <span class="n">configuration</span><span class="o">/</span><span class="n">config</span><span class="o">-</span><span class="nb">map</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mf">1.</span><span class="n">yaml</span>
+<span class="n">kubectl</span> <span class="n">apply</span> <span class="o">-</span><span class="n">f</span> <span class="n">configuration</span><span class="o">/</span><span class="n">config</span><span class="o">-</span><span class="nb">map</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mf">2.</span><span class="n">yaml</span>
+<span class="n">kubectl</span> <span class="n">apply</span> <span class="o">-</span><span class="n">f</span> <span class="n">configuration</span><span class="o">/</span><span class="n">config</span><span class="o">-</span><span class="nb">map</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mf">3.</span><span class="n">yaml</span>
+<span class="n">kubectl</span> <span class="n">apply</span> <span class="o">-</span><span class="n">f</span> <span class="n">configuration</span><span class="o">/</span><span class="n">config</span><span class="o">-</span><span class="nb">map</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mf">4.</span><span class="n">yaml</span>
+<span class="n">kubectl</span> <span class="n">apply</span> <span class="o">-</span><span class="n">f</span> <span class="n">configuration</span><span class="o">/</span><span class="n">secret</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mf">1.</span><span class="n">yaml</span>
+<span class="n">kubectl</span> <span class="n">apply</span> <span class="o">-</span><span class="n">f</span> <span class="n">configuration</span><span class="o">/</span><span class="n">secret</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mf">2.</span><span class="n">yaml</span>
+<span class="n">kubectl</span> <span class="n">apply</span> <span class="o">-</span><span class="n">f</span> <span class="n">configuration</span><span class="o">/</span><span class="n">secret</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mf">3.</span><span class="n">yaml</span>
+<span class="n">kubectl</span> <span class="n">apply</span> <span class="o">-</span><span class="n">f</span> <span class="n">configuration</span><span class="o">/</span><span class="n">secret</span><span class="o">-</span><span class="n">node</span><span class="o">-</span><span class="mf">4.</span><span class="n">yaml</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Similar to what we did, with config-map.yaml and secret.yaml i.e. indexing them
+per node, we have to do the same for each Kubernetes component
+i.e. Services, StorageClasses, PersistentVolumeClaims, StatefulSets, Deployments etc.</p>
+</div>
+<div class="code text highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># For Services</span>
+<span class="o">*-</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">svc</span><span class="o">.</span><span class="n">yaml</span>
+<span class="o">*-</span><span class="n">node</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="n">svc</span><span class="o">.</span><span class="n">yaml</span>
+<span class="o">*-</span><span class="n">node</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="n">svc</span><span class="o">.</span><span class="n">yaml</span>
+<span class="o">*-</span><span class="n">node</span><span class="o">-</span><span class="mi">4</span><span class="o">-</span><span class="n">svc</span><span class="o">.</span><span class="n">yaml</span>
+
+<span class="c1"># For StorageClasses</span>
+<span class="o">*-</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">sc</span><span class="o">.</span><span class="n">yaml</span>
+<span class="o">*-</span><span class="n">node</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="n">sc</span><span class="o">.</span><span class="n">yaml</span>
+<span class="o">*-</span><span class="n">node</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="n">sc</span><span class="o">.</span><span class="n">yaml</span>
+<span class="o">*-</span><span class="n">node</span><span class="o">-</span><span class="mi">4</span><span class="o">-</span><span class="n">sc</span><span class="o">.</span><span class="n">yaml</span>
+
+<span class="c1"># For PersistentVolumeClaims</span>
+<span class="o">*-</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">pvc</span><span class="o">.</span><span class="n">yaml</span>
+<span class="o">*-</span><span class="n">node</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="n">pvc</span><span class="o">.</span><span class="n">yaml</span>
+<span class="o">*-</span><span class="n">node</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="n">pvc</span><span class="o">.</span><span class="n">yaml</span>
+<span class="o">*-</span><span class="n">node</span><span class="o">-</span><span class="mi">4</span><span class="o">-</span><span class="n">pvc</span><span class="o">.</span><span class="n">yaml</span>
+
+<span class="c1"># For StatefulSets</span>
+<span class="o">*-</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">ss</span><span class="o">.</span><span class="n">yaml</span>
+<span class="o">*-</span><span class="n">node</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="n">ss</span><span class="o">.</span><span class="n">yaml</span>
+<span class="o">*-</span><span class="n">node</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="n">ss</span><span class="o">.</span><span class="n">yaml</span>
+<span class="o">*-</span><span class="n">node</span><span class="o">-</span><span class="mi">4</span><span class="o">-</span><span class="n">ss</span><span class="o">.</span><span class="n">yaml</span>
+
+<span class="c1"># For Deployments</span>
+<span class="o">*-</span><span class="n">node</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">dep</span><span class="o">.</span><span class="n">yaml</span>
+<span class="o">*-</span><span class="n">node</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="n">dep</span><span class="o">.</span><span class="n">yaml</span>
+<span class="o">*-</span><span class="n">node</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="n">dep</span><span class="o">.</span><span class="n">yaml</span>
+<span class="o">*-</span><span class="n">node</span><span class="o">-</span><span class="mi">4</span><span class="o">-</span><span class="n">dep</span><span class="o">.</span><span class="n">yaml</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="single-site-single-azure-kubernetes-cluster">
+<span id="single-site-network"></span><h3>Single Site: Single Azure Kubernetes Cluster<a class="headerlink" href="#single-site-single-azure-kubernetes-cluster" title="Permalink to this headline">¶</a></h3>
+<p>For the deployment of a BigchainDB network under a single cluster, we need to replicate
+the <a class="reference internal" href="node-on-kubernetes.html"><span class="doc">deployment steps for each node</span></a> N number of times, N being
+the number of participants in the network.</p>
+<p>In our Kubernetes deployment template for a single BigchainDB node, we covered the basic configurations
+settings <a class="reference internal" href="node-config-map-and-secrets.html#how-to-configure-a-bigchaindb-node"><span class="std std-ref">here</span></a>.</p>
+<p>Since, we index the ConfigMap and Secret Keys for the single site deployment, we need to update
+all the Kubernetes components to reflect the corresponding changes i.e. For each Kubernetes Service,
+StatefulSet, PersistentVolumeClaim, Deployment, and StorageClass, we need to update the respective
+<cite>*.yaml</cite> file and update the ConfigMapKeyRef.name OR secret.secretName.</p>
+<div class="section" id="example">
+<h4>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h4>
+<p>Assuming we are deploying the MongoDB StatefulSet for Node 1. We need to update
+the <code class="docutils literal notranslate"><span class="pre">mongo-node-1-ss.yaml</span></code> and update the corresponding ConfigMapKeyRef.name or secret.secretNames.</p>
+<div class="code text highlight-default notranslate"><div class="highlight"><pre><span></span>########################################################################
+# This YAML file desribes a StatefulSet with a service for running and #
+# exposing a MongoDB instance.                                         #
+# It depends on the configdb and db k8s pvc.                           #
+########################################################################
+
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: mdb-instance-0-ss
+  namespace: default
+spec:
+  serviceName: mdb-instance-0
+  replicas: 1
+  template:
+    metadata:
+      name: mdb-instance-0-ss
+      labels:
+        app: mdb-instance-0-ss
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: mongodb
+        image: bigchaindb/mongodb:3.2
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: MONGODB_FQDN
+          valueFrom:
+            configMapKeyRef:
+             name: vars-1 # Changed from ``vars``
+             key: mdb-instance-name
+        - name: MONGODB_POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: MONGODB_PORT
+          valueFrom:
+            configMapKeyRef:
+             name: vars-1 # Changed from ``vars``
+             key: mongodb-backend-port
+        - name: STORAGE_ENGINE_CACHE_SIZE
+          valueFrom:
+            configMapKeyRef:
+             name: vars-1 # Changed from ``vars``
+             key: storage-engine-cache-size
+        args:
+        - --mongodb-port
+        - $(MONGODB_PORT)
+        - --mongodb-key-file-path
+        - /etc/mongod/ssl/mdb-instance.pem
+        - --mongodb-ca-file-path
+        - /etc/mongod/ca/ca.pem
+        - --mongodb-crl-file-path
+        - /etc/mongod/ca/crl.pem
+        - --mongodb-fqdn
+        - $(MONGODB_FQDN)
+        - --mongodb-ip
+        - $(MONGODB_POD_IP)
+        - --storage-engine-cache-size
+        - $(STORAGE_ENGINE_CACHE_SIZE)
+        securityContext:
+          capabilities:
+            add:
+            - FOWNER
+        ports:
+        - containerPort: &quot;&lt;mongodb-backend-port from ConfigMap&gt;&quot;
+          protocol: TCP
+          name: mdb-api-port
+        volumeMounts:
+        - name: mdb-db
+          mountPath: /data/db
+        - name: mdb-configdb
+          mountPath: /data/configdb
+        - name: mdb-certs
+          mountPath: /etc/mongod/ssl/
+          readOnly: true
+        - name: ca-auth
+          mountPath: /etc/mongod/ca/
+          readOnly: true
+        resources:
+          limits:
+            cpu: 200m
+            memory: 5G
+        livenessProbe:
+          tcpSocket:
+            port: mdb-api-port
+          initialDelaySeconds: 15
+          successThreshold: 1
+          failureThreshold: 3
+          periodSeconds: 15
+          timeoutSeconds: 10
+      restartPolicy: Always
+      volumes:
+      - name: mdb-db
+        persistentVolumeClaim:
+          claimName: mongo-db-claim-1 # Changed from ``mongo-db-claim``
+      - name: mdb-configdb
+        persistentVolumeClaim:
+          claimName: mongo-configdb-claim-1 # Changed from ``mongo-configdb-claim``
+      - name: mdb-certs
+        secret:
+          secretName: mdb-certs-1 # Changed from ``mdb-certs``
+          defaultMode: 0400
+      - name: ca-auth
+        secret:
+          secretName: ca-auth-1 # Changed from ``ca-auth``
+          defaultMode: 0400
+</pre></div>
+</div>
+<p>The above example is meant to be repeated for all the Kubernetes components of a BigchainDB node.</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">nginx-http/nginx-http-node-X-svc.yaml</span></code> or <code class="docutils literal notranslate"><span class="pre">nginx-https/nginx-https-node-X-svc.yaml</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">nginx-http/nginx-http-node-X-dep.yaml</span></code> or <code class="docutils literal notranslate"><span class="pre">nginx-https/nginx-https-node-X-dep.yaml</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">mongodb/mongodb-node-X-svc.yaml</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">mongodb/mongodb-node-X-sc.yaml</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">mongodb/mongodb-node-X-pvc.yaml</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">mongodb/mongodb-node-X-ss.yaml</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">bigchaindb/bigchaindb-node-X-svc.yaml</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">bigchaindb/bigchaindb-node-X-sc.yaml</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">bigchaindb/bigchaindb-node-X-pvc.yaml</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">bigchaindb/bigchaindb-node-X-ss.yaml</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">nginx-openresty/nginx-openresty-node-X-svc.yaml</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">nginx-openresty/nginx-openresty-node-X-dep.yaml</span></code></li>
+</ul>
+</div>
+</div>
+<div class="section" id="multi-site-multiple-azure-kubernetes-clusters">
+<h3>Multi Site: Multiple Azure Kubernetes Clusters<a class="headerlink" href="#multi-site-multiple-azure-kubernetes-clusters" title="Permalink to this headline">¶</a></h3>
+<p>For the multi site deployment of a BigchainDB network with geographically dispersed
+nodes, we need to replicate the <a class="reference internal" href="node-on-kubernetes.html"><span class="doc">deployment steps for each node</span></a> N number of times,
+N being the number of participants in the network.</p>
+<p>The operator needs to follow a consistent naming convention which has <a class="reference internal" href="#pre-reqs-bdb-network"><span class="std std-ref">already
+discussed in this document</span></a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Assuming we are using independent Kubernetes clusters, the ConfigMap and Secret Keys
+do not need to be updated unlike <a class="reference internal" href="#single-site-network"><span class="std std-ref">Single Site: Single Azure Kubernetes Cluster</span></a>, and we also do not
+need to update corresponding ConfigMap/Secret imports in the Kubernetes components.</p>
+</div>
+</div>
+</div>
+<div class="section" id="deploy-kubernetes-services">
+<h2>Deploy Kubernetes Services<a class="headerlink" href="#deploy-kubernetes-services" title="Permalink to this headline">¶</a></h2>
+<p>Deploy the following services for each node by following the naming convention
+described <a class="reference internal" href="#pre-reqs-bdb-network"><span class="std std-ref">above</span></a>:</p>
+<ul class="simple">
+<li><a class="reference internal" href="node-on-kubernetes.html#start-the-nginx-service"><span class="std std-ref">Start the NGINX Service</span></a>.</li>
+<li><a class="reference internal" href="node-on-kubernetes.html#assign-dns-name-to-nginx-public-ip"><span class="std std-ref">Assign DNS Name to the NGINX Public IP</span></a></li>
+<li><a class="reference internal" href="node-on-kubernetes.html#start-the-mongodb-kubernetes-service"><span class="std std-ref">Start the MongoDB Kubernetes Service</span></a>.</li>
+<li><a class="reference internal" href="node-on-kubernetes.html#start-the-bigchaindb-kubernetes-service"><span class="std std-ref">Start the BigchainDB Kubernetes Service</span></a>.</li>
+<li><a class="reference internal" href="node-on-kubernetes.html#start-the-openresty-kubernetes-service"><span class="std std-ref">Start the OpenResty Kubernetes Service</span></a>.</li>
+</ul>
+<div class="section" id="only-for-multi-site-deployments">
+<h3>Only for multi site deployments<a class="headerlink" href="#only-for-multi-site-deployments" title="Permalink to this headline">¶</a></h3>
+<p>We need to make sure that clusters are able
+to talk to each other i.e. specifically the communication between the
+BigchainDB peers. Set up networking between the clusters using
+<a class="reference external" href="https://kubernetes.io/docs/concepts/services-networking/service/">Kubernetes Services</a>.</p>
+<p>Assuming we have a BigchainDB instance <code class="docutils literal notranslate"><span class="pre">bigchaindb-instance-1</span></code> residing in Azure data center location <code class="docutils literal notranslate"><span class="pre">westeurope</span></code> and we
+want to connect to <code class="docutils literal notranslate"><span class="pre">bigchaindb-instance-2</span></code>, <code class="docutils literal notranslate"><span class="pre">bigchaindb-instance-3</span></code>, and <code class="docutils literal notranslate"><span class="pre">bigchaindb-instance-4</span></code> located in Azure data centers
+<code class="docutils literal notranslate"><span class="pre">eastus</span></code>, <code class="docutils literal notranslate"><span class="pre">centralus</span></code> and <code class="docutils literal notranslate"><span class="pre">westus</span></code>, respectively. Unless you already have explicitly set up networking for
+<code class="docutils literal notranslate"><span class="pre">bigchaindb-instance-1</span></code> to communicate with <code class="docutils literal notranslate"><span class="pre">bigchaindb-instance-2/3/4</span></code> and
+vice versa, we will have to add a Kubernetes Service in each cluster to accomplish this goal in order to set up a
+BigchainDB P2P network.
+It is similar to ensuring that there is a <code class="docutils literal notranslate"><span class="pre">CNAME</span></code> record in the DNS
+infrastructure to resolve <code class="docutils literal notranslate"><span class="pre">bigchaindb-instance-X</span></code> to the host where it is actually available.
+We can do this in Kubernetes using a Kubernetes Service of <code class="docutils literal notranslate"><span class="pre">type</span></code>
+<code class="docutils literal notranslate"><span class="pre">ExternalName</span></code>.</p>
+<ul class="simple">
+<li>This configuration is located in the file <code class="docutils literal notranslate"><span class="pre">bigchaindb/bigchaindb-ext-conn-svc.yaml</span></code>.</li>
+<li>Set the name of the <code class="docutils literal notranslate"><span class="pre">metadata.name</span></code> to the host name of the BigchainDB instance you are trying to connect to.
+For instance if you are configuring this service on cluster with <code class="docutils literal notranslate"><span class="pre">bigchaindb-instance-1</span></code> then the <code class="docutils literal notranslate"><span class="pre">metadata.name</span></code> will
+be <code class="docutils literal notranslate"><span class="pre">bigchaindb-instance-2</span></code> and vice versa.</li>
+<li>Set <code class="docutils literal notranslate"><span class="pre">spec.ports.port[0]</span></code> to the <code class="docutils literal notranslate"><span class="pre">tm-p2p-port</span></code> from the ConfigMap for the other cluster.</li>
+<li>Set <code class="docutils literal notranslate"><span class="pre">spec.ports.port[1]</span></code> to the <code class="docutils literal notranslate"><span class="pre">tm-rpc-port</span></code> from the ConfigMap for the other cluster.</li>
+<li>Set <code class="docutils literal notranslate"><span class="pre">spec.externalName</span></code> to the FQDN mapped to NGINX Public IP of the cluster you are trying to connect to.
+For more information about the FQDN please refer to: <a class="reference internal" href="node-on-kubernetes.html#assign-dns-name-to-nginx-public-ip"><span class="std std-ref">Assign DNS name to NGINX Public
+IP</span></a>.</li>
+</ul>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>This operation needs to be replicated <code class="docutils literal notranslate"><span class="pre">n-1</span></code> times per node for a <code class="docutils literal notranslate"><span class="pre">n</span></code> node cluster, with the respective FQDNs
+we need to communicate with.</p>
+<p class="last">If you are not the system administrator of the cluster, you have to get in
+touch with the system administrator/s of the other <code class="docutils literal notranslate"><span class="pre">n-1</span></code> clusters and
+share with them your instance name (<code class="docutils literal notranslate"><span class="pre">bigchaindb-instance-name</span></code> in the ConfigMap)
+and the FQDN of the NGINX instance acting as Gateway(set in: <a class="reference internal" href="node-on-kubernetes.html#assign-dns-name-to-nginx-public-ip"><span class="std std-ref">Assign DNS name to NGINX
+Public IP</span></a>).</p>
+</div>
+</div>
+</div>
+<div class="section" id="start-nginx-kubernetes-deployments">
+<h2>Start NGINX Kubernetes deployments<a class="headerlink" href="#start-nginx-kubernetes-deployments" title="Permalink to this headline">¶</a></h2>
+<p>Start the NGINX deployment that serves as a Gateway for each node by following the
+naming convention described <a class="reference internal" href="#pre-reqs-bdb-network"><span class="std std-ref">above</span></a> and referring to the following instructions:</p>
+<ul class="simple">
+<li><a class="reference internal" href="node-on-kubernetes.html#start-the-nginx-deployment"><span class="std std-ref">Start the NGINX Kubernetes Deployment</span></a>.</li>
+</ul>
+</div>
+<div class="section" id="deploy-kubernetes-storageclasses-for-mongodb-and-bigchaindb">
+<h2>Deploy Kubernetes StorageClasses for MongoDB and BigchainDB<a class="headerlink" href="#deploy-kubernetes-storageclasses-for-mongodb-and-bigchaindb" title="Permalink to this headline">¶</a></h2>
+<p>Deploy the following StorageClasses for each node by following the naming convention
+described <a class="reference internal" href="#pre-reqs-bdb-network"><span class="std std-ref">above</span></a>:</p>
+<ul class="simple">
+<li><a class="reference internal" href="node-on-kubernetes.html#create-kubernetes-storage-class-mdb"><span class="std std-ref">Create Kubernetes Storage Classes for MongoDB</span></a>.</li>
+<li><a class="reference internal" href="node-on-kubernetes.html#create-kubernetes-storage-class"><span class="std std-ref">Create Kubernetes Storage Classes for BigchainDB</span></a>.</li>
+</ul>
+</div>
+<div class="section" id="deploy-kubernetes-persistentvolumeclaims-for-mongodb-and-bigchaindb">
+<h2>Deploy Kubernetes PersistentVolumeClaims for MongoDB and BigchainDB<a class="headerlink" href="#deploy-kubernetes-persistentvolumeclaims-for-mongodb-and-bigchaindb" title="Permalink to this headline">¶</a></h2>
+<p>Deploy the following services for each node by following the naming convention
+described <a class="reference internal" href="#pre-reqs-bdb-network"><span class="std std-ref">above</span></a>:</p>
+<ul class="simple">
+<li><a class="reference internal" href="node-on-kubernetes.html#create-kubernetes-persistent-volume-claim-mdb"><span class="std std-ref">Create Kubernetes Persistent Volume Claims for MongoDB</span></a>.</li>
+<li><a class="reference internal" href="node-on-kubernetes.html#create-kubernetes-persistent-volume-claim"><span class="std std-ref">Create Kubernetes Persistent Volume Claims for BigchainDB</span></a></li>
+</ul>
+</div>
+<div class="section" id="deploy-mongodb-kubernetes-statefulset">
+<h2>Deploy MongoDB Kubernetes StatefulSet<a class="headerlink" href="#deploy-mongodb-kubernetes-statefulset" title="Permalink to this headline">¶</a></h2>
+<p>Deploy the MongoDB StatefulSet (standalone MongoDB) for each node by following the naming convention
+described <a class="reference internal" href="#pre-reqs-bdb-network"><span class="std std-ref">above</span></a>: and referring to the following section:</p>
+<ul class="simple">
+<li><a class="reference internal" href="node-on-kubernetes.html#start-kubernetes-stateful-set-mongodb"><span class="std std-ref">Start a Kubernetes StatefulSet for MongoDB</span></a>.</li>
+</ul>
+</div>
+<div class="section" id="configure-users-and-access-control-for-mongodb">
+<h2>Configure Users and Access Control for MongoDB<a class="headerlink" href="#configure-users-and-access-control-for-mongodb" title="Permalink to this headline">¶</a></h2>
+<p>Configure users and access control for each MongoDB instance
+in the network by referring to the following section:</p>
+<ul class="simple">
+<li><a class="reference internal" href="node-on-kubernetes.html#configure-users-and-access-control-mongodb"><span class="std std-ref">Configure Users and Access Control for MongoDB</span></a>.</li>
+</ul>
+</div>
+<div class="section" id="start-kubernetes-statefulset-for-bigchaindb">
+<h2>Start Kubernetes StatefulSet for BigchainDB<a class="headerlink" href="#start-kubernetes-statefulset-for-bigchaindb" title="Permalink to this headline">¶</a></h2>
+<p>Start the BigchainDB Kubernetes StatefulSet for each node by following the
+naming convention described <a class="reference internal" href="#pre-reqs-bdb-network"><span class="std std-ref">above</span></a> and referring to the following instructions:</p>
+<ul class="simple">
+<li><a class="reference internal" href="node-on-kubernetes.html#start-kubernetes-stateful-set-bdb"><span class="std std-ref">Start a Kubernetes Deployment for BigchainDB</span></a>.</li>
+</ul>
+</div>
+<div class="section" id="start-kubernetes-deployment-for-mongodb-monitoring-agent">
+<h2>Start Kubernetes Deployment for MongoDB Monitoring Agent<a class="headerlink" href="#start-kubernetes-deployment-for-mongodb-monitoring-agent" title="Permalink to this headline">¶</a></h2>
+<p>Start the MongoDB monitoring agent Kubernetes deployment for each node by following the
+naming convention described <a class="reference internal" href="#pre-reqs-bdb-network"><span class="std std-ref">above</span></a> and referring to the following instructions:</p>
+<ul class="simple">
+<li><a class="reference internal" href="node-on-kubernetes.html#start-kubernetes-deployment-for-mdb-mon-agent"><span class="std std-ref">Start a Kubernetes Deployment for MongoDB Monitoring Agent</span></a>.</li>
+</ul>
+</div>
+<div class="section" id="start-kubernetes-deployment-for-openresty">
+<h2>Start Kubernetes Deployment for OpenResty<a class="headerlink" href="#start-kubernetes-deployment-for-openresty" title="Permalink to this headline">¶</a></h2>
+<p>Start the OpenResty Kubernetes deployment for each node by following the
+naming convention described <a class="reference internal" href="#pre-reqs-bdb-network"><span class="std std-ref">above</span></a> and referring to the following instructions:</p>
+<ul class="simple">
+<li><a class="reference internal" href="node-on-kubernetes.html#start-kubernetes-deployment-openresty"><span class="std std-ref">Start a Kubernetes Deployment for OpenResty</span></a>.</li>
+</ul>
+</div>
+<div class="section" id="verify-and-test">
+<h2>Verify and Test<a class="headerlink" href="#verify-and-test" title="Permalink to this headline">¶</a></h2>
+<p>Verify and test your setup by referring to the following instructions:</p>
+<ul class="simple">
+<li><a class="reference internal" href="node-on-kubernetes.html#verify-and-test-bdb"><span class="std std-ref">Verify the BigchainDB Node Setup</span></a>.</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="tectonic-azure.html" class="btn btn-neutral float-right" title="Walkthrough: Deploy a Kubernetes Cluster on Azure using Tectonic by CoreOS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="upgrade-on-kubernetes.html" class="btn btn-neutral float-left" title="Kubernetes Template: Upgrade all Software in a BigchainDB Node" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, BigchainDB Contributors
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
