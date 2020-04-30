@@ -34,12 +34,11 @@ class BigchaindbBackend(BaseStorageBackend):
     def _put_self_key(self) -> bool:
         hospital = {
             'data': {
-                'public_key': self.keys.public_key,
+                 self.hospital_slug + '_public_key': self.keys.public_key,
             }
         }
         metadata = {
             'record_type': 'hospital_key',
-            'index': self.hospital_slug + "-public-key",
         }
 
         prepared_creation_tx = self.bdb.transactions.prepare(
@@ -121,6 +120,8 @@ class BigchaindbBackend(BaseStorageBackend):
 
         query_results = self.bdb.assets.get(search=key)
 
+        print(query_results)
+
         if len(query_results) == 0:
             error = 'Key does not exist'
 
@@ -134,7 +135,7 @@ class BigchaindbBackend(BaseStorageBackend):
         if error:
             return {
                 'transferred': False,
-                'error': error,
+                'error': output['public_keys'][0] + ' == ' + self.keys.public_key + ', ' + patient_block['inputs'][0]['owners_before'][0],
             }
 
         patient_transfer_asset = {
@@ -175,11 +176,12 @@ class BigchaindbBackend(BaseStorageBackend):
             }
 
     def _get_key_by_slug(self, hospital_slug: str) -> str:
-        query_index = hospital_slug + '-public-key'
-        res = self.bdb.metadata.get(search=query_index)
+        query_index = hospital_slug + '_public_key'
+        res = self.bdb.assets.get(search=query_index)
 
         if len(res) == 0:
             return ""
 
         hospital_block = res[0]
-        return hospital_block['data']['public_key']
+
+        return hospital_block['data'][query_index]
