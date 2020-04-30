@@ -3,6 +3,7 @@ import os
 
 from nameko.rpc import rpc
 from nameko.web.handlers import http
+from nameko_prometheus import PrometheusMetrics
 
 from consistent_storage.centraldb import CentralDBStorageBackend
 from consistent_storage.sagas import SagasBackend
@@ -22,6 +23,7 @@ class ConsistentStorageProxy:
     """
 
     name = 'consistent_storage'
+    metrics = PrometheusMetrics()
 
     def __init__(self):
         self.backend = BaseStorageBackend()
@@ -156,3 +158,7 @@ class ConsistentStorageProxy:
         data = json.loads(request.get_data(as_text=True))
         res = handler(**data)
         return json.dumps(res)
+
+    @http('GET', '/metrics')
+    def serve_metrics(self, request):
+        return self.metrics.expose_metrics(request)

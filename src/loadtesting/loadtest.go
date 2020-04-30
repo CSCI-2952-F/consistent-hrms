@@ -14,8 +14,12 @@ import (
 )
 
 type LoadTest struct {
-	client *http.Client
-	recv   chan RequestResponse
+	client    *http.Client
+	recv      chan RequestResponse
+	hospitals []*discovery.Hospital
+
+	// Requests per second to send
+	requestRate int
 }
 
 type LoadTestResult struct {
@@ -33,19 +37,33 @@ type RequestResponse struct {
 	success   bool
 }
 
-func NewLoadTest() *LoadTest {
+func NewLoadTest(hospitals []*discovery.Hospital) *LoadTest {
 	return &LoadTest{
-		client: &http.Client{},
-		recv:   make(chan RequestResponse),
+		client:    &http.Client{},
+		recv:      make(chan RequestResponse),
+		hospitals: hospitals,
 	}
 }
 
-func (t *LoadTest) Run(ctx context.Context, name string, numRequests int, hospitals []*discovery.Hospital) (*LoadTestResult, error) {
+func (t *LoadTest) SetRequestRate(rate int) {
+	t.requestRate = rate
+}
+
+func (t *LoadTest) Run(ctx context.Context, name string, numRequests int) (*LoadTestResult, error) {
 	// Prepare result
 	result := LoadTestResult{NumRequests: numRequests}
 
 	// Start time
 	startTime := time.Now()
+
+	var tick *time.Ticker
+	if t.requestRate > 0 {
+		tick = time.NewTicker(time.Second)
+		defer tick.Stop()
+	}
+
+	// Number of requests sent in current tick
+	var tickRequestsSent int
 
 	// Handle test type
 	switch name {
@@ -60,9 +78,17 @@ func (t *LoadTest) Run(ctx context.Context, name string, numRequests int, hospit
 				return nil, err
 			}
 
-			for _, hospital := range hospitals {
+			for _, hospital := range t.hospitals {
 				url := "http://" + hospital.ConsistentStorageAddr
 				go t.request(ctx, "GET", url, body, "exists")
+
+				tickRequestsSent++
+
+				// If throttling is enabled, wait until next timestep if limit reached
+				if tick != nil && tickRequestsSent == t.requestRate {
+					<-tick.C
+					tickRequestsSent = 0
+				}
 			}
 		}
 
@@ -71,7 +97,7 @@ func (t *LoadTest) Run(ctx context.Context, name string, numRequests int, hospit
 	}
 
 	// Wait to receive response
-	for i := 0; i < numRequests*len(hospitals); i++ {
+	for i := 0; i < numRequests*len(t.hospitals); i++ {
 		select {
 		case val := <-t.recv:
 			if val.err != nil {
