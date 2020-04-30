@@ -26,7 +26,7 @@ class GrpcProxyServer(ConsistentStorageServicer):
         )
 
     def Put(self, request, context):
-        res = self.backend.put(request.key, request.value)
+        res = self.backend.put(request.key, request.value.decode('utf-8'))
         return pb.PutResponse(
             ok=res.get('ok', False),
             owner=res.get('owner', ''),
