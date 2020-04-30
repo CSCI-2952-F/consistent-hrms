@@ -23,7 +23,7 @@ class BigchaindbBackend(BaseStorageBackend):
 
         hospital = self.discovery_service.find_hospital(self.hospital_id)
 
-        self.public_key = hospital.publicKey
+        self.public_key = hospital['public_key']
         self.private_key = self.discovery_service.get_private_key()
 
         self.bdb = BigchainDB(bdb_root_url)
@@ -96,9 +96,7 @@ class BigchaindbBackend(BaseStorageBackend):
         patient = {'data': {'patient': {'public_key': value, 'uuid': key}}}
         metadata = {'record_type': 'patient_registration', 'hospital_id': self.hospital_id}
 
-        prepared_creation_tx = self.bdb.transactions.prepare(
-            operation='CREATE', signers=self.public_key, asset=patient, metadata=metadata
-        )
+        prepared_creation_tx = self.bdb.transactions.prepare(operation='CREATE', signers=self.public_key, asset=patient, metadata=metadata)
 
         fulfilled_creation_tx = self.bdb.transactions.fulfill(prepared_creation_tx, private_keys=self.private_key)
 
