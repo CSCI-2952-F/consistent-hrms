@@ -120,13 +120,12 @@ class BigchaindbBackend(BaseStorageBackend):
         self._debug_print(f"Private key: {self.private_key}")
 
         # assumes dest is the hospital slug
-        # use dest to query blockchain to find public key of destination hospital
         dest_hospital = self.discovery_service.find_hospital(dest)
         dest_public_key = None
 
-        for key in dest_hospital['public_keys']:
-            if key['name'] == BIGCHAIN_KEY_NAME:
-                dest_public_key = key['value']
+        for pubkey in dest_hospital['public_keys']:
+            if pubkey['name'] == BIGCHAIN_KEY_NAME:
+                dest_public_key = pubkey['value']
 
         if dest_public_key is None:
             # TODO: Invalid grpc error message but blah
