@@ -199,6 +199,9 @@ func (z *ZkKeyStorage) GetPublicKey(name string) ([]byte, error) {
 	// Get from path
 	zkPath := path.Join(z.prefix, z.id, name)
 	bytes, _, err := z.Get(zkPath)
+	if err == zk.ErrNoNode {
+		return nil, nil
+	}
 	if err != nil {
 		return nil, err
 	}
