@@ -98,6 +98,7 @@ class BigchaindbBackend(BaseStorageBackend):
 
         print(query_results)
 
+        error = None
         if len(query_results) == 0:
             error = 'Key does not exist'
 
