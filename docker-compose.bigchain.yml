@@ -21,16 +21,16 @@ services:
     build:
       context: ./src/bigchaindb
       dockerfile: Dockerfile
-#    volumes:
-#      - ./src/bigchaindb:/usr/src/app
-#      - ./src/bigchaindb/bigchaindb:/usr/src/app/bigchaindb
-#      - ./src/bigchaindb/tests:/usr/src/app/tests
-#      - ./src/bigchaindb/docs:/usr/src/app/docs
-#      - ./src/bigchaindb/htmlcov:/usr/src/app/htmlcov
-#      - ./src/bigchaindb/setup.py:/usr/src/app/setup.py
-#      - ./src/bigchaindb/setup.cfg:/usr/src/app/setup.cfg
-#      - ./src/bigchaindb/pytest.ini:/usr/src/app/pytest.ini
-#      - ./src/bigchaindb/tox.ini:/usr/src/app/tox.ini
+    #    volumes:
+    #      - ./src/bigchaindb:/usr/src/app
+    #      - ./src/bigchaindb/bigchaindb:/usr/src/app/bigchaindb
+    #      - ./src/bigchaindb/tests:/usr/src/app/tests
+    #      - ./src/bigchaindb/docs:/usr/src/app/docs
+    #      - ./src/bigchaindb/htmlcov:/usr/src/app/htmlcov
+    #      - ./src/bigchaindb/setup.py:/usr/src/app/setup.py
+    #      - ./src/bigchaindb/setup.cfg:/usr/src/app/setup.cfg
+    #      - ./src/bigchaindb/pytest.ini:/usr/src/app/pytest.ini
+    #      - ./src/bigchaindb/tox.ini:/usr/src/app/tox.ini
     environment:
       BIGCHAINDB_DATABASE_BACKEND: localmongodb
       BIGCHAINDB_DATABASE_HOST: mongodb
@@ -45,7 +45,7 @@ services:
       - '9985:9985'
       - '26658'
     healthcheck:
-      test: ["CMD", "bash", "-c", "curl http://bigchaindb:9984"]
+      test: ['CMD', 'bash', '-c', 'curl http://bigchaindb:9984']
       interval: 3s
       timeout: 5s
       retries: 3
