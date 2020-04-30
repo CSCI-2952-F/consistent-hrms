@@ -134,8 +134,6 @@ class BigchaindbBackend(BaseStorageBackend):
 
         self._debug_print(f"Destination Hospital Pub Key: {dest_public_key}")
 
-        print(destination_hospital_public_key, flush=True)
-
         query_results = self.bdb.assets.get(search=key)
 
         self._debug_print(f"Query results: {query_results}")
