@@ -4,7 +4,6 @@ services:
   loadtester:
     build:
       context: ./src/loadtesting
-    command: bash -c "echo 'To run load test, use docker/docker-compose exec to invoke manually.' && tail -f /dev/null"
     networks:
       - loadtesting
       - hospital-discovery
@@ -13,7 +12,6 @@ services:
     build:
       context: .
       dockerfile: ./src/loadtesting_py/Dockerfile
-    command: bash -c "echo 'To run load test, use docker/docker-compose exec to invoke manually.' && tail -f /dev/null"
     networks:
       - loadtesting
       - hospital-discovery
