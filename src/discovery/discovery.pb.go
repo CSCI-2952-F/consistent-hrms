@@ -31,10 +31,11 @@ type Hospital struct {
 	GatewayAddr    string `protobuf:"bytes,4,opt,name=gatewayAddr,proto3" json:"gatewayAddr,omitempty"`
 	PublicKey      []byte `protobuf:"bytes,5,opt,name=publicKey,proto3" json:"publicKey,omitempty"`
 	// communication
-	ConsistentStorageAddr string   `protobuf:"bytes,6,opt,name=consistentStorageAddr,proto3" json:"consistentStorageAddr,omitempty"`
-	XXX_NoUnkeyedLiteral  struct{} `json:"-"`
-	XXX_unrecognized      []byte   `json:"-"`
-	XXX_sizecache         int32    `json:"-"`
+	ConsistentStorageAddr string          `protobuf:"bytes,6,opt,name=consistentStorageAddr,proto3" json:"consistentStorageAddr,omitempty"`
+	PublicKeys            []*DiscoveryKey `protobuf:"bytes,7,rep,name=publicKeys,proto3" json:"publicKeys,omitempty"`
+	XXX_NoUnkeyedLiteral  struct{}        `json:"-"`
+	XXX_unrecognized      []byte          `json:"-"`
+	XXX_sizecache         int32           `json:"-"`
 }
 
 func (m *Hospital) Reset()         { *m = Hospital{} }
@@ -102,6 +103,13 @@ func (m *Hospital) GetConsistentStorageAddr() string {
 		return m.ConsistentStorageAddr
 	}
 	return ""
+}
+
+func (m *Hospital) GetPublicKeys() []*DiscoveryKey {
+	if m != nil {
+		return m.PublicKeys
+	}
+	return nil
 }
 
 type InfoRequest struct {
@@ -268,12 +276,261 @@ func (m *ListResponse) GetHospitals() []*Hospital {
 	return nil
 }
 
+type DiscoveryKey struct {
+	Name   string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Value  []byte `protobuf:"bytes,2,opt,name=value,proto3" json:"value,omitempty"`
+	Public bool   `protobuf:"varint,3,opt,name=public,proto3" json:"public,omitempty"`
+	// (should be false for asymmetric)
+	Scheme               string   `protobuf:"bytes,4,opt,name=scheme,proto3" json:"scheme,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DiscoveryKey) Reset()         { *m = DiscoveryKey{} }
+func (m *DiscoveryKey) String() string { return proto.CompactTextString(m) }
+func (*DiscoveryKey) ProtoMessage()    {}
+func (*DiscoveryKey) Descriptor() ([]byte, []int) {
+	return fileDescriptor_1e7ff60feb39c8d0, []int{5}
+}
+
+func (m *DiscoveryKey) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DiscoveryKey.Unmarshal(m, b)
+}
+func (m *DiscoveryKey) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DiscoveryKey.Marshal(b, m, deterministic)
+}
+func (m *DiscoveryKey) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DiscoveryKey.Merge(m, src)
+}
+func (m *DiscoveryKey) XXX_Size() int {
+	return xxx_messageInfo_DiscoveryKey.Size(m)
+}
+func (m *DiscoveryKey) XXX_DiscardUnknown() {
+	xxx_messageInfo_DiscoveryKey.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DiscoveryKey proto.InternalMessageInfo
+
+func (m *DiscoveryKey) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *DiscoveryKey) GetValue() []byte {
+	if m != nil {
+		return m.Value
+	}
+	return nil
+}
+
+func (m *DiscoveryKey) GetPublic() bool {
+	if m != nil {
+		return m.Public
+	}
+	return false
+}
+
+func (m *DiscoveryKey) GetScheme() string {
+	if m != nil {
+		return m.Scheme
+	}
+	return ""
+}
+
+type GetKeyRequest struct {
+	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Public               bool     `protobuf:"varint,2,opt,name=public,proto3" json:"public,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetKeyRequest) Reset()         { *m = GetKeyRequest{} }
+func (m *GetKeyRequest) String() string { return proto.CompactTextString(m) }
+func (*GetKeyRequest) ProtoMessage()    {}
+func (*GetKeyRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_1e7ff60feb39c8d0, []int{6}
+}
+
+func (m *GetKeyRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetKeyRequest.Unmarshal(m, b)
+}
+func (m *GetKeyRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetKeyRequest.Marshal(b, m, deterministic)
+}
+func (m *GetKeyRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetKeyRequest.Merge(m, src)
+}
+func (m *GetKeyRequest) XXX_Size() int {
+	return xxx_messageInfo_GetKeyRequest.Size(m)
+}
+func (m *GetKeyRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetKeyRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetKeyRequest proto.InternalMessageInfo
+
+func (m *GetKeyRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *GetKeyRequest) GetPublic() bool {
+	if m != nil {
+		return m.Public
+	}
+	return false
+}
+
+type GetKeyResponse struct {
+	Found                bool          `protobuf:"varint,1,opt,name=found,proto3" json:"found,omitempty"`
+	Key                  *DiscoveryKey `protobuf:"bytes,2,opt,name=key,proto3" json:"key,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
+	XXX_unrecognized     []byte        `json:"-"`
+	XXX_sizecache        int32         `json:"-"`
+}
+
+func (m *GetKeyResponse) Reset()         { *m = GetKeyResponse{} }
+func (m *GetKeyResponse) String() string { return proto.CompactTextString(m) }
+func (*GetKeyResponse) ProtoMessage()    {}
+func (*GetKeyResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_1e7ff60feb39c8d0, []int{7}
+}
+
+func (m *GetKeyResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetKeyResponse.Unmarshal(m, b)
+}
+func (m *GetKeyResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetKeyResponse.Marshal(b, m, deterministic)
+}
+func (m *GetKeyResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetKeyResponse.Merge(m, src)
+}
+func (m *GetKeyResponse) XXX_Size() int {
+	return xxx_messageInfo_GetKeyResponse.Size(m)
+}
+func (m *GetKeyResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetKeyResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetKeyResponse proto.InternalMessageInfo
+
+func (m *GetKeyResponse) GetFound() bool {
+	if m != nil {
+		return m.Found
+	}
+	return false
+}
+
+func (m *GetKeyResponse) GetKey() *DiscoveryKey {
+	if m != nil {
+		return m.Key
+	}
+	return nil
+}
+
+type PutKeyRequest struct {
+	Key                  *DiscoveryKey `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
+	XXX_unrecognized     []byte        `json:"-"`
+	XXX_sizecache        int32         `json:"-"`
+}
+
+func (m *PutKeyRequest) Reset()         { *m = PutKeyRequest{} }
+func (m *PutKeyRequest) String() string { return proto.CompactTextString(m) }
+func (*PutKeyRequest) ProtoMessage()    {}
+func (*PutKeyRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_1e7ff60feb39c8d0, []int{8}
+}
+
+func (m *PutKeyRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PutKeyRequest.Unmarshal(m, b)
+}
+func (m *PutKeyRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PutKeyRequest.Marshal(b, m, deterministic)
+}
+func (m *PutKeyRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PutKeyRequest.Merge(m, src)
+}
+func (m *PutKeyRequest) XXX_Size() int {
+	return xxx_messageInfo_PutKeyRequest.Size(m)
+}
+func (m *PutKeyRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_PutKeyRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PutKeyRequest proto.InternalMessageInfo
+
+func (m *PutKeyRequest) GetKey() *DiscoveryKey {
+	if m != nil {
+		return m.Key
+	}
+	return nil
+}
+
+type PutKeyResponse struct {
+	Ok                   bool     `protobuf:"varint,1,opt,name=ok,proto3" json:"ok,omitempty"`
+	Error                string   `protobuf:"bytes,2,opt,name=error,proto3" json:"error,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *PutKeyResponse) Reset()         { *m = PutKeyResponse{} }
+func (m *PutKeyResponse) String() string { return proto.CompactTextString(m) }
+func (*PutKeyResponse) ProtoMessage()    {}
+func (*PutKeyResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_1e7ff60feb39c8d0, []int{9}
+}
+
+func (m *PutKeyResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PutKeyResponse.Unmarshal(m, b)
+}
+func (m *PutKeyResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PutKeyResponse.Marshal(b, m, deterministic)
+}
+func (m *PutKeyResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PutKeyResponse.Merge(m, src)
+}
+func (m *PutKeyResponse) XXX_Size() int {
+	return xxx_messageInfo_PutKeyResponse.Size(m)
+}
+func (m *PutKeyResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_PutKeyResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PutKeyResponse proto.InternalMessageInfo
+
+func (m *PutKeyResponse) GetOk() bool {
+	if m != nil {
+		return m.Ok
+	}
+	return false
+}
+
+func (m *PutKeyResponse) GetError() string {
+	if m != nil {
+		return m.Error
+	}
+	return ""
+}
+
 func init() {
 	proto.RegisterType((*Hospital)(nil), "Hospital")
 	proto.RegisterType((*InfoRequest)(nil), "InfoRequest")
 	proto.RegisterType((*InfoResponse)(nil), "InfoResponse")
 	proto.RegisterType((*ListRequest)(nil), "ListRequest")
 	proto.RegisterType((*ListResponse)(nil), "ListResponse")
+	proto.RegisterType((*DiscoveryKey)(nil), "DiscoveryKey")
+	proto.RegisterType((*GetKeyRequest)(nil), "GetKeyRequest")
+	proto.RegisterType((*GetKeyResponse)(nil), "GetKeyResponse")
+	proto.RegisterType((*PutKeyRequest)(nil), "PutKeyRequest")
+	proto.RegisterType((*PutKeyResponse)(nil), "PutKeyResponse")
 }
 
 func init() {
@@ -281,28 +538,39 @@ func init() {
 }
 
 var fileDescriptor_1e7ff60feb39c8d0 = []byte{
-	// 321 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x92, 0xc1, 0x4b, 0xc3, 0x30,
-	0x14, 0xc6, 0x97, 0x76, 0x4e, 0xfb, 0xda, 0x4e, 0x0c, 0x08, 0x65, 0x88, 0x94, 0x1e, 0xb4, 0xa7,
-	0x1c, 0xa6, 0xe0, 0x59, 0x11, 0x54, 0xf4, 0x54, 0x3d, 0x79, 0xeb, 0x96, 0xe7, 0x0c, 0x6c, 0x4d,
-	0x4d, 0xb2, 0xc9, 0xfc, 0x1b, 0xfd, 0xa3, 0xa4, 0xd9, 0xea, 0x82, 0xf6, 0x96, 0xf7, 0x3d, 0xf8,
-	0xf2, 0x7b, 0xdf, 0x7b, 0x70, 0xc8, 0x85, 0x9e, 0xca, 0x15, 0xaa, 0x35, 0xab, 0x95, 0x34, 0x32,
-	0xfb, 0x26, 0x70, 0x70, 0x2f, 0x75, 0x2d, 0x4c, 0x39, 0xa7, 0x43, 0xf0, 0x04, 0x4f, 0x48, 0x4a,
-	0xf2, 0xa0, 0xf0, 0x04, 0xa7, 0x14, 0xfa, 0x55, 0xb9, 0xc0, 0xc4, 0xb3, 0x8a, 0x7d, 0xd3, 0x33,
-	0x18, 0x2a, 0x9c, 0x09, 0x6d, 0x50, 0x21, 0x7f, 0x11, 0x0b, 0x4c, 0xfc, 0x94, 0xe4, 0x7e, 0xf1,
-	0x47, 0xa5, 0x29, 0x84, 0xb3, 0xd2, 0xe0, 0x67, 0xb9, 0xbe, 0xe6, 0x5c, 0x25, 0x7d, 0x6b, 0xe1,
-	0x4a, 0xf4, 0x04, 0x82, 0x7a, 0x39, 0x99, 0x8b, 0xe9, 0x23, 0xae, 0x93, 0xbd, 0x94, 0xe4, 0x51,
-	0xb1, 0x13, 0xe8, 0x25, 0x1c, 0x4f, 0x65, 0xa5, 0x1b, 0xcb, 0xca, 0x3c, 0x1b, 0xa9, 0xca, 0x19,
-	0x5a, 0xa7, 0x81, 0x75, 0xea, 0x6e, 0x66, 0x31, 0x84, 0x0f, 0xd5, 0x9b, 0x2c, 0xf0, 0x63, 0x89,
-	0xda, 0x64, 0x5f, 0x10, 0x6d, 0x4a, 0x5d, 0xcb, 0x4a, 0x77, 0xc1, 0x93, 0x4e, 0xf8, 0x4d, 0x10,
-	0xde, 0xbf, 0x20, 0x7c, 0x27, 0x88, 0x53, 0x80, 0x5a, 0x89, 0x55, 0x69, 0xb0, 0xe1, 0xef, 0x5b,
-	0x7e, 0x47, 0x69, 0x50, 0x9e, 0x84, 0x36, 0x2d, 0xca, 0x15, 0x44, 0x9b, 0x72, 0x8b, 0x72, 0x0e,
-	0xc1, 0xfb, 0x36, 0x77, 0x9d, 0x90, 0xd4, 0xcf, 0xc3, 0x71, 0xc0, 0xda, 0x4d, 0x14, 0xbb, 0xde,
-	0x78, 0x01, 0x47, 0xad, 0x7c, 0xdb, 0x2e, 0x8f, 0xe6, 0xb0, 0x7f, 0x87, 0xa6, 0x99, 0x8d, 0x46,
-	0xcc, 0x99, 0x78, 0x14, 0x33, 0x77, 0xe0, 0xac, 0x47, 0x19, 0xc4, 0xcd, 0xbf, 0xad, 0x85, 0xa6,
-	0x11, 0x73, 0xb0, 0x46, 0x31, 0x73, 0xa9, 0xb2, 0xde, 0x4d, 0xf8, 0x1a, 0xfc, 0xde, 0xc8, 0x64,
-	0x60, 0x8f, 0xe4, 0xe2, 0x27, 0x00, 0x00, 0xff, 0xff, 0x7c, 0x9d, 0xac, 0xc2, 0x37, 0x02, 0x00,
-	0x00,
+	// 498 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x54, 0xcd, 0x8e, 0xd3, 0x30,
+	0x10, 0xae, 0xd3, 0x9f, 0x6d, 0xa7, 0x49, 0x2a, 0xac, 0x05, 0x45, 0x15, 0x82, 0xc8, 0x07, 0x88,
+	0x84, 0xb0, 0xd0, 0x82, 0xe0, 0xc0, 0x09, 0x84, 0x54, 0xd0, 0x72, 0x40, 0x81, 0x13, 0xb7, 0x6c,
+	0xe3, 0x6d, 0xa3, 0xb6, 0x71, 0xb0, 0x9d, 0xa2, 0xf0, 0x82, 0x3c, 0x14, 0x17, 0x14, 0xdb, 0x69,
+	0x5d, 0xb6, 0xdc, 0x32, 0xe3, 0xcc, 0xe7, 0xef, 0x67, 0x64, 0x98, 0xe5, 0x85, 0x5c, 0xf2, 0x3d,
+	0x13, 0x0d, 0xad, 0x04, 0x57, 0x9c, 0xfc, 0x41, 0x30, 0xfe, 0xc8, 0x65, 0x55, 0xa8, 0x6c, 0x8b,
+	0x43, 0xf0, 0x8a, 0x3c, 0x42, 0x31, 0x4a, 0x26, 0xa9, 0x57, 0xe4, 0x18, 0xc3, 0xa0, 0xcc, 0x76,
+	0x2c, 0xf2, 0x74, 0x47, 0x7f, 0xe3, 0x27, 0x10, 0x0a, 0xb6, 0x2a, 0xa4, 0x62, 0x82, 0xe5, 0xdf,
+	0x8a, 0x1d, 0x8b, 0xfa, 0x31, 0x4a, 0xfa, 0xe9, 0x3f, 0x5d, 0x1c, 0xc3, 0x74, 0x95, 0x29, 0xf6,
+	0x33, 0x6b, 0xde, 0xe5, 0xb9, 0x88, 0x06, 0x1a, 0xc2, 0x6d, 0xe1, 0x87, 0x30, 0xa9, 0xea, 0x9b,
+	0x6d, 0xb1, 0xbc, 0x66, 0x4d, 0x34, 0x8c, 0x51, 0xe2, 0xa7, 0xc7, 0x06, 0x7e, 0x05, 0xf7, 0x97,
+	0xbc, 0x94, 0x2d, 0x64, 0xa9, 0xbe, 0x2a, 0x2e, 0xb2, 0x15, 0xd3, 0x48, 0x23, 0x8d, 0x74, 0xfe,
+	0x10, 0x3f, 0x07, 0x38, 0x40, 0xc8, 0xe8, 0x22, 0xee, 0x27, 0xd3, 0xab, 0x80, 0x7e, 0xe8, 0x44,
+	0x5f, 0xb3, 0x26, 0x75, 0x7e, 0x20, 0x01, 0x4c, 0x3f, 0x95, 0xb7, 0x3c, 0x65, 0x3f, 0x6a, 0x26,
+	0x15, 0xf9, 0x05, 0xbe, 0x29, 0x65, 0xc5, 0x4b, 0x79, 0x4e, 0x2b, 0x3a, 0xab, 0xd5, 0xf8, 0xe6,
+	0xdd, 0xf1, 0xad, 0xef, 0xf8, 0xf6, 0x08, 0xa0, 0x12, 0xc5, 0x3e, 0x53, 0xac, 0x95, 0x3b, 0xd0,
+	0x72, 0x9d, 0x4e, 0x4b, 0xe5, 0x73, 0x21, 0x55, 0x47, 0xe5, 0x0d, 0xf8, 0xa6, 0xb4, 0x54, 0x9e,
+	0xc2, 0x64, 0x6d, 0x63, 0x92, 0x11, 0xd2, 0xba, 0x26, 0xb4, 0x0b, 0x2e, 0x3d, 0x9e, 0x91, 0x35,
+	0xf8, 0xae, 0xdc, 0x03, 0x17, 0xe4, 0x70, 0xb9, 0x84, 0xe1, 0x3e, 0xdb, 0xd6, 0x26, 0x58, 0x3f,
+	0x35, 0x05, 0x7e, 0x00, 0x23, 0x63, 0x8d, 0xe6, 0x3d, 0x4e, 0x6d, 0xd5, 0xf6, 0xe5, 0x72, 0xcd,
+	0x76, 0xcc, 0x86, 0x68, 0x2b, 0xf2, 0x16, 0x82, 0x05, 0x53, 0xad, 0xa5, 0x86, 0xf3, 0xd9, 0xab,
+	0x8e, 0xa0, 0x9e, 0x0b, 0x4a, 0x16, 0x10, 0x76, 0xc3, 0x56, 0xe1, 0x25, 0x0c, 0x6f, 0x79, 0x5d,
+	0x9a, 0xfd, 0x1b, 0xa7, 0xa6, 0xc0, 0x8f, 0xa1, 0xbf, 0x61, 0x8d, 0x1e, 0xbe, 0x93, 0x64, 0x7b,
+	0x42, 0x5e, 0x40, 0xf0, 0xa5, 0x76, 0x59, 0xd8, 0x09, 0xf4, 0xdf, 0x89, 0xd7, 0x10, 0x76, 0x13,
+	0xf6, 0xea, 0x10, 0x3c, 0xbe, 0xb1, 0xf7, 0x7a, 0x7c, 0xd3, 0x52, 0x61, 0x42, 0x70, 0x61, 0x23,
+	0x35, 0xc5, 0xd5, 0x6f, 0x04, 0xf7, 0x3a, 0xc7, 0x0f, 0xa8, 0x38, 0x81, 0x8b, 0x05, 0x53, 0xed,
+	0xda, 0x60, 0x9f, 0x3a, 0xcb, 0x34, 0x0f, 0xa8, 0xbb, 0x4b, 0xa4, 0x87, 0x29, 0x04, 0x6d, 0xa4,
+	0x1d, 0x84, 0xc4, 0x3e, 0x75, 0x12, 0x9f, 0x07, 0xd4, 0x0d, 0x9c, 0xf4, 0xf0, 0x33, 0x18, 0x19,
+	0x8b, 0x70, 0x48, 0x4f, 0x8c, 0x9e, 0xcf, 0xe8, 0xa9, 0x77, 0xe6, 0x67, 0x23, 0x0a, 0x87, 0xf4,
+	0xc4, 0x8f, 0xf9, 0x8c, 0x9e, 0xaa, 0x25, 0xbd, 0xf7, 0xd3, 0xef, 0x93, 0xc3, 0x3b, 0x70, 0x33,
+	0xd2, 0x0f, 0xc1, 0xcb, 0xbf, 0x01, 0x00, 0x00, 0xff, 0xff, 0x83, 0x55, 0x62, 0x2d, 0x1b, 0x04,
+	0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -319,6 +587,8 @@ const _ = grpc.SupportPackageIsVersion6
 type HospitalDiscoveryClient interface {
 	GetInfo(ctx context.Context, in *InfoRequest, opts ...grpc.CallOption) (*InfoResponse, error)
 	ListHospitals(ctx context.Context, in *ListRequest, opts ...grpc.CallOption) (*ListResponse, error)
+	GetKey(ctx context.Context, in *GetKeyRequest, opts ...grpc.CallOption) (*GetKeyResponse, error)
+	PutKey(ctx context.Context, in *PutKeyRequest, opts ...grpc.CallOption) (*PutKeyResponse, error)
 }
 
 type hospitalDiscoveryClient struct {
@@ -347,10 +617,30 @@ func (c *hospitalDiscoveryClient) ListHospitals(ctx context.Context, in *ListReq
 	return out, nil
 }
 
+func (c *hospitalDiscoveryClient) GetKey(ctx context.Context, in *GetKeyRequest, opts ...grpc.CallOption) (*GetKeyResponse, error) {
+	out := new(GetKeyResponse)
+	err := c.cc.Invoke(ctx, "/HospitalDiscovery/GetKey", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *hospitalDiscoveryClient) PutKey(ctx context.Context, in *PutKeyRequest, opts ...grpc.CallOption) (*PutKeyResponse, error) {
+	out := new(PutKeyResponse)
+	err := c.cc.Invoke(ctx, "/HospitalDiscovery/PutKey", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // HospitalDiscoveryServer is the server API for HospitalDiscovery service.
 type HospitalDiscoveryServer interface {
 	GetInfo(context.Context, *InfoRequest) (*InfoResponse, error)
 	ListHospitals(context.Context, *ListRequest) (*ListResponse, error)
+	GetKey(context.Context, *GetKeyRequest) (*GetKeyResponse, error)
+	PutKey(context.Context, *PutKeyRequest) (*PutKeyResponse, error)
 }
 
 // UnimplementedHospitalDiscoveryServer can be embedded to have forward compatible implementations.
@@ -362,6 +652,12 @@ func (*UnimplementedHospitalDiscoveryServer) GetInfo(ctx context.Context, req *I
 }
 func (*UnimplementedHospitalDiscoveryServer) ListHospitals(ctx context.Context, req *ListRequest) (*ListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListHospitals not implemented")
+}
+func (*UnimplementedHospitalDiscoveryServer) GetKey(ctx context.Context, req *GetKeyRequest) (*GetKeyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetKey not implemented")
+}
+func (*UnimplementedHospitalDiscoveryServer) PutKey(ctx context.Context, req *PutKeyRequest) (*PutKeyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PutKey not implemented")
 }
 
 func RegisterHospitalDiscoveryServer(s *grpc.Server, srv HospitalDiscoveryServer) {
@@ -404,6 +700,42 @@ func _HospitalDiscovery_ListHospitals_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _HospitalDiscovery_GetKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetKeyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HospitalDiscoveryServer).GetKey(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/HospitalDiscovery/GetKey",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HospitalDiscoveryServer).GetKey(ctx, req.(*GetKeyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _HospitalDiscovery_PutKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PutKeyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(HospitalDiscoveryServer).PutKey(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/HospitalDiscovery/PutKey",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(HospitalDiscoveryServer).PutKey(ctx, req.(*PutKeyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _HospitalDiscovery_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "HospitalDiscovery",
 	HandlerType: (*HospitalDiscoveryServer)(nil),
@@ -415,6 +747,14 @@ var _HospitalDiscovery_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListHospitals",
 			Handler:    _HospitalDiscovery_ListHospitals_Handler,
+		},
+		{
+			MethodName: "GetKey",
+			Handler:    _HospitalDiscovery_GetKey_Handler,
+		},
+		{
+			MethodName: "PutKey",
+			Handler:    _HospitalDiscovery_PutKey_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
