@@ -129,7 +129,7 @@ services:
       default: {}
       hospital-bigchain: {}
     environment:
-      - GRPC_LISTEN_ADDR=:8080
+      - GRPC_LISTEN_ADDR=[::]:8080
       - BIGCHAIN_ROOT_URL=http://bigchaindb:9984
     depends_on:
       - discovery_service
