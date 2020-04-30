@@ -5,6 +5,8 @@ option go_package = "discovery";
 service HospitalDiscovery {
   rpc GetInfo(InfoRequest) returns (InfoResponse) {}
   rpc ListHospitals(ListRequest) returns (ListResponse) {}
+  rpc GetKey(GetKeyRequest) returns (GetKeyResponse) {}
+  rpc PutKey(PutKeyRequest) returns (PutKeyResponse) {}
 }
 
 message Hospital {
@@ -15,6 +17,7 @@ message Hospital {
   bytes publicKey = 5;      // Public key of the hospital for any signed
                             // communication
   string consistentStorageAddr = 6; // Address to hospital's consistent storage
+  repeated DiscoveryKey publicKeys = 7; // List of public keys for the hospital
 }
 
 message InfoRequest {}
@@ -30,3 +33,29 @@ message InfoResponse {
 message ListRequest {}
 
 message ListResponse { repeated Hospital hospitals = 1; }
+
+message DiscoveryKey {
+  string name = 1;   // Name of key
+  bytes value = 2;   // Value of key
+  bool public = 3;   // Whether the key is a public key
+                     // (should be false for asymmetric)
+  string scheme = 4; // Optional field describing the scheme
+                     // of the key (e.g. rsa, ed25519)
+}
+
+message GetKeyRequest {
+  string name = 1; // Name of key to look up
+  bool public = 2; // Whether to retrieve the public or private key
+}
+
+message GetKeyResponse {
+  bool found = 1;
+  DiscoveryKey key = 2;
+}
+
+message PutKeyRequest { DiscoveryKey key = 1; }
+
+message PutKeyResponse {
+  bool ok = 1;
+  string error = 2;
+}

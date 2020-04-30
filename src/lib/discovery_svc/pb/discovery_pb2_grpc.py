@@ -23,6 +23,16 @@ class HospitalDiscoveryStub(object):
                 request_serializer=discovery__pb2.ListRequest.SerializeToString,
                 response_deserializer=discovery__pb2.ListResponse.FromString,
                 )
+        self.GetKey = channel.unary_unary(
+                '/HospitalDiscovery/GetKey',
+                request_serializer=discovery__pb2.GetKeyRequest.SerializeToString,
+                response_deserializer=discovery__pb2.GetKeyResponse.FromString,
+                )
+        self.PutKey = channel.unary_unary(
+                '/HospitalDiscovery/PutKey',
+                request_serializer=discovery__pb2.PutKeyRequest.SerializeToString,
+                response_deserializer=discovery__pb2.PutKeyResponse.FromString,
+                )
 
 
 class HospitalDiscoveryServicer(object):
@@ -40,6 +50,18 @@ class HospitalDiscoveryServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetKey(self, request, context):
+        """Missing associated documentation comment in .proto file"""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def PutKey(self, request, context):
+        """Missing associated documentation comment in .proto file"""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_HospitalDiscoveryServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -52,6 +74,16 @@ def add_HospitalDiscoveryServicer_to_server(servicer, server):
                     servicer.ListHospitals,
                     request_deserializer=discovery__pb2.ListRequest.FromString,
                     response_serializer=discovery__pb2.ListResponse.SerializeToString,
+            ),
+            'GetKey': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetKey,
+                    request_deserializer=discovery__pb2.GetKeyRequest.FromString,
+                    response_serializer=discovery__pb2.GetKeyResponse.SerializeToString,
+            ),
+            'PutKey': grpc.unary_unary_rpc_method_handler(
+                    servicer.PutKey,
+                    request_deserializer=discovery__pb2.PutKeyRequest.FromString,
+                    response_serializer=discovery__pb2.PutKeyResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -92,5 +124,37 @@ class HospitalDiscovery(object):
         return grpc.experimental.unary_unary(request, target, '/HospitalDiscovery/ListHospitals',
             discovery__pb2.ListRequest.SerializeToString,
             discovery__pb2.ListResponse.FromString,
+            options, channel_credentials,
+            call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetKey(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/HospitalDiscovery/GetKey',
+            discovery__pb2.GetKeyRequest.SerializeToString,
+            discovery__pb2.GetKeyResponse.FromString,
+            options, channel_credentials,
+            call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def PutKey(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/HospitalDiscovery/PutKey',
+            discovery__pb2.PutKeyRequest.SerializeToString,
+            discovery__pb2.PutKeyResponse.FromString,
             options, channel_credentials,
             call_credentials, compression, wait_for_ready, timeout, metadata)
