@@ -18,11 +18,13 @@ import (
 var (
 	testName    string
 	numRequests int
+	requestRate int
 )
 
 func init() {
 	flag.StringVar(&testName, "test", "", "Name of test to run")
 	flag.IntVar(&numRequests, "n", 0, "Number of requests to send")
+	flag.IntVar(&requestRate, "rate", 0, "Request rate to throttle sending of requests (in reqs/sec)")
 }
 
 func main() {
@@ -47,7 +49,7 @@ func main() {
 	fmt.Printf("Discovered hospitals: %s\n", strings.Join(hospitalIds, ", "))
 
 	// Create new load test
-	test := loadtesting.NewLoadTest()
+	test := loadtesting.NewLoadTest(hospitals)
 
 	// Register signal handlers
 	quit := make(chan os.Signal, 1)
@@ -60,8 +62,11 @@ func main() {
 
 	fmt.Println("Starting test.")
 
+	// Set parameters
+	test.SetRequestRate(requestRate)
+
 	// Run test!
-	result, err := test.Run(ctx, testName, numRequests, hospitals)
+	result, err := test.Run(ctx, testName, numRequests)
 	if err != nil {
 		log.Fatalf("Error running test: %s", err)
 	}
