@@ -101,7 +101,7 @@ func LoadPrivateKey(storage CryptoPrivateKeyStorage) (Signer, error) {
 	// Try to load private key, otherwise regenerate it
 	bytes, err := storage.GetPrivateKey()
 	if err != nil || bytes == nil {
-		return generatePrivateKey(storage)
+		return GeneratePrivateKey(storage)
 	}
 
 	// Parse private key, otherwise regenerate it
@@ -112,7 +112,7 @@ func LoadPrivateKey(storage CryptoPrivateKeyStorage) (Signer, error) {
 
 	log.Printf("warning: private key stored is corrupt, regenerating")
 
-	return generatePrivateKey(storage)
+	return GeneratePrivateKey(storage)
 }
 
 func LoadPublicKey(storage CryptoPublicKeyStorage, key string) (Unsigner, error) {
@@ -124,7 +124,7 @@ func LoadPublicKey(storage CryptoPublicKeyStorage, key string) (Unsigner, error)
 	return ParsePublicKey(bytes)
 }
 
-func generatePrivateKey(storage CryptoPrivateKeyStorage) (Signer, error) {
+func GeneratePrivateKey(storage CryptoPrivateKeyStorage) (Signer, error) {
 	key, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
 		return nil, err
