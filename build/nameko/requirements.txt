@@ -1,5 +1,6 @@
 grpcio
 nameko
+nameko-prometheus
 protobuf
 pycryptodome
 PyJWT[crypto]

@@ -1,6 +1,7 @@
+bigchaindb_driver
 grpcio
 nameko
+nameko-prometheus
 protobuf
-bigchaindb_driver
 pycryptodome
 rsa
