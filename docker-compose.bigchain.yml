@@ -52,6 +52,7 @@ services:
     networks:
       - default
       - hospital-bigchain
+    command: bigchaindb -l DEBUG start
     restart: always
   tendermint:
     image: tendermint/tendermint:v0.31.5
@@ -66,8 +67,7 @@ services:
   bdb:
     image: busybox
     depends_on:
-      bigchaindb:
-        condition: service_healthy
+      - bigchaindb
 
 
   # curl client to check the health of development env

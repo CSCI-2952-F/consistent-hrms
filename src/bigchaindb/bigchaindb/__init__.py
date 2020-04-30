@@ -56,8 +56,7 @@ config = {
         # Note: this section supports all the Gunicorn settings:
         #       - http://docs.gunicorn.org/en/stable/settings.html
         'bind': 'localhost:9984',
-        'loglevel': logging.getLevelName(
-            log_config['handlers']['console']['level']).lower(),
+        'loglevel': "DEBUG",
         'workers': None,  # if None, the value will be cpu_count * 2 + 1
     },
     'wsserver': {
