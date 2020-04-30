@@ -1,4 +1,4 @@
-version: '3'
+version: '2.2'
 
 services:
   centraldb:
@@ -14,7 +14,8 @@ services:
       - hospital-centraldb
       - hospital-discovery
     depends_on:
-      - mysql
+      db:
+        condition: service_healthy
 
   mysql:
     image: mysql
@@ -23,6 +24,10 @@ services:
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
       MYSQL_USER: centraldb
       MYSQL_PASSWORD: centraldb
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      timeout: 20s
+      retries: 10
 
 networks:
   hospital-centraldb:
