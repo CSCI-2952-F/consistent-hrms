@@ -45,7 +45,7 @@ class GrpcProxyServer(ConsistentStorageServicer):
 
         return pb.RemoveResponse(
             removed=res.get('removed', False),
-            error=error,
+            errorType=error,
         )
 
     def Transfer(self, request, context):
@@ -61,5 +61,5 @@ class GrpcProxyServer(ConsistentStorageServicer):
 
         return pb.TransferResponse(
             transferred=res.get('transferred', False),
-            error=error,
+            errorType=error,
         )
