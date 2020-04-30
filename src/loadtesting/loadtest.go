@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/irvinlim/cs2952f-hrms/src/discovery"
+	lib "github.com/irvinlim/cs2952f-hrms/src/golang-lib"
 	"go.etcd.io/etcd/pkg/stringutil"
 )
 
@@ -81,6 +82,44 @@ func (t *LoadTest) Run(ctx context.Context, name string, numRequests int) (*Load
 			for _, hospital := range t.hospitals {
 				url := "http://" + hospital.ConsistentStorageAddr
 				go t.request(ctx, "GET", url, body, "exists")
+
+				tickRequestsSent++
+
+				// If throttling is enabled, wait until next timestep if limit reached
+				if tick != nil && tickRequestsSent == t.requestRate {
+					<-tick.C
+					tickRequestsSent = 0
+				}
+			}
+		}
+
+	case "put":
+		// Generate public key
+		stub := KeyStorageStub{}
+		key, err := lib.GeneratePrivateKey(&stub)
+		if err != nil {
+			return nil, fmt.Errorf("cannot generate key: %s", err)
+		}
+		pubKey := key.GetUnsigner()
+		pubKeyBytes, err := pubKey.MarshalBinary()
+		if err != nil {
+			return nil, fmt.Errorf("cannot marshal key: %s", err)
+		}
+
+		// Put random keys; but all hospitals try to put the same key at the same time.
+		for _, key := range randomKeys(numRequests) {
+			data := map[string]string{
+				"key":   key,
+				"value": string(pubKeyBytes),
+			}
+			body, err := json.Marshal(data)
+			if err != nil {
+				return nil, err
+			}
+
+			for _, hospital := range t.hospitals {
+				url := "http://" + hospital.ConsistentStorageAddr
+				go t.request(ctx, "PUT", url, body, "ok")
 
 				tickRequestsSent++
 
