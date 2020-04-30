@@ -49,7 +49,7 @@ class GrpcProxyServer(ConsistentStorageServicer):
         )
 
     def Transfer(self, request, context):
-        res = self.backend.transfer(request.key, request.dest)
+        res = self.backend.transfer(request.key, request.newOwner)
 
         error = res.get('error', '')
         if error == 'Key does not exist':
