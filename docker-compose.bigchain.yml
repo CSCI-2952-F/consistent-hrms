@@ -19,8 +19,8 @@ services:
       - mongodb
       - tendermint
     build:
-      context: .
-      dockerfile: ./src/bigchaindb/Dockerfile-dev
+      context: ./src/bigchaindb
+      dockerfile: Dockerfile
     volumes:
       - ./src/bigchaindb:/usr/src/app
       - ./src/bigchaindb/bigchaindb:/usr/src/app/bigchaindb
@@ -52,7 +52,7 @@ services:
     networks:
       - default
       - hospital-bigchain
-    command: '.ci/entrypoint.sh'
+    command: bigchaindb -l DEBUG start
     restart: always
   tendermint:
     image: tendermint/tendermint:v0.31.5
@@ -67,46 +67,45 @@ services:
   bdb:
     image: busybox
     depends_on:
-      bigchaindb:
-        condition: service_healthy
+      - bigchaindb
 
 
   # curl client to check the health of development env
-  curl-client:
-    image: appropriate/curl
-    command: /bin/sh -c "curl -s http://bigchaindb:9984/ > /dev/null && curl -s http://tendermint:26657/ > /dev/null"
+#  curl-client:
+#    image: appropriate/curl
+#    command: /bin/sh -c "curl -s http://bigchaindb:9984/ > /dev/null && curl -s http://tendermint:26657/ > /dev/null"
 
   # BigchainDB setup to do acceptance testing with Python
-  python-acceptance:
-    build:
-      context: .
-      dockerfile: ./src/bigchaindb/acceptance/python/Dockerfile
-    volumes:
-      - ./src/bigchaindb/acceptance/python/docs:/docs
-      - ./src/bigchaindb/acceptance/python/src:/src
-    environment:
-      - BIGCHAINDB_ENDPOINT=bigchaindb
+#  python-acceptance:
+#    build:
+#      context: ./src/bigchaindb
+#      dockerfile: ./acceptance/python/Dockerfile
+#    volumes:
+#      - ./src/bigchaindb/acceptance/python/docs:/docs
+#      - ./src/bigchaindb/acceptance/python/src:/src
+#    environment:
+#      - BIGCHAINDB_ENDPOINT=bigchaindb
 
   # Build docs only
   # docker-compose build bdocs
   # docker-compose up -d bdocs
-  bdocs:
-    depends_on:
-      - vdocs
-    build:
-      context: .
-      dockerfile: Dockerfile-dev
-      args:
-        backend: localmongodb
-    volumes:
-      - ./src/bigchaindb:/usr/src/app/
-    command: make -C docs/server html
-  vdocs:
-    image: nginx
-    ports:
-      - '33333:80'
-    volumes:
-      - ./src/bigchaindb/docs/server/build/html:/usr/share/nginx/html
+#  bdocs:
+#    depends_on:
+#      - vdocs
+#    build:
+#      context: ./src/bigchaindb
+#      dockerfile: Dockerfile-dev
+#      args:
+#        backend: localmongodb
+#    volumes:
+#      - ./src/bigchaindb:/usr/src/app/
+#    command: make -C docs/server html
+#  vdocs:
+#    image: nginx
+#    ports:
+#      - '33333:80'
+#    volumes:
+#      - ./src/bigchaindb/docs/server/build/html:/usr/share/nginx/html
 
 networks:
   hospital-bigchain:
