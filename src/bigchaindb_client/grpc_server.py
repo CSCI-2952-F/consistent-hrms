@@ -61,6 +61,7 @@ class GrpcProxyServer(ConsistentStorageServicer):
         elif error == 'Not owner of key':
             error = pb.REMOVE_NOT_OWNER
         else:
+            print(error, flush=True)
             error = pb.REMOVE_KEY_ERROR  # Default error, not accurate.
 
         return pb.RemoveResponse(
@@ -78,6 +79,7 @@ class GrpcProxyServer(ConsistentStorageServicer):
         elif error == 'Not owner of key':
             error = pb.TRANSFER_NOT_OWNER
         else:
+            print(error, flush=True)
             error = pb.TRANSFER_KEY_ERROR  # Default error, not accurate.
 
         return pb.TransferResponse(
