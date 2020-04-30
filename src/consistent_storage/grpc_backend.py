@@ -1,8 +1,8 @@
 import grpc
 
-from consistent_storage.pb.consistent_storage_pb2 import *
-from consistent_storage.pb.consistent_storage_pb2_grpc import ConsistentStorageStub
-from lib.consistent_storage import BaseStorageBackend
+from lib.consistent_storage.base import BaseStorageBackend
+from lib.consistent_storage.pb.consistent_storage_pb2 import *
+from lib.consistent_storage.pb.consistent_storage_pb2_grpc import ConsistentStorageStub
 
 
 class GrpcStorageBackend(BaseStorageBackend):

@@ -8,7 +8,7 @@ from nameko_prometheus import PrometheusMetrics
 from consistent_storage.centraldb import CentralDBStorageBackend
 from consistent_storage.sagas import SagasBackend
 from consistent_storage.bigchain import BigchaindbBackend
-from lib.consistent_storage import BaseStorageBackend
+from lib.consistent_storage.base import BaseStorageBackend
 
 BACKEND = os.getenv('CONSISTENT_STORAGE_BACKEND', 'sagas')
 
@@ -36,11 +36,11 @@ class ConsistentStorageProxy:
             self.backend = SagasBackend(grpc_addr)
 
         elif BACKEND == 'bigchain':
-            bdb_root_url = os.getenv('BIGCHAIN_ROOT_URL')
-            if not bdb_root_url:
-                raise Exception('BIGCHAIN_ROOT_URL not set')
+            grpc_addr = os.getenv('BIGCHAIN_GRPC_ADDR')
+            if not grpc_addr:
+                raise Exception('BIGCHAIN_GRPC_ADDR not set')
 
-            self.backend = BigchaindbBackend(bdb_root_url)
+            self.backend = BigchaindbBackend(grpc_addr)
 
         elif BACKEND == 'centraldb':
             grpc_addr = os.getenv('CENTRALDB_GRPC_ADDR')

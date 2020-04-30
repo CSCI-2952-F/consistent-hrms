@@ -4,7 +4,7 @@ from nameko.exceptions import RemoteError
 from nameko.rpc import RpcProxy, rpc
 
 from lib import hasher
-from lib.consistent_storage import BaseStorageBackend
+from lib.consistent_storage.base import BaseStorageBackend
 from lib.hospital import get_hospital_name
 from lib.local_storage import LocalStorage
 from lib.medical_record import MedicalRecord

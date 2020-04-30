@@ -1,13 +1,9 @@
-# standard
-import base64
-import os
-
 # global
 from bigchaindb_driver import BigchainDB
 from bigchaindb_driver.crypto import generate_keypair
 
 # local
-from lib.consistent_storage import BaseStorageBackend
+from lib.consistent_storage.base import BaseStorageBackend
 from lib.discovery_svc import DiscoveryService
 
 GENESIS_PUBLIC_KEY = 'BZcVfy3LgB5z1uj2HT4s2sJ8DVnW8Hzh1CJZTZecf2ac'
@@ -22,6 +18,8 @@ class BigchaindbBackend(BaseStorageBackend):
     Implements the BaseStorageBackend interface.
     """
     def __init__(self, bdb_root_url: str):
+        print(f'Generating keypair.', flush=True)
+
         self.keys = generate_keypair()
         self.bdb = BigchainDB(bdb_root_url)
 
@@ -34,7 +32,7 @@ class BigchaindbBackend(BaseStorageBackend):
     def _put_self_key(self) -> bool:
         hospital = {
             'data': {
-                 self.hospital_slug + '_public_key': self.keys.public_key,
+                self.hospital_slug + '_public_key': self.keys.public_key,
             }
         }
         metadata = {
@@ -42,16 +40,10 @@ class BigchaindbBackend(BaseStorageBackend):
         }
 
         prepared_creation_tx = self.bdb.transactions.prepare(
-            operation='CREATE',
-            signers=GENESIS_PUBLIC_KEY,
-            asset=hospital,
-            metadata=metadata
+            operation='CREATE', signers=GENESIS_PUBLIC_KEY, asset=hospital, metadata=metadata
         )
 
-        fulfilled_creation_tx = self.bdb.transactions.fulfill(
-            prepared_creation_tx,
-            private_keys=GENESIS_PRIVATE_KEY
-        )
+        fulfilled_creation_tx = self.bdb.transactions.fulfill(prepared_creation_tx, private_keys=GENESIS_PRIVATE_KEY)
 
         res_tx = self.bdb.transactions.send_commit(fulfilled_creation_tx)
 
@@ -78,30 +70,14 @@ class BigchaindbBackend(BaseStorageBackend):
         }
 
     def put(self, key: str, value: str) -> dict:
-        patient = {
-            'data': {
-                'patient': {
-                    'public_key': value,
-                    'uuid': key
-                }
-            }
-        }
-        metadata = {
-            'record_type': 'patient_registration',
-            'hospital_slug': self.hospital_slug
-        }
+        patient = {'data': {'patient': {'public_key': value, 'uuid': key}}}
+        metadata = {'record_type': 'patient_registration', 'hospital_slug': self.hospital_slug}
 
         prepared_creation_tx = self.bdb.transactions.prepare(
-            operation='CREATE',
-            signers=self.keys.public_key,
-            asset=patient,
-            metadata=metadata
+            operation='CREATE', signers=self.keys.public_key, asset=patient, metadata=metadata
         )
 
-        fulfilled_creation_tx = self.bdb.transactions.fulfill(
-            prepared_creation_tx,
-            private_keys=self.keys.private_key
-        )
+        fulfilled_creation_tx = self.bdb.transactions.fulfill(prepared_creation_tx, private_keys=self.keys.private_key)
 
         res_tx = self.bdb.transactions.send_commit(fulfilled_creation_tx)
 
@@ -111,7 +87,7 @@ class BigchaindbBackend(BaseStorageBackend):
         }
 
     def remove(self, key: str) -> dict:
-        raise NotImplementedError
+        raise NotImplementedError()
 
     def transfer(self, key: str, dest: str) -> dict:
         # assumes dest is the hospital slug
@@ -138,42 +114,29 @@ class BigchaindbBackend(BaseStorageBackend):
                 'error': output['public_keys'][0] + ' == ' + self.keys.public_key + ', ' + patient_block['inputs'][0]['owners_before'][0],
             }
 
-        patient_transfer_asset = {
-            'id': tx_id
-        }
+        patient_transfer_asset = {'id': tx_id}
 
         transfer_input = {
             'fulfillment': output['condition']['details'],
             'fulfills': {
                 'output_index': 0,  # TODO: should this always be 0?
-                'transaction_id': tx_id
+                'transaction_id': tx_id,
             },
             'owners_before': output['public_keys']
         }
 
         prepared_transfer_tx = self.bdb.transactions.prepare(
-            operation='TRANSFER',
-            asset=patient_transfer_asset,
-            inputs=transfer_input,
-            recipients=destination_hospital_public_key
+            operation='TRANSFER', asset=patient_transfer_asset, inputs=transfer_input, recipients=destination_hospital_public_key
         )
 
-        fulfilled_transfer_tx = self.bdb.transactions.fulfill(
-            prepared_transfer_tx,
-            private_keys=self.keys.private_key
-        )
+        fulfilled_transfer_tx = self.bdb.transactions.fulfill(prepared_transfer_tx, private_keys=self.keys.private_key)
 
         res_tx = self.bdb.transactions.send_commit(fulfilled_transfer_tx)
 
         if res_tx != fulfilled_transfer_tx:
-            return {
-                'transferred': False,
-                'error': "Checksum failed"
-            }
+            return {'transferred': False, 'error': "Checksum failed"}
         else:
-            return {
-                'transferred': True
-            }
+            return {'transferred': True}
 
     def _get_key_by_slug(self, hospital_slug: str) -> str:
         query_index = hospital_slug + '_public_key'

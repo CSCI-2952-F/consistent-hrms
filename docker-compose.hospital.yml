@@ -107,7 +107,6 @@ services:
     networks:
       default: {}
       rabbitmq: {}
-      hospital-bigchain: {}
       hospital-centraldb: {}
       loadtesting:
         aliases:
@@ -115,10 +114,25 @@ services:
     environment:
       - CONSISTENT_STORAGE_BACKEND=${CONSISTENT_STORAGE_BACKEND:-sagas}
       - SAGAS_GRPC_ADDR=sagas:8080
-      - BIGCHAIN_ROOT_URL=http://bigchaindb:9984
+      - BIGCHAIN_GRPC_ADDR=bigchaindb_client:8080
       - CENTRALDB_GRPC_ADDR=centraldb:8080
     depends_on:
       - sagas
+      - bigchaindb_client
+
+  bigchaindb_client:
+    env_file: .env
+    build:
+      context: .
+      dockerfile: ./src/bigchaindb_client/Dockerfile
+    networks:
+      default: {}
+      hospital-bigchain: {}
+    environment:
+      - GRPC_LISTEN_ADDR=:8080
+      - BIGCHAIN_ROOT_URL=http://bigchaindb:9984
+    depends_on:
+      - discovery_service
 
   sagas:
     env_file: .env

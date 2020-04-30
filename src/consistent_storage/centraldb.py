@@ -1,10 +1,7 @@
-import grpc
-import rsa
-
-from consistent_storage.pb.consistent_storage_pb2 import *
-from consistent_storage.pb.consistent_storage_pb2_grpc import CentralConsistentStorageStub
 from consistent_storage.grpc_backend import GrpcStorageBackend
 from lib import crypto
+from lib.consistent_storage.pb.consistent_storage_pb2 import *
+from lib.consistent_storage.pb.consistent_storage_pb2_grpc import CentralConsistentStorageStub
 from lib.discovery_svc import DiscoveryService
 
 

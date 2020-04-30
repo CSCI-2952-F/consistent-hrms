@@ -1,0 +1,3 @@
+bigchaindb_driver
+grpcio
+protobuf
