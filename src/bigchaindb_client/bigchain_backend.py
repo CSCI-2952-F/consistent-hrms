@@ -21,13 +21,20 @@ class BigchaindbBackend(BaseStorageBackend):
         print(f'Generating keypair.', flush=True)
 
         self.keys = generate_keypair()
+        print(f'Public key: {self.keys.public_key}', flush=True)
+
         self.bdb = BigchainDB(bdb_root_url)
 
         ds = DiscoveryService()
         self.hospital_slug = ds.get_id()
 
+        print(f'Obtained hospital ID: {self.hospital_slug}', flush=True)
+
+        print(f'Putting key on blockchain...', flush=True)
         if not self._put_self_key():
             raise Exception("ERROR: Failed to put self key on bigchaindb")
+
+        print(f'Initialization complete. Ready to receive requests.', flush=True)
 
     def _put_self_key(self) -> bool:
         hospital = {
@@ -94,6 +101,8 @@ class BigchaindbBackend(BaseStorageBackend):
         # use dest to query blockchain to find public key of destination hospital
         destination_hospital_public_key = self._get_key_by_slug(dest)
 
+        print(destination_hospital_public_key, flush=True)
+
         query_results = self.bdb.assets.get(search=key)
 
         print(query_results)
@@ -147,5 +156,4 @@ class BigchaindbBackend(BaseStorageBackend):
             return ""
 
         hospital_block = res[0]
-
         return hospital_block['data'][query_index]
