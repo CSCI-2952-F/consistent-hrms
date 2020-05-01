@@ -14,7 +14,7 @@ services:
       - hospital-centraldb
       - hospital-discovery
     depends_on:
-      db:
+      mysql:
         condition: service_healthy
 
   mysql:
