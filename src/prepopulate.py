@@ -31,7 +31,9 @@ def prepopulate():
     temp_backend = BigchaindbBackend(bdb_root_url)
 
     for i in range(100):
-        uuid = "bob" + str(i)
+        name = "bob"
+        patient_id = str(i)
+        uuid = name + patient_id
         keys = generate_keypair()
         temp_backend.put(uuid, keys.public_key)
 
@@ -40,8 +42,8 @@ def prepopulate():
         file_name = PATH_TO_VOLUME + uuid + "_patient_card.csv"
         with open(file_name, 'w') as f:
             writer = csv.writer(f, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(['UID', 'PRIV_KEY'])
-            writer.writerow([uuid, keys.private_key])
+            writer.writerow(['NAME', 'ID', 'PUB_KEY', 'PRIV_KEY'])
+            writer.writerow([name, patient_id, keys.public_key, keys.private_key])
 
         _debug_print(f"{uuid} with priv_key:{keys.public_key} written to csv")
 

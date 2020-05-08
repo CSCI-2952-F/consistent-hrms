@@ -111,6 +111,35 @@ class BigchaindbBackend(BaseStorageBackend):
             'owner': self.public_key,
         }
 
+    def new_put(self, key: str, value: str) -> dict:
+        self._debug_print(f"Called NEW_PUT with key: {key} and value: {value}")
+        self._debug_print(f"Public key: {self.public_key}")
+        self._debug_print(f"Private key: {self.private_key}")
+
+        patient = {'data': {'patient': {'public_key': value, 'uuid': key}}}
+        metadata = {'record_type': 'patient_new_registration', 'hospital_id': self.hospital_id}
+
+        self._debug_print(f"Checking if patient with uuid: {key} exists")
+        if len(self.get(key)) > 0:
+            self._debug_print(f"Patient with uuid: {key} already exists!!! Aborting NEW PUT ...")
+            return {
+                'ok': False,
+                'owner': ""
+            }
+
+        prepared_creation_tx = self.bdb.transactions.prepare(operation='CREATE', signers=self.public_key, asset=patient, metadata=metadata)
+
+        fulfilled_creation_tx = self.bdb.transactions.fulfill(prepared_creation_tx, private_keys=self.private_key)
+
+        self._debug_print(f"Fulfilled PUT tx: {fulfilled_creation_tx}")
+
+        res_tx = self.bdb.transactions.send_commit(fulfilled_creation_tx)
+
+        return {
+            'ok': res_tx == fulfilled_creation_tx,
+            'owner': self.public_key,
+        }
+
     def remove(self, key: str) -> dict:
         raise NotImplementedError()
 
