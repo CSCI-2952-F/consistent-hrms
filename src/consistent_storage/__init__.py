@@ -98,7 +98,7 @@ class ConsistentStorageProxy:
             }
         """
         if BACKEND == 'bigchain':
-            return self.backend.new_put(key, value)
+            return self.backend.transfer_to_register(key, value)
         else:
             return self.backend.put(key, value)
 

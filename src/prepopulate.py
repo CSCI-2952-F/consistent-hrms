@@ -35,7 +35,7 @@ def prepopulate():
         patient_id = str(i)
         uuid = name + patient_id
         keys = generate_keypair()
-        temp_backend.put(uuid, keys.public_key)
+        temp_backend.init_put(uuid, keys.public_key)
 
         _debug_print(f"{uuid} with pub_key:{keys.public_key} put to bigchaindb")
 
