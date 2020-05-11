@@ -5,7 +5,7 @@ import traceback
 import csv
 
 from bigchaindb_client.bigchain_backend import BigchaindbBackend
-from bigchaindb_driver.crypto import generate_keypair
+from bigchaindb_driver.crypto import generate_keypair  # TODO: replace with crypto subtle
 
 PATH_TO_VOLUME = "/usr/src/app/bigchaindb_client/patient_cards/"
 
@@ -34,7 +34,7 @@ def prepopulate():
         name = "bob"
         patient_id = str(i)
         uuid = name + patient_id
-        keys = generate_keypair()
+        keys = generate_keypair()  # TODO: replace with crypto subtle
         temp_backend.init_put(uuid, keys.public_key)
 
         _debug_print(f"{uuid} with pub_key:{keys.public_key} put to bigchaindb")
