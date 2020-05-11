@@ -6,8 +6,8 @@ from bigchaindb_driver.crypto import generate_keypair
 from lib.consistent_storage.base import BaseStorageBackend
 from lib.discovery_svc import DiscoveryService
 
-# GENESIS_PUBLIC_KEY = 'BZcVfy3LgB5z1uj2HT4s2sJ8DVnW8Hzh1CJZTZecf2ac'
-# GENESIS_PRIVATE_KEY = 'HzKkzuCDYfppGH7vbBrXeMA6Fg6fEVAiPaeXhxmcJ9Vm'
+GENESIS_PUBLIC_KEY = 'BZcVfy3LgB5z1uj2HT4s2sJ8DVnW8Hzh1CJZTZecf2ac'
+GENESIS_PRIVATE_KEY = 'HzKkzuCDYfppGH7vbBrXeMA6Fg6fEVAiPaeXhxmcJ9Vm'
 
 BIGCHAIN_KEY_NAME = 'bigchaindb'
 BIGCHAIN_KEY_SCHEME = 'ed25519'
@@ -110,6 +110,90 @@ class BigchaindbBackend(BaseStorageBackend):
             'ok': res_tx == fulfilled_creation_tx,
             'owner': self.public_key,
         }
+
+    def init_put(self, key: str, value: str) -> dict:
+        # key: patient's uuid, value: patient's public key
+        # this function should only be called when initializing the bigchaindb
+        self._debug_print(f"Called INIT_PUT with key: {key} and value: {value}")
+        self._debug_print(f"Public key: {self.public_key}")
+        self._debug_print(f"Private key: {self.private_key}")
+
+        patient = {'data': {'patient': {'public_key': value, 'uuid': key}}}
+        metadata = {'record_type': 'patient_new_registration', 'hospital_id': ""}
+
+        self._debug_print(f"Checking if patient with uuid: {key} exists")
+        if len(self.get(key)) > 0:
+            self._debug_print(f"Patient with uuid: {key} already exists!!! Aborting INIT PUT ...")
+            return {
+                'ok': False,
+                'owner': ""
+            }
+
+        prepared_creation_tx = self.bdb.transactions.prepare(operation='CREATE', signers=GENESIS_PUBLIC_KEY, asset=patient, metadata=metadata)
+
+        fulfilled_creation_tx = self.bdb.transactions.fulfill(prepared_creation_tx, private_keys=GENESIS_PRIVATE_KEY)
+
+        self._debug_print(f"Fulfilled PUT tx: {fulfilled_creation_tx}")
+
+        res_tx = self.bdb.transactions.send_commit(fulfilled_creation_tx)
+
+        return {
+            'ok': res_tx == fulfilled_creation_tx,
+            'owner': GENESIS_PUBLIC_KEY,
+        }
+
+    def transfer_to_register(self, key: str, value: str) -> dict:
+        # key: patient's uuid, value: patient's public key
+        self._debug_print(f"Called TRANSFER_TO_REGISTER with key: {key} and value: {value}")
+        self._debug_print(f"Public key: {self.public_key}")
+        self._debug_print(f"Private key: {self.private_key}")
+
+        self._debug_print(f"Checking if patient with uuid: {key} exists")
+        query_results = self.bdb.assets.get(search=key)
+        self._debug_print(f"Query results: {query_results}")
+
+        error = None
+        if len(query_results) == 0:
+            error = 'Key does not exist'
+
+        tx_id = query_results[0]['id']
+        patient_block = self.bdb.transactions.retrieve(tx_id)
+        output = patient_block['outputs'][0]
+
+        self._debug_print(f"Patient block: {patient_block}")
+
+        if output['public_keys'][0] != GENESIS_PUBLIC_KEY:
+            error = 'Genesis is not owner of key'
+
+        if error:
+            return {
+                'transferred': False,
+                'error': error,
+            }
+
+        patient_transfer_asset = {'id': tx_id}
+
+        transfer_input = {
+            'fulfillment': output['condition']['details'],
+            'fulfills': {
+                'output_index': 0,  # TODO: should this always be 0?
+                'transaction_id': tx_id,
+            },
+            'owners_before': output['public_keys']
+        }
+
+        prepared_transfer_tx = self.bdb.transactions.prepare(
+            operation='TRANSFER', asset=patient_transfer_asset, inputs=transfer_input, recipients=self.public_key
+        )
+
+        fulfilled_transfer_tx = self.bdb.transactions.fulfill(prepared_transfer_tx, private_keys=GENESIS_PRIVATE_KEY)
+
+        res_tx = self.bdb.transactions.send_commit(fulfilled_transfer_tx)
+
+        if res_tx != fulfilled_transfer_tx:
+            return {'transferred': False, 'error': "Checksum failed"}
+        else:
+            return {'transferred': True}
 
     def remove(self, key: str) -> dict:
         raise NotImplementedError()
