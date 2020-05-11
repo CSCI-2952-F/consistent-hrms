@@ -97,10 +97,7 @@ class ConsistentStorageProxy:
                 'owner': [str],
             }
         """
-        if BACKEND == 'bigchain':
-            return self.backend.transfer_to_register(key, value)
-        else:
-            return self.backend.put(key, value)
+        return self.backend.put(key, value)
 
     @rpc
     def remove(self, key: str) -> dict:
