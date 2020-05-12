@@ -17,7 +17,7 @@ from loadtesting_py.card_digester import PatientCardDigester
 
 PATIENT_CARD_DIGESTER = PatientCardDigester()
 
-with open('loadtesting_py/pub.key') as f:
+with open('/usr/src/app/loadtesting_py/pub.key') as f:
     PUBLIC_KEY = f.read()
 
 
@@ -142,15 +142,19 @@ def run(test, num_requests, hospitals, executor):
 
     elif test == "transfer":
         # Generate random keys
-        keys = [random_key() for _ in range(num_requests)]
+        if len(PATIENT_CARD_DIGESTER.cards) < num_requests:
+            return Exception("ERROR: Num requests > num patient cards")
+
+        uuid_pubkey_pairs = PATIENT_CARD_DIGESTER.get_uuid_pubkey_pairs()[:num_requests]
 
         # Put keys initially
-        data = ({'key': key, 'value': PUBLIC_KEY} for key in keys)
+        data = ({'key': uuid_pubkey_pair[0], 'value': uuid_pubkey_pair[1]} for uuid_pubkey_pair in uuid_pubkey_pairs)
         dispatch('PUT', data, addrs, executor)
 
         # Now transfer them all to some random hospital
+        uuids = [uuid_pubkey_pair[0] for uuid_pubkey_pair in uuid_pubkey_pairs]
         owners = (random.choice(ids) for _ in range(num_requests))
-        data = ({'key': key, 'owner': owner} for key, owner in zip(keys, owners))
+        data = ({'key': key, 'owner': owner} for key, owner in zip(uuids, owners))
         actual_duration, durations, responses = dispatch('TRANSFER', data, addrs, executor)
 
         # Count successes
@@ -164,7 +168,6 @@ def run(test, num_requests, hospitals, executor):
 def main():
     if len(sys.argv) < 3:
         print('Usage python storage_load_test.py <test> <num_requests> <executor>')
-        print(PATIENT_CARD_DIGESTER.get_card_with_replacement())  # TODO: remove this!!
         sys.exit(1)
 
     test = sys.argv[1].strip().lower()
