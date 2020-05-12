@@ -1,3 +1,10 @@
 .idea
 .git
 .venv
+
+/.*
+/docker-compose*
+/hospitals.py
+/*.sh
+README.md
+hospitals.txt
