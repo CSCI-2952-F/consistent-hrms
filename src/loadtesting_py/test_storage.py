@@ -12,9 +12,9 @@ import requests
 from gevent.pool import Pool
 
 from lib.discovery_svc import DiscoveryService
+from loadtesting_py.card_digester import PatientCardDigester
 
-with open('loadtesting_py/pub.key') as f:
-    PUBLIC_KEY = f.read()
+PATIENT_CARD_DIGESTER = PatientCardDigester()
 
 
 def random_key():
@@ -30,9 +30,11 @@ def request(method, addr, data):
         return res
     except requests.RequestException as e:
         print('[!] Exception in requests (gevent):', str(e))
+        print(f"RESULT BODY {res.text}")
         return None
     except Exception as e:
         print('[!] Unknown exception in request() call:', str(e))
+        print(f"RESULT BODY {res.text}")
         return None
 
 
@@ -86,25 +88,21 @@ def run(test, num_requests, hospitals, executor):
     addrs = [hospital['consistent_storage_addr'] for hospital in hospitals]
     ids = [hospital['id'] for hospital in hospitals]
 
+    # Get patient cards from digester; these must be prepopulated beforehand.
+    if len(PATIENT_CARD_DIGESTER.cards) < num_requests:
+        return Exception("ERROR: Num requests > num patient cards")
+
+    uuid_pubkey_pairs = PATIENT_CARD_DIGESTER.get_uuid_pubkey_pairs()[:num_requests]
+
     if test == "get":
-        # Fetch random, non-existent keys
-        data = ({'key': random_key()} for _ in range(num_requests))
-        actual_duration, durations, responses = dispatch('GET', data, addrs, executor)
+        print('[!] NOTE: Test may fail if keys do not already exist.')
 
-        # Count successes
-        num_success = len([1 for res in responses if res['exists']])
-        return actual_duration, durations, num_success
+        # Get UUIDs in random order
+        uuids = [uuid_pubkey_pair[0] for uuid_pubkey_pair in uuid_pubkey_pairs]
+        random.shuffle(uuids)
 
-    elif test == "get_existing":
-        # Generate random keys
-        keys = [random_key() for _ in range(num_requests)]
-
-        # Put random keys
-        data = ({'key': key, 'value': PUBLIC_KEY} for key in keys)
-        dispatch('PUT', data, addrs, executor)
-
-        # Now measure getting successfully put keys
-        data = ({'key': key} for key in keys)
+        # Get keys, assuming they already exist
+        data = ({'key': uuid} for uuid in uuids)
         actual_duration, durations, responses = dispatch('GET', data, addrs, executor)
 
         # Count successes
@@ -112,8 +110,10 @@ def run(test, num_requests, hospitals, executor):
         return actual_duration, durations, num_success
 
     elif test == "put":
-        # Put random keys
-        data = ({'key': random_key(), 'value': PUBLIC_KEY} for _ in range(num_requests))
+        print('[!] NOTE: Test may fail if keys already exist.')
+
+        # Put the keys
+        data = ({'key': uuid, 'value': pubkey} for uuid, pubkey in uuid_pubkey_pairs)
         actual_duration, durations, responses = dispatch('PUT', data, addrs, executor)
 
         # Count successes
@@ -121,15 +121,14 @@ def run(test, num_requests, hospitals, executor):
         return actual_duration, durations, num_success
 
     elif test == "remove":
-        # Generate random keys
-        keys = [random_key() for _ in range(num_requests)]
+        print('[!] NOTE: Test may fail if keys do not already exist.')
 
-        # Put keys initially
-        data = ({'key': key, 'value': PUBLIC_KEY} for key in keys)
-        dispatch('PUT', data, addrs, executor)
+        # Get UUIDs in random order
+        uuids = [uuid_pubkey_pair[0] for uuid_pubkey_pair in uuid_pubkey_pairs]
+        random.shuffle(uuids)
 
-        # Now measure the removal
-        data = ({'key': key} for key in keys)
+        # Remove all the keys
+        data = ({'key': key} for key in uuids)
         actual_duration, durations, responses = dispatch('REMOVE', data, addrs, executor)
 
         # Count successes
@@ -137,16 +136,14 @@ def run(test, num_requests, hospitals, executor):
         return actual_duration, durations, num_success
 
     elif test == "transfer":
-        # Generate random keys
-        keys = [random_key() for _ in range(num_requests)]
+        print('[!] NOTE: Test may fail if keys do not already exist.')
 
-        # Put keys initially
-        data = ({'key': key, 'value': PUBLIC_KEY} for key in keys)
-        dispatch('PUT', data, addrs, executor)
+        # Get UUIDs
+        uuids = [uuid_pubkey_pair[0] for uuid_pubkey_pair in uuid_pubkey_pairs]
 
-        # Now transfer them all to some random hospital
+        # Transfer them all to some random hospital
         owners = (random.choice(ids) for _ in range(num_requests))
-        data = ({'key': key, 'owner': owner} for key, owner in zip(keys, owners))
+        data = ({'key': key, 'dest': owner} for key, owner in zip(uuids, owners))
         actual_duration, durations, responses = dispatch('TRANSFER', data, addrs, executor)
 
         # Count successes
@@ -186,13 +183,17 @@ def main():
     elapsed_duration = sum(durations)
 
     print(f'Total duration: {actual_duration:.4f}s for {num_requests} requests each at {num_hospitals} hospitals')
-    print(f'Number of successes: {num_success}')
+    avg_time = actual_duration / num_requests
+    print(f'Average time per request: {avg_time:.4f}s')
+    print(f'QPS: {1/avg_time:.4f}')
+    print()
 
-    avg_time = elapsed_duration / num_ok
+    print(f'Number of successes: {num_success}')
     print(f'Number of valid responses: {num_ok}')
-    print(f'Total elapsed duration: {elapsed_duration}')
-    print(f'Average time per request: {avg_time:.6f}s')
-    print(f'QPS: {1/avg_time:.2f}')
+
+    if num_ok > 0:
+        inflight_time = elapsed_duration / num_ok
+        print(f'Average in-flight request time: {inflight_time:.6f}s')
 
 
 if __name__ == "__main__":

@@ -1,3 +1,5 @@
 bigchaindb_driver
 grpcio
 protobuf
+pycryptodome
+rsa

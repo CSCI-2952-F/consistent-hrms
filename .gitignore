@@ -1,4 +1,6 @@
 **/.DS_Store
+**/__pycache__
+**/*.pyc
 
 docker-compose*.override.yml
 
@@ -39,3 +41,6 @@ src/.env
 *~
 *.swp
 *.swo
+
+# Ignore patient cards
+/src/bigchaindb_client/patient_cards/*
