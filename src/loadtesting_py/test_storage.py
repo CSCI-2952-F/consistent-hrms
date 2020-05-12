@@ -34,9 +34,11 @@ def request(method, addr, data):
         return res
     except requests.RequestException as e:
         print('[!] Exception in requests (gevent):', str(e))
+        print(f"RESULT BODY {res.text}")
         return None
     except Exception as e:
         print('[!] Unknown exception in request() call:', str(e))
+        print(f"RESULT BODY {res.text}")
         return None
 
 
@@ -90,6 +92,11 @@ def run(test, num_requests, hospitals, executor):
     addrs = [hospital['consistent_storage_addr'] for hospital in hospitals]
     ids = [hospital['id'] for hospital in hospitals]
 
+    #  get pubkeys
+    if len(PATIENT_CARD_DIGESTER.cards) < num_requests:
+        return Exception("ERROR: Num requests > num patient cards")
+    uuid_pubkey_pairs = PATIENT_CARD_DIGESTER.get_uuid_pubkey_pairs()[:num_requests]
+
     if test == "get":
         # Fetch random, non-existent keys
         data = ({'key': random_key()} for _ in range(num_requests))
@@ -100,15 +107,17 @@ def run(test, num_requests, hospitals, executor):
         return actual_duration, durations, num_success
 
     elif test == "get_existing":
-        # Generate random keys
-        keys = [random_key() for _ in range(num_requests)]
+        # get keys
+        uuids = [uuid_pubkey_pair[0] for uuid_pubkey_pair in uuid_pubkey_pairs]
+        # randomize
+        uuids = random.shuffle(uuids)
 
         # Put random keys
-        data = ({'key': key, 'value': PUBLIC_KEY} for key in keys)
+        data = ({'key': uuid_pubkey_pair[0], 'value': uuid_pubkey_pair[1]} for uuid_pubkey_pair in uuid_pubkey_pairs)
         dispatch('PUT', data, addrs, executor)
 
         # Now measure getting successfully put keys
-        data = ({'key': key} for key in keys)
+        data = ({'key': uuid} for uuid in uuids)
         actual_duration, durations, responses = dispatch('GET', data, addrs, executor)
 
         # Count successes
@@ -117,7 +126,7 @@ def run(test, num_requests, hospitals, executor):
 
     elif test == "put":
         # Put random keys
-        data = ({'key': random_key(), 'value': PUBLIC_KEY} for _ in range(num_requests))
+        data = ({'key': uuid_pubkey_pair[0], 'value': uuid_pubkey_pair[1]} for uuid_pubkey_pair in uuid_pubkey_pairs)
         actual_duration, durations, responses = dispatch('PUT', data, addrs, executor)
 
         # Count successes
@@ -141,20 +150,18 @@ def run(test, num_requests, hospitals, executor):
         return actual_duration, durations, num_success
 
     elif test == "transfer":
-        # Generate random keys
-        if len(PATIENT_CARD_DIGESTER.cards) < num_requests:
-            return Exception("ERROR: Num requests > num patient cards")
-
-        uuid_pubkey_pairs = PATIENT_CARD_DIGESTER.get_uuid_pubkey_pairs()[:num_requests]
+        # get keys
+        uuids = [uuid_pubkey_pair[0] for uuid_pubkey_pair in uuid_pubkey_pairs]
+        # randomize
+        random.shuffle(uuids)
 
         # Put keys initially
         data = ({'key': uuid_pubkey_pair[0], 'value': uuid_pubkey_pair[1]} for uuid_pubkey_pair in uuid_pubkey_pairs)
         dispatch('PUT', data, addrs, executor)
 
         # Now transfer them all to some random hospital
-        uuids = [uuid_pubkey_pair[0] for uuid_pubkey_pair in uuid_pubkey_pairs]
         owners = (random.choice(ids) for _ in range(num_requests))
-        data = ({'key': key, 'owner': owner} for key, owner in zip(uuids, owners))
+        data = ({'key': key, 'dest': owner} for key, owner in zip(uuids, owners))
         actual_duration, durations, responses = dispatch('TRANSFER', data, addrs, executor)
 
         # Count successes
