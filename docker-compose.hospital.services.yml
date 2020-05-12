@@ -1,0 +1,87 @@
+version: "3"
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: ./build/frontend/Dockerfile
+    environment:
+      - HOSPITAL_NAME
+      - API_GATEWAY_PORT
+    ports:
+      - "127.0.0.1:${FRONTEND_PORT:-8000}:80"
+    depends_on:
+      - api_gateway
+
+  api_gateway:
+    build:
+      context: .
+      dockerfile: ./build/nameko/Dockerfile
+      args:
+        module: api_gateway
+    ports:
+      - "127.0.0.1:${API_GATEWAY_PORT:-8100}:80"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "-s", "localhost/healthy"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    networks:
+      default: {}
+      rabbitmq: {}
+      interhospital:
+        aliases:
+          - ${HOSPITAL_NAME_SLUG}.interhospital
+    depends_on:
+      - rabbitmq
+      - patient_service
+      - physician_service
+      - discovery_service
+
+  patient_service:
+    build:
+      context: .
+      dockerfile: ./build/nameko/Dockerfile
+      args:
+        module: patient_service
+    environment:
+      - HOSPITAL_NAME
+      - REDIS_HOST=redis
+    networks:
+      - default
+      - rabbitmq
+      - interhospital
+    depends_on:
+      - rabbitmq
+      - consistent_storage
+      - redis
+
+  physician_service:
+    build:
+      context: .
+      dockerfile: ./build/nameko/Dockerfile
+      args:
+        module: physician_service
+    environment:
+      - HOSPITAL_NAME
+      - REDIS_HOST=redis
+    networks:
+      - default
+      - rabbitmq
+    depends_on:
+      - rabbitmq
+      - consistent_storage
+      - redis
+
+  redis:
+    image: redis
+    volumes:
+      - local-storage:/data
+
+volumes:
+  local-storage: {}
+
+networks:
+  interhospital:
+    external:
+      name: hrms-interhospital

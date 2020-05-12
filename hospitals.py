@@ -14,7 +14,13 @@ BASE_FRONTEND_PORT = 8000
 BASE_API_GATEWAY_PORT = 8100
 BASE_CONSISTENT_STORAGE_PORT = 8200
 
-DOCKER_COMPOSE_FILES = ['docker-compose.hospital.yml', 'docker-compose.hospital.override.yml']
+DOCKER_COMPOSE_FILES = [
+    'docker-compose.hospital.csl.yml',
+    'docker-compose.hospital.services.yml',
+    'docker-compose.hospital.bigchain.yml',
+    'docker-compose.hospital.sagas.yml',
+    'docker-compose.hospital.override.yml',
+]
 HOSPITAL_NAMES_FILE = 'data/hospitals.txt'
 
 PROXIED_COMMANDS = {

@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  sagas:
+    env_file: .env
+    build:
+      context: ./src/sagas
+    networks:
+      - default
+      - hospital-sagas
+    environment:
+      - NUM_PARTITIONS=${SAGAS_NUM_PARTITIONS}
+      - TOPIC_NAME=patient_registrations
+      - KAFKA_BROKERS=kafka:9092
+      - STORAGE_FILE_PATH=/var/lib/sagas/data.json
+      - GRPC_LISTEN_ADDR=:8080
+    expose:
+      - "8080"
+    volumes:
+      - sagas-storage:/var/lib/sagas
+    depends_on:
+      - discovery_service
+
+volumes:
+  sagas-storage: {}
+
+networks:
+  hospital-sagas:
+    external:
+      name: hrms-hospital-sagas
