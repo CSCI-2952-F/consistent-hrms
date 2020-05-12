@@ -23,6 +23,9 @@ docker-compose*.override.yml
 /node_modules
 /yarn-error.log
 
+env/
+src/.env
+
 /public/assets
 .byebug_history
 
