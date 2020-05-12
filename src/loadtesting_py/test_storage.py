@@ -164,6 +164,7 @@ def run(test, num_requests, hospitals, executor):
 def main():
     if len(sys.argv) < 3:
         print('Usage python storage_load_test.py <test> <num_requests> <executor>')
+        print(PATIENT_CARD_DIGESTER.get_card_with_replacement())  # TODO: remove this!!
         sys.exit(1)
 
     test = sys.argv[1].strip().lower()

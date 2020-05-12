@@ -35,7 +35,11 @@ def prepopulate():
         patient_id = str(i)
         uuid = name + patient_id
         keys = generate_keypair()  # TODO: replace with crypto subtle
-        temp_backend.init_put(uuid, keys.public_key)
+        res = temp_backend.init_put(uuid, keys.public_key)
+
+        if not res['ok']:
+            _debug_print("INIT PUT failed, aborting this PUT ...")
+            continue
 
         _debug_print(f"{uuid} with pub_key:{keys.public_key} put to bigchaindb")
 
