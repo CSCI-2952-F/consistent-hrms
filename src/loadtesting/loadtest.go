@@ -194,6 +194,36 @@ func (t *LoadTest) Run(ctx context.Context, name string, numRequests int) (*Load
 			}
 		}
 
+	case "remove":
+		fmt.Println("This test will fail if the cards already exist in the storage.")
+
+		// Start timer
+		startTime = time.Now()
+
+		for _, card := range cards {
+			for _, hospital := range t.hospitals {
+				data := map[string]string{
+					"key": card.PatientID,
+				}
+				body, err := json.Marshal(data)
+				if err != nil {
+					return nil, err
+				}
+
+				url := "http://" + hospital.ConsistentStorageAddr
+				go t.request(ctx, "REMOVE", url, body, "removed")
+
+				tickRequestsSent++
+				totalRequestsSent++
+
+				// If throttling is enabled, wait until next timestep if limit reached
+				if tick != nil && tickRequestsSent == t.requestRate {
+					<-tick.C
+					tickRequestsSent = 0
+				}
+			}
+		}
+
 	default:
 		return nil, fmt.Errorf("invalid test name: %s", name)
 	}
