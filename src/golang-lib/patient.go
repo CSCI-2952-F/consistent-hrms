@@ -29,7 +29,7 @@ func ParsePatientCards(directory string) ([]*PatientCard, error) {
 	for _, filename := range matches {
 		card, err := ParsePatientCard(filename)
 		if err != nil {
-			return nil, err
+			continue
 		}
 		cards = append(cards, card)
 	}
