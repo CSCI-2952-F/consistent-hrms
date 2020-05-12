@@ -45,3 +45,8 @@ ensure_up docker-compose.centraldb.yml
 # For testing pruposes
 mkdnet hrms-loadtesting
 ensure_up docker-compose.loadtesting.yml
+
+sleep 10
+
+# Just because
+docker restart cs2952f-bigchain_tendermint_1
