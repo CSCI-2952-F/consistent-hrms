@@ -93,6 +93,10 @@ github.com/irvinlim/cs2952f-hrms/src/golang-lib v0.0.0-20200429211721-5f83562f74
 github.com/irvinlim/cs2952f-hrms/src/golang-lib v0.0.0-20200429211721-5f83562f74e0/go.mod h1:mOm9hBNmfOGNMvWCVjxMo7XuwLuFhff1FVIvCInMgNA=
 github.com/irvinlim/cs2952f-hrms/src/golang-lib v0.0.0-20200430230028-b1b562927c5d h1:x2dkv46VO52KmEjvTborM47W6WdWk3dkboRdIt43ViM=
 github.com/irvinlim/cs2952f-hrms/src/golang-lib v0.0.0-20200430230028-b1b562927c5d/go.mod h1:mOm9hBNmfOGNMvWCVjxMo7XuwLuFhff1FVIvCInMgNA=
+github.com/irvinlim/cs2952f-hrms/src/golang-lib v0.0.0-20200512160013-e9cf4e9f9a96 h1:Z6geb80qhJB88NM8VKvZzIDrAVA+pIcJAYDAEIJTDxM=
+github.com/irvinlim/cs2952f-hrms/src/golang-lib v0.0.0-20200512160013-e9cf4e9f9a96/go.mod h1:mOm9hBNmfOGNMvWCVjxMo7XuwLuFhff1FVIvCInMgNA=
+github.com/irvinlim/cs2952f-hrms/src/golang-lib v0.0.0-20200512163939-6861644e3026 h1:Cvld55CBk8rOxVcJ0gYuQ2bAgcEDwDzGviCNvwRR3Bc=
+github.com/irvinlim/cs2952f-hrms/src/golang-lib v0.0.0-20200512163939-6861644e3026/go.mod h1:mOm9hBNmfOGNMvWCVjxMo7XuwLuFhff1FVIvCInMgNA=
 github.com/jonboulle/clockwork v0.1.0 h1:VKV+ZcuP6l3yW9doeqz6ziZGgcynBVQO+obU0+0hcPo=
 github.com/jonboulle/clockwork v0.1.0/go.mod h1:Ii8DK3G1RaLaWxj9trq07+26W01tbo22gdxWY5EU2bo=
 github.com/json-iterator/go v1.1.6/go.mod h1:+SdeFBvtyEkXs7REEP0seUULqWtbJapLOCVDaaPEHmU=

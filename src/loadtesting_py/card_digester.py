@@ -7,7 +7,7 @@ from glob import glob
 from copy import deepcopy
 from random import shuffle
 
-CARD_PATH = "/usr/src/app/bigchaindb_client/patient_cards/"
+CARD_PATH = "/var/patient_cards"
 
 
 def catch_exc(func):
