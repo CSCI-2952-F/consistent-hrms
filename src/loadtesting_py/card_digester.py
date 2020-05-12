@@ -47,10 +47,11 @@ class PatientCardDigester:
                     else:
                         name = row[0]
                         patient_id = row[1]
-                        pub_key = row[2]
-                        priv_key = row[3]
+                        uuid = row[2]
+                        pub_key = row[3]
+                        priv_key = row[4]
 
-                        self.cards.append(PatientCard(name, patient_id, pub_key, priv_key))
+                        self.cards.append(PatientCard(name, patient_id, uuid, pub_key, priv_key))
         self.unique_cards = deepcopy(self.cards)
 
     @catch_exc
@@ -75,13 +76,12 @@ class PatientCardDigester:
 
 class PatientCard:
     @catch_exc
-    def __init__(self, name, patient_id, pub_key, priv_key):
+    def __init__(self, name, patient_id, uuid, pub_key, priv_key):
         self.name = name
         self.patient_id = patient_id
+        self.uuid = uuid
         self.pub_key = pub_key
         self.priv_key = priv_key
-
-        self.uuid = name + patient_id
 
 
 def _debug_print(msg: str) -> None:

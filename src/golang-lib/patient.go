@@ -1,30 +1,23 @@
 package golang_lib
 
 import (
-	"crypto/sha256"
 	"encoding/csv"
-	"encoding/hex"
 	"fmt"
 	"os"
 	"path"
 	"path/filepath"
 )
 
-func HashPatientUID(name string, patientID string) string {
-	hash := sha256.New()
-	sum := hash.Sum([]byte(name + patientID))
-	return hex.EncodeToString(sum)
-}
-
 type PatientCard struct {
 	Name       string
 	PatientID  string
+	uuid       string
 	PublicKey  Unsigner
 	PrivateKey Signer
 }
 
 func (c PatientCard) UUID() string {
-	return HashPatientUID(c.Name, c.PatientID)
+	return c.uuid
 }
 
 func ParsePatientCards(directory string) ([]*PatientCard, error) {
@@ -62,16 +55,16 @@ func ParsePatientCard(filename string) (*PatientCard, error) {
 	row, err := reader.Read()
 	if err != nil {
 		return nil, err
-	} else if len(row) != 4 {
-		return nil, fmt.Errorf("expected 4 columns in row, got %d", len(row))
+	} else if len(row) != 5 {
+		return nil, fmt.Errorf("expected 5 columns in row, got %d", len(row))
 	}
 
 	// Parse keys
-	publicKey, err := ParsePublicKey([]byte(row[2]))
+	publicKey, err := ParsePublicKey([]byte(row[3]))
 	if err != nil {
 		return nil, fmt.Errorf("could not parse public key: %s", err)
 	}
-	privateKey, err := ParsePrivateKey([]byte(row[3]))
+	privateKey, err := ParsePrivateKey([]byte(row[4]))
 	if err != nil {
 		return nil, fmt.Errorf("could not parse public key: %s", err)
 	}
@@ -79,6 +72,7 @@ func ParsePatientCard(filename string) (*PatientCard, error) {
 	card := PatientCard{
 		Name:       row[0],
 		PatientID:  row[1],
+		uuid:       row[2],
 		PublicKey:  publicKey,
 		PrivateKey: privateKey,
 	}

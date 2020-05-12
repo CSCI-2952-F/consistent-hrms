@@ -8,6 +8,9 @@ for card_file in glob("src/bigchaindb_client/patient_cards/*.csv"):
             if i == 0:
                 continue
             else:
-                PUBLIC_KEY = row[2]
-                PRIVATE_KEY = row[3]
+                PATIENT_NAME = row[0]
+                PATIENT_ID = row[1]
+                PATIENT_UID = row[2]
+                PUBLIC_KEY = row[3]
+                PRIVATE_KEY = row[4]
     break

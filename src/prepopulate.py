@@ -37,8 +37,7 @@ def prepopulate(num_cards, name):
 
     for i in range(num_cards):
         patient_id = str(i)
-        uuid = name + patient_id
-        hash_uid = hasher.hash(uuid)
+        hash_uid = hasher.hash(name + patient_id)
 
         res = temp_backend.init_put(hash_uid, public_key)
 
@@ -48,11 +47,11 @@ def prepopulate(num_cards, name):
 
         _debug_print(f"{hash_uid} with pub_key:{public_key} put to bigchaindb")
 
-        file_name = PATH_TO_VOLUME + uuid + "_patient_card.csv"
+        file_name = PATH_TO_VOLUME + name + patient_id + "_patient_card.csv"
         with open(file_name, 'w') as f:
             writer = csv.writer(f, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(['NAME', 'ID', 'PUB_KEY', 'PRIV_KEY'])
-            writer.writerow([name, patient_id, public_key, private_key])
+            writer.writerow(['NAME', 'ID', 'UUID', 'PUB_KEY', 'PRIV_KEY'])
+            writer.writerow([name, patient_id, hash_uid, public_key, private_key])
 
         _debug_print(f"{hash_uid} with priv_key:{public_key} written to csv")
 
