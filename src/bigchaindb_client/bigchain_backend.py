@@ -142,25 +142,6 @@ class BigchaindbBackend(BaseStorageBackend):
             return {'ok': False, 'owner': ""}
         else:
             return {'ok': True, 'owner': self.public_key}
-        # self._debug_print(f"Called PUT with key: {key} and value: {value}")
-        # self._debug_print(f"Public key: {self.public_key}")
-        # self._debug_print(f"Private key: {self.private_key}")
-        #
-        # patient = {'data': {'patient': {'public_key': value, 'uuid': key}}}
-        # metadata = {'record_type': 'patient_registration', 'hospital_id': self.hospital_id}
-        #
-        # prepared_creation_tx = self.bdb.transactions.prepare(operation='CREATE', signers=self.public_key, asset=patient, metadata=metadata)
-        #
-        # fulfilled_creation_tx = self.bdb.transactions.fulfill(prepared_creation_tx, private_keys=self.private_key)
-        #
-        # self._debug_print(f"Fulfilled PUT tx: {fulfilled_creation_tx}")
-        #
-        # res_tx = self.bdb.transactions.send_commit(fulfilled_creation_tx)
-        #
-        # return {
-        #     'ok': res_tx == fulfilled_creation_tx,
-        #     'owner': self.public_key,
-        # }
 
     def init_put(self, key: str, value: str) -> dict:
         # key: patient's uuid, value: patient's public key
@@ -173,7 +154,7 @@ class BigchaindbBackend(BaseStorageBackend):
         metadata = {'record_type': 'patient_new_registration', 'hospital_id': ""}
 
         self._debug_print(f"Checking if patient with uuid: {key} exists")
-        if len(self.get(key)) > 0:
+        if self.get(key).get('exists'):
             self._debug_print(f"Patient with uuid: {key} already exists!!! Aborting INIT PUT ...")
             return {
                 'ok': False,
@@ -193,10 +174,8 @@ class BigchaindbBackend(BaseStorageBackend):
             'owner': GENESIS_PUBLIC_KEY,
         }
 
-    # TODO: DEPRECATED!!!
-    def transfer_to_register(self, key: str, value: str) -> dict:
-        # key: patient's uuid, value: patient's public key
-        self._debug_print(f"Called TRANSFER_TO_REGISTER with key: {key} and value: {value}")
+    def remove(self, key: str) -> dict:
+        self._debug_print(f"Called REMOVE with key: {key}")
         self._debug_print(f"Public key: {self.public_key}")
         self._debug_print(f"Private key: {self.private_key}")
 
@@ -214,12 +193,12 @@ class BigchaindbBackend(BaseStorageBackend):
 
         self._debug_print(f"Patient block: {patient_block}")
 
-        if output['public_keys'][0] != GENESIS_PUBLIC_KEY:
+        if output['public_keys'][0] != self.public_key:
             error = 'Genesis is not owner of key'
 
         if error:
             return {
-                'transferred': False,
+                'removed': False,
                 'error': error,
             }
 
@@ -235,20 +214,23 @@ class BigchaindbBackend(BaseStorageBackend):
         }
 
         prepared_transfer_tx = self.bdb.transactions.prepare(
-            operation='TRANSFER', asset=patient_transfer_asset, inputs=transfer_input, recipients=self.public_key
+            operation='TRANSFER', asset=patient_transfer_asset, inputs=transfer_input, recipients=GENESIS_PUBLIC_KEY
         )
 
-        fulfilled_transfer_tx = self.bdb.transactions.fulfill(prepared_transfer_tx, private_keys=GENESIS_PRIVATE_KEY)
+        fulfilled_transfer_tx = self.bdb.transactions.fulfill(prepared_transfer_tx, private_keys=self.private_key)
 
         res_tx = self.bdb.transactions.send_commit(fulfilled_transfer_tx)
 
         if res_tx != fulfilled_transfer_tx:
-            return {'transferred': False, 'error': "Checksum failed"}
+            return {
+                'removed': False,
+                'error': "result tx != fulfilled tx",
+            }
         else:
-            return {'transferred': True}
-
-    def remove(self, key: str) -> dict:
-        raise NotImplementedError()
+            return {
+                'removed': True,
+                'error': error,
+            }
 
     def transfer(self, key: str, dest: str) -> dict:
         self._debug_print(f"Called TRANSFER with key: {key} and dest: {dest}")

@@ -5,8 +5,8 @@
 ### Starting up
 
 First, run `init.sh`, which will bootstrap any necessary dependencies. This only needs to be done once, or whenever the script itself is changed.
-You need to reset the __tendermint__ container by calling `docker restart cs2952f-bigchain_tendermint_1`
 
+> NOTE: You need to restart the **tendermint** container by calling `docker restart cs2952f-bigchain_tendermint_1`
 
 A useful Python script has been included to start various hospital namespaces, orchestrated using Docker Compose. The number of namespaces started depends on the list of hospital names in `data/hospitals.txt`.
 
@@ -16,9 +16,24 @@ To start all hospitals, run:
 python hospitals.py start
 ```
 
->_if this is your first time running the system_ OR _you have just rebuilt the bigchaindb service_ 
->
->You need to seed bigchaindb with unregisterd patient assets. Run the following commands: `./prepopulate.sh`
+> _NOTE: If this is your first time running the system_ OR _you have just rebuilt the bigchaindb service_
+
+You need to seed bigchaindb with unregistered patient assets. Run the following commands:
+
+```sh
+./prepopulate.sh 1 alice
+./prepopulate.sh 1 bob
+./prepopulate.sh 1 charlie
+```
+
+The patient cards will be found in `src/bigchaindb_client/patient_cards/`.
+
+If you would like to reseed bigchain, do this:
+
+```sh
+docker-compose -f docker-compose.bigchain.yml -p cs2952f-bigchain down -v
+docker-compose -f docker-compose.bigchain.yml -p cs2952f-bigchain up -d --build
+```
 
 The frontend servers will be listening on the local interface, at ports starting from 8000.
 

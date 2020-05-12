@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   loadtester:
@@ -7,6 +7,8 @@ services:
     networks:
       - loadtesting
       - hospital-discovery
+    volumes:
+      - ./src/bigchaindb_client/patient_cards:/var/patient_cards
 
   loadtester-py:
     build:
@@ -15,6 +17,9 @@ services:
     networks:
       - loadtesting
       - hospital-discovery
+    volumes:
+      - ./src/bigchaindb_client/patient_cards:/var/patient_cards
+      - ./src/loadtesting_py:/usr/src/app/loadtesting_py
 
 networks:
   loadtesting:

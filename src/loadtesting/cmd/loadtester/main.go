@@ -29,6 +29,11 @@ func init() {
 
 func main() {
 	flag.Parse()
+	if testName == "" {
+		flag.PrintDefaults()
+		os.Exit(1)
+	}
+
 	ctx, cancelFunc := context.WithCancel(context.Background())
 
 	// Get hospitals from discovery service
@@ -48,8 +53,8 @@ func main() {
 
 	fmt.Printf("Discovered hospitals: %s\n", strings.Join(hospitalIds, ", "))
 
-	// Create new load test
-	test := loadtesting.NewLoadTest(hospitals)
+	// Create new load test with a maximum number of open connections.
+	test := loadtesting.NewLoadTest(hospitals, requestRate*3)
 
 	// Register signal handlers
 	quit := make(chan os.Signal, 1)
@@ -59,8 +64,6 @@ func main() {
 		log.Println("Stopping.")
 		cancelFunc()
 	}()
-
-	fmt.Println("Starting test.")
 
 	// Set parameters
 	test.SetRequestRate(requestRate)
@@ -73,6 +76,9 @@ func main() {
 
 	// Print results
 	fmt.Printf("Time taken: %.4fs\n", result.ActualDuration.Seconds())
+	avgTime := result.ActualDuration.Seconds() / float64(numRequests)
+	fmt.Printf("Average time per request: %.6f\n", avgTime)
+	fmt.Printf("QPS: %.4f\n", 1/avgTime)
 	fmt.Println()
 
 	fmt.Printf("Number of requests: %d\n", numRequests*len(hospitalIds))
@@ -80,9 +86,6 @@ func main() {
 	fmt.Printf("Number of successes: %d\n", result.NumSuccess)
 	fmt.Println()
 
-	avgTime := result.TotalRequestDuration.Seconds() / float64(result.NumOk)
-	qps := 1 / avgTime
-	fmt.Printf("Total request elapsed time: %.2fs\n", result.TotalRequestDuration.Seconds())
-	fmt.Printf("Average time taken per request: %.6fs\n", avgTime)
-	fmt.Printf("Queries per second: %.2f QPS\n", qps)
+	avgInflightTime := result.TotalRequestDuration.Seconds() / float64(result.NumOk)
+	fmt.Printf("Average in-flight time per request: %.6fs\n", avgInflightTime)
 }
