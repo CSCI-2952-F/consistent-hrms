@@ -8,14 +8,14 @@ ports 8100 and 8101 respectively.
 from __future__ import print_function
 
 import base64
-import random
-import string
 import sys
+import time
 
+import jwt
 import rsa
 
 from common import fail, succeed
-from keys import PUBLIC_KEY, PRIVATE_KEY
+from keys import PATIENT_NAME, PATIENT_ID, PUBLIC_KEY, PRIVATE_KEY
 
 
 def main():
@@ -23,19 +23,15 @@ def main():
         hospitals = [line.strip() for line in f.readlines() if line.strip()]
         num_hospitals = len(hospitals)
 
-    if num_hospitals < 1:
+    if num_hospitals < 2:
         print('There needs to be at least 2 hospitals running.')
         return False
 
-    # Generate patient name and ID
-    patient_name = ''.join(random.choice(string.ascii_lowercase) for _ in range(8))
-    patient_id = ''.join(random.choice(string.ascii_lowercase) for _ in range(8))
-
     # Register patient at hospital A
-    print(f'[*] Registering name={patient_name} id={patient_id} at {hospitals[0]}...')
+    print(f'[*] Registering name={PATIENT_NAME} id={PATIENT_ID} at {hospitals[0]}...')
     res = succeed('http://localhost:8100/patient_reg', {
-        'id': patient_id,
-        'name': patient_name,
+        'id': PATIENT_ID,
+        'name': PATIENT_NAME,
         'pub_key': PUBLIC_KEY,
     })
     print(f'    Result obtained: {res}')
@@ -43,16 +39,16 @@ def main():
     patient_uid = res['uid']
 
     # Attempt to register patient at hospital B
-    print(f'[*] Registering name={patient_name} id={patient_id} at {hospitals[1]}...')
+    print(f'[*] Registering name={PATIENT_NAME} id={PATIENT_ID} at {hospitals[1]}...')
     res = fail('http://localhost:8101/patient_reg', {
-        'id': patient_id,
-        'name': patient_name,
+        'id': PATIENT_ID,
+        'name': PATIENT_NAME,
         'pub_key': PUBLIC_KEY,
     })
     print(f'    Exception obtained: {res}')
 
     # Read patient card from hospital A
-    print(f'[*] Fetching patient data for name={patient_name} id={patient_id} from {hospitals[0]}...')
+    print(f'[*] Fetching patient data for name={PATIENT_NAME} id={PATIENT_ID} from {hospitals[0]}...')
     res = succeed('http://localhost:8100/patient_read', {
         'uid': patient_uid,
     })
@@ -60,12 +56,26 @@ def main():
     print(f'    Result obtained: data=[{data_len} items]')
 
     # Decrypt patient data
-    print(f'[*] Decrypting patient data for name={patient_name} id={patient_id} from {hospitals[0]}...')
+    print(f'[*] Decrypting patient data for name={PATIENT_NAME} id={PATIENT_ID} from {hospitals[0]}...')
     priv_key = rsa.PrivateKey.load_pkcs1(PRIVATE_KEY)
     for data in res['data']:
         data = base64.b64decode(data.encode('utf-8'))
         decrypted = rsa.decrypt(data, priv_key).decode('utf-8')
         print(f'    Result obtained: {decrypted}')
+
+    # Clean up: Unregister patient
+    token = jwt.encode({
+        'name': PATIENT_NAME,
+        'id': PATIENT_ID,
+        'exp': int(time.time()) + 60,
+    }, PRIVATE_KEY, algorithm='RS256').decode('utf-8')
+
+    print(f'[*] Unregistering uid={patient_uid} at {hospitals[0]}...')
+    res = succeed('http://localhost:8100/patient_unreg', {
+        'uid': patient_uid,
+        'auth_token': token,
+    })
+    print(f'    Result obtained: {res}')
 
     print()
 

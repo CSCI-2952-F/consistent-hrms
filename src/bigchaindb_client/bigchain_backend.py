@@ -1,8 +1,8 @@
-# global
+import json
+
 from bigchaindb_driver import BigchainDB
 from bigchaindb_driver.crypto import generate_keypair
 
-# local
 from lib.consistent_storage.base import BaseStorageBackend
 from lib.discovery_svc import DiscoveryService
 
@@ -11,6 +11,17 @@ GENESIS_PRIVATE_KEY = 'HzKkzuCDYfppGH7vbBrXeMA6Fg6fEVAiPaeXhxmcJ9Vm'
 
 BIGCHAIN_KEY_NAME = 'bigchaindb'
 BIGCHAIN_KEY_SCHEME = 'ed25519'
+
+
+class MissingAssetException(Exception):
+    def __init__(self, key):
+        super().__init__(f"Patient asset not yet created: {key}. Run prepopulate to get a patient card first.")
+
+
+class NotOwnerException(Exception):
+    def __init__(self, owner):
+        self.owner = owner
+        super().__init__("Not owner")
 
 
 class BigchaindbBackend(BaseStorageBackend):
@@ -68,20 +79,16 @@ class BigchaindbBackend(BaseStorageBackend):
         self._debug_print(f"Called GET with key: {key}")
 
         res = self.bdb.assets.get(search=key)
-
-        self._debug_print(f"Result for GET query: {res}")
-
         if len(res) == 0:
-            return {
-                'exists': False,
-                'value': None,
-            }
+            raise MissingAssetException(key)
 
-        patient_block = res[0]
-        tx_block = self.bdb.transactions.retrieve(patient_block['id'])
-        owner = tx_block['outputs'][0]['public_keys'][0]
+        asset_id = res[0]['id']
+        owner = self.bdb.transactions.get(asset_id=asset_id)[-1]['outputs'][0]['public_keys'][0]
+        self._debug_print(f"Owner for {key}: {owner}")
 
-        self._debug_print(f"Owner for GET query: {owner}")
+        # If genesis owns the asset, then patient is not registered on any hospital.
+        if owner == GENESIS_PUBLIC_KEY:
+            return {'exists': False}
 
         return {
             'exists': True,
@@ -90,59 +97,6 @@ class BigchaindbBackend(BaseStorageBackend):
             'owner': owner,
         }
 
-    def put(self, key: str, value: str) -> dict:
-        # key: patient's uuid, value: patient's public key
-        self._debug_print(f"Called TRANSFER_TO_REGISTER with key: {key} and value: {value}")
-        self._debug_print(f"Public key: {self.public_key}")
-        self._debug_print(f"Private key: {self.private_key}")
-
-        self._debug_print(f"Checking if patient with uuid: {key} exists")
-        query_results = self.bdb.assets.get(search=key)
-        self._debug_print(f"Query results: {query_results}")
-
-        error = None
-        if len(query_results) == 0:
-            error = 'Key does not exist'
-            return {'ok': False, 'owner': ""}
-
-        tx_id = query_results[0]['id']
-        patient_block = self.bdb.transactions.retrieve(tx_id)
-        output = patient_block['outputs'][0]
-
-        self._debug_print(f"Patient block: {patient_block}")
-
-        if output['public_keys'][0] != GENESIS_PUBLIC_KEY:
-            error = 'Genesis is not owner of key'
-
-        if error:
-            return {
-                'ok': False,
-                'owner': "",
-            }
-
-        patient_transfer_asset = {'id': tx_id}
-
-        transfer_input = {
-            'fulfillment': output['condition']['details'],
-            'fulfills': {
-                'output_index': 0,  # TODO: should this always be 0?
-                'transaction_id': tx_id,
-            },
-            'owners_before': output['public_keys']
-        }
-
-        prepared_transfer_tx = self.bdb.transactions.prepare(
-            operation='TRANSFER', asset=patient_transfer_asset, inputs=transfer_input, recipients=self.public_key
-        )
-
-        fulfilled_transfer_tx = self.bdb.transactions.fulfill(prepared_transfer_tx, private_keys=GENESIS_PRIVATE_KEY)
-
-        res_tx = self.bdb.transactions.send_commit(fulfilled_transfer_tx)
-
-        if res_tx != fulfilled_transfer_tx:
-            return {'ok': False, 'owner': ""}
-        else:
-            return {'ok': True, 'owner': self.public_key}
 
     def init_put(self, key: str, value: str) -> dict:
         # key: patient's uuid, value: patient's public key
@@ -155,83 +109,74 @@ class BigchaindbBackend(BaseStorageBackend):
         metadata = {'record_type': 'patient_new_registration', 'hospital_id': ""}
 
         self._debug_print(f"Checking if patient with uuid: {key} exists")
-        if self.get(key).get('exists'):
-            self._debug_print(f"Patient with uuid: {key} already exists!!! Aborting INIT PUT ...")
+
+        try:
+            asset_id, _ = self._bdb_get_latest_txn(key)
+            asset_exists = True
+        except MissingAssetException:
+            asset_exists = False
+
+        if asset_exists:
+            self._debug_print(f"Asset already exists for {key}. Asset ID: {asset_id}")
             return {
                 'ok': False,
-                'owner': ""
+                'owner': '',
             }
 
-        prepared_creation_tx = self.bdb.transactions.prepare(operation='CREATE', signers=GENESIS_PUBLIC_KEY, asset=patient, metadata=metadata)
+        prepared_creation_tx = self.bdb.transactions.prepare(
+            operation='CREATE',
+            signers=GENESIS_PUBLIC_KEY,
+            asset=patient,
+            metadata=metadata,
+        )
 
-        fulfilled_creation_tx = self.bdb.transactions.fulfill(prepared_creation_tx, private_keys=GENESIS_PRIVATE_KEY)
+        fulfilled_creation_tx = self.bdb.transactions.fulfill(
+            prepared_creation_tx,
+            private_keys=GENESIS_PRIVATE_KEY,
+        )
 
         self._debug_print(f"Fulfilled PUT tx: {fulfilled_creation_tx}")
 
         res_tx = self.bdb.transactions.send_commit(fulfilled_creation_tx)
 
-        return {
-            'ok': res_tx == fulfilled_creation_tx,
-            'owner': GENESIS_PUBLIC_KEY,
-        }
+        return {'ok': res_tx == fulfilled_creation_tx, 'owner': GENESIS_PUBLIC_KEY}
+
+    def put(self, key: str, value: str) -> dict:
+        # key: patient's uuid, value: patient's public key
+        self._debug_print(f"Called TRANSFER_TO_REGISTER with key: {key} and value: {value}")
+        self._debug_print(f"Public key: {self.public_key}")
+        self._debug_print(f"Private key: {self.private_key}")
+
+        # Transfer from genesis to ourselves.
+        try:
+            new_owner = self._bdb_transfer(key, GENESIS_PUBLIC_KEY, GENESIS_PRIVATE_KEY, self.public_key)
+        except NotOwnerException as e:
+            return {'ok': False, 'owner': e.owner}
+
+        if new_owner != self.public_key:
+            self._debug_print(f"PUT failed, another transaction beat us to it: {new_owner}")
+            return {'ok': False}
+
+        self._debug_print(f"Successfully PUT key {key}. New owner: {new_owner}")
+        return {'ok': True, 'owner': self.public_key}
 
     def remove(self, key: str) -> dict:
         self._debug_print(f"Called REMOVE with key: {key}")
         self._debug_print(f"Public key: {self.public_key}")
         self._debug_print(f"Private key: {self.private_key}")
 
-        self._debug_print(f"Checking if patient with uuid: {key} exists")
-        query_results = self.bdb.assets.get(search=key)
-        self._debug_print(f"Query results: {query_results}")
+        # Transfer from ourselves to genesis.
+        try:
+            new_owner = self._bdb_transfer(key, self.public_key, self.private_key, GENESIS_PUBLIC_KEY)
+        except NotOwnerException:
+            return {'removed': False, 'error': 'Not owner of key'}
 
-        error = None
-        if len(query_results) == 0:
-            error = 'Key does not exist'
+        if new_owner != GENESIS_PUBLIC_KEY:
+            self._debug_print(f"REMOVE failed, another transaction beat us to it: {new_owner}")
+            return {'removed': False, 'error': 'Transaction failed'}
 
-        tx_id = query_results[0]['id']
-        patient_block = self.bdb.transactions.retrieve(tx_id)
-        output = patient_block['outputs'][0]
-
-        self._debug_print(f"Patient block: {patient_block}")
-
-        if output['public_keys'][0] != self.public_key:
-            error = 'Genesis is not owner of key'
-
-        if error:
-            return {
-                'removed': False,
-                'error': error,
-            }
-
-        patient_transfer_asset = {'id': tx_id}
-
-        transfer_input = {
-            'fulfillment': output['condition']['details'],
-            'fulfills': {
-                'output_index': 0,  # TODO: should this always be 0?
-                'transaction_id': tx_id,
-            },
-            'owners_before': output['public_keys']
-        }
-
-        prepared_transfer_tx = self.bdb.transactions.prepare(
-            operation='TRANSFER', asset=patient_transfer_asset, inputs=transfer_input, recipients=GENESIS_PUBLIC_KEY
-        )
-
-        fulfilled_transfer_tx = self.bdb.transactions.fulfill(prepared_transfer_tx, private_keys=self.private_key)
-
-        res_tx = self.bdb.transactions.send_commit(fulfilled_transfer_tx)
-
-        if res_tx != fulfilled_transfer_tx:
-            return {
-                'removed': False,
-                'error': "result tx != fulfilled tx",
-            }
-        else:
-            return {
-                'removed': True,
-                'error': error,
-            }
+        self._debug_print(f"Successfully REMOVE key {key}. New owner: {new_owner}")
+        return {'removed': True}
 
     def transfer(self, key: str, dest: str) -> dict:
         self._debug_print(f"Called TRANSFER with key: {key} and dest: {dest}")
@@ -245,56 +190,86 @@ class BigchaindbBackend(BaseStorageBackend):
         for pubkey in dest_hospital['public_keys']:
             if pubkey['name'] == BIGCHAIN_KEY_NAME:
                 dest_public_key = pubkey['value']
+                break
 
         if dest_public_key is None:
-            # TODO: Invalid grpc error message but blah
             return {'transferred': False, 'error': 'Hospital does not exist'}
-
         self._debug_print(f"Destination Hospital Pub Key: {dest_public_key}")
 
+        # Transfer from genesis to ourselves.
+        try:
+            new_owner = self._bdb_transfer(key, self.public_key, self.private_key, dest_public_key)
+        except NotOwnerException:
+            return {'transferred': False, 'error': 'Not owner of key'}
+
+        if new_owner is None:
+            self._debug_print(f"TRANSFER failed, another transaction beat us to it: {new_owner}")
+            return {'transferred': False, 'error': 'Transaction failed'}
+
+        self._debug_print(f"Successfully TRANSFER key {key}. New owner: {new_owner}")
+        return {'transferred': True}
+
+    def _bdb_get_latest_txn(self, key):
+        "Returns latest transaction of an asset named by key."
+
+        # Search for the asset.
+        # NOTE: This does a FULLTEXT search. So that means keys should be unique enough.
         query_results = self.bdb.assets.get(search=key)
 
-        self._debug_print(f"Query results: {query_results}")
-
-        error = None
         if len(query_results) == 0:
-            error = 'Key does not exist'
+            raise MissingAssetException(key)
 
-        tx_id = query_results[0]['id']
-        patient_block = self.bdb.transactions.retrieve(tx_id)
-        output = patient_block['outputs'][0]
+        # Get asset ID.
+        asset_id = query_results[0]['id']
 
-        self._debug_print(f"Patient block: {patient_block}")
+        # Look up all transactions for this asset.
+        transactions = self.bdb.transactions.get(asset_id=asset_id)
 
-        if output['public_keys'][0] != self.public_key:
-            error = 'Not owner of key'
+        # Uncomment this to see the list of past transactions
+        # past_txns = [{'public_key': txn['outputs'][0]['public_keys'][0], 'txn_id': txn['id']} for txn in transactions]
+        # self._debug_print('Past transactions: {}'.format(json.dumps(past_txns, indent=2)))
 
-        if error:
-            return {
-                'transferred': False,
-                'error': output['public_keys'][0] + ' == ' + self.public_key + ' == ' + patient_block['inputs'][0]['owners_before'][0],
-            }
+        return asset_id, transactions[-1]
 
-        patient_transfer_asset = {'id': tx_id}
+    def _bdb_transfer(self, key, from_public_key, from_private_key, to_public_key):
+        # Get latest transaction
+        asset_id, txn = self._bdb_get_latest_txn(key)
 
-        transfer_input = {
-            'fulfillment': output['condition']['details'],
-            'fulfills': {
-                'output_index': 0,  # TODO: should this always be 0?
-                'transaction_id': tx_id,
-            },
-            'owners_before': output['public_keys']
-        }
+        # Get the output from the latest transaction.
+        output = txn['outputs'][0]
 
+        # Get the owner from the latest transaction.
+        owner = output['public_keys'][0]
+
+        # Check if the owner matches the from_private_key.
+        if owner != from_public_key:
+            raise NotOwnerException(owner)
+
+        # Prepare transaction to transfer to `to_public_key`.
         prepared_transfer_tx = self.bdb.transactions.prepare(
-            operation='TRANSFER', asset=patient_transfer_asset, inputs=transfer_input, recipients=dest_public_key
+            operation='TRANSFER',
+            asset={'id': asset_id},
+            inputs={
+                'fulfillment': output['condition']['details'],
+                'fulfills': {
+                    'output_index': 0,  # TODO: should this always be 0?
+                    'transaction_id': txn['id'],  # Use latest txn ID - this new txn fulfils it
+                },
+                'owners_before': output['public_keys'],
+            },
+            recipients=to_public_key,
         )
 
-        fulfilled_transfer_tx = self.bdb.transactions.fulfill(prepared_transfer_tx, private_keys=self.private_key)
+        # Fulfil the transaction with from_private_key.
+        fulfilled_transfer_tx = self.bdb.transactions.fulfill(
+            prepared_transfer_tx,
+            private_keys=from_private_key,
+        )
 
-        res_tx = self.bdb.transactions.send_commit(fulfilled_transfer_tx)
+        # Commit the transaction
+        sent_transfer_tx = self.bdb.transactions.send_commit(fulfilled_transfer_tx)
 
-        if res_tx != fulfilled_transfer_tx:
-            return {'transferred': False, 'error': "Checksum failed"}
-        else:
-            return {'transferred': True}
+        # Get the owner of the sent transaction
+        new_owner = sent_transfer_tx['outputs'][0]['public_keys'][0]
+
+        return new_owner
