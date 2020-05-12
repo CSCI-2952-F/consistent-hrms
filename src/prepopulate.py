@@ -52,8 +52,8 @@ def prepopulate(num_cards, name):
 
         with open(file_name, 'w') as f:
             writer = csv.writer(f, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(['NAME', 'ID', 'UUID', 'PUB_KEY', 'PRIV_KEY'])
-            writer.writerow([name, patient_id, hash_uid, public_key, private_key])
+            writer.writerow(['NAME', 'ID', 'PUB_KEY', 'PRIV_KEY'])
+            writer.writerow([name, patient_id, public_key, private_key])
 
         _debug_print(f"{hash_uid} with priv_key:{public_key} written to csv")
 
