@@ -106,7 +106,7 @@ func (t *LoadTest) Run(ctx context.Context, name string, numRequests int) (*Load
 		// Get random keys
 		for _, card := range cards {
 			data := map[string]string{
-				"key": card.PatientID,
+				"key": card.UUID(),
 			}
 			body, err := json.Marshal(data)
 			if err != nil {
@@ -140,7 +140,7 @@ func (t *LoadTest) Run(ctx context.Context, name string, numRequests int) (*Load
 			}
 
 			data := map[string]string{
-				"key":   card.PatientID,
+				"key":   card.UUID(),
 				"value": string(publicKeyBytes),
 			}
 			body, err := json.Marshal(data)
@@ -172,7 +172,7 @@ func (t *LoadTest) Run(ctx context.Context, name string, numRequests int) (*Load
 		for _, card := range cards {
 			for i, hospital := range t.hospitals {
 				data := map[string]string{
-					"key":  card.PatientID,
+					"key":  card.UUID(),
 					"dest": t.hospitals[(i+1)%len(t.hospitals)].Id, // Transfer it to the next hospital
 				}
 				body, err := json.Marshal(data)
@@ -203,7 +203,7 @@ func (t *LoadTest) Run(ctx context.Context, name string, numRequests int) (*Load
 		for _, card := range cards {
 			for _, hospital := range t.hospitals {
 				data := map[string]string{
-					"key": card.PatientID,
+					"key": card.UUID(),
 				}
 				body, err := json.Marshal(data)
 				if err != nil {
