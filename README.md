@@ -20,6 +20,11 @@ python hospitals.py start
 >
 >You need to seed bigchaindb with unregisterd patient assets. Run the following commands: `./prepopulate.sh`
 
+If you would like to reseed bigchain, remove the bigchaindb docker image and run './init.sh' again.
+```sh
+docker rmi <image id of cs2952f-bigchain_bigchaindb>
+```
+
 The frontend servers will be listening on the local interface, at ports starting from 8000.
 
 ### Development
