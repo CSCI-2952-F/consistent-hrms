@@ -1,9 +1,13 @@
-import os
+import csv
+from glob import glob
 
-BASE_PATH = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-
-with open(os.path.join(BASE_PATH, 'pub.key')) as f:
-    PUBLIC_KEY = f.read()
-
-with open(os.path.join(BASE_PATH, 'priv.key')) as f:
-    PRIVATE_KEY = f.read()
+for card_file in glob("src/bigchaindb_client/patient_cards/*.csv"):
+    with open(card_file, "r") as f:
+        reader = csv.reader(f, delimiter=",", quotechar='"')
+        for i, row in enumerate(reader):
+            if i == 0:
+                continue
+            else:
+                PUBLIC_KEY = row[2]
+                PRIVATE_KEY = row[3]
+    break
