@@ -173,7 +173,7 @@ class BigchaindbBackend(BaseStorageBackend):
         metadata = {'record_type': 'patient_new_registration', 'hospital_id': ""}
 
         self._debug_print(f"Checking if patient with uuid: {key} exists")
-        if len(self.get(key)) > 0:
+        if self.get(key).get('exists'):
             self._debug_print(f"Patient with uuid: {key} already exists!!! Aborting INIT PUT ...")
             return {
                 'ok': False,
