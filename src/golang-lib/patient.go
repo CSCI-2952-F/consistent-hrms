@@ -1,12 +1,20 @@
 package golang_lib
 
 import (
+	"crypto/sha256"
 	"encoding/csv"
+	"encoding/hex"
 	"fmt"
 	"os"
 	"path"
 	"path/filepath"
 )
+
+func HashPatientUID(name string, patientID string) string {
+	hash := sha256.New()
+	sum := hash.Sum([]byte(name + patientID))
+	return hex.EncodeToString(sum)
+}
 
 type PatientCard struct {
 	Name       string
@@ -16,7 +24,7 @@ type PatientCard struct {
 }
 
 func (c PatientCard) UUID() string {
-	return c.Name + c.PatientID
+	return HashPatientUID(c.Name, c.PatientID)
 }
 
 func ParsePatientCards(directory string) ([]*PatientCard, error) {
