@@ -30,14 +30,14 @@ def prepopulate(num_cards, name):
 
     temp_backend = BigchaindbBackend(bdb_root_url)
 
+    _debug_print("Generating keys...")
+    public_key, private_key = crypto.generate_keys()
+    public_key = crypto.export_key(public_key)
+    private_key = crypto.export_key(private_key)
+
     for i in range(num_cards):
         patient_id = str(i)
         uuid = name + patient_id
-
-        _debug_print("Generating keys...")
-        public_key, private_key = crypto.generate_keys()
-        public_key = crypto.export_key(public_key)
-        private_key = crypto.export_key(private_key)
 
         res = temp_backend.init_put(uuid, public_key)
 
