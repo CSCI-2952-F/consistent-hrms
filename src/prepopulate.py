@@ -5,7 +5,7 @@ import traceback
 import csv
 
 from bigchaindb_client.bigchain_backend import BigchaindbBackend
-from lib import crypto
+from lib import crypto, hasher
 
 PATH_TO_VOLUME = "/usr/src/app/bigchaindb_client/patient_cards/"
 
@@ -38,14 +38,15 @@ def prepopulate(num_cards, name):
     for i in range(num_cards):
         patient_id = str(i)
         uuid = name + patient_id
+        hash_uid = hasher.hash(uuid)
 
-        res = temp_backend.init_put(uuid, public_key)
+        res = temp_backend.init_put(hash_uid, public_key)
 
         if not res['ok']:
             _debug_print("INIT PUT failed, aborting this PUT ...")
             continue
 
-        _debug_print(f"{uuid} with pub_key:{public_key} put to bigchaindb")
+        _debug_print(f"{hash_uid} with pub_key:{public_key} put to bigchaindb")
 
         file_name = PATH_TO_VOLUME + uuid + "_patient_card.csv"
         with open(file_name, 'w') as f:
@@ -53,7 +54,7 @@ def prepopulate(num_cards, name):
             writer.writerow(['NAME', 'ID', 'PUB_KEY', 'PRIV_KEY'])
             writer.writerow([name, patient_id, public_key, private_key])
 
-        _debug_print(f"{uuid} with priv_key:{public_key} written to csv")
+        _debug_print(f"{hash_uid} with priv_key:{public_key} written to csv")
 
 
 def _debug_print(msg: str) -> None:
