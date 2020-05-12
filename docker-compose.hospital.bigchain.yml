@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  bigchaindb_client:
+    env_file: .env
+    build:
+      context: .
+      dockerfile: ./src/bigchaindb_client/Dockerfile
+    networks:
+      default: {}
+      hospital-bigchain: {}
+    environment:
+      - GRPC_LISTEN_ADDR=[::]:8080
+      - BIGCHAIN_ROOT_URL=http://bigchaindb:9984
+    depends_on:
+      - discovery_service
+
+networks:
+  hospital-bigchain:
+    external:
+      name: hrms-hospital-bigchain

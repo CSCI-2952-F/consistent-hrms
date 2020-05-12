@@ -1,0 +1,56 @@
+version: "3"
+
+services:
+  discovery_service:
+    build:
+      context: ./src/discovery
+    networks:
+      - default
+      - hospital-discovery
+    environment:
+      - HOSPITAL_ID=${HOSPITAL_NAME_SLUG}
+      - HOSPITAL_NAME
+      - HOSPITAL_GATEWAY_ADDR=${HOSPITAL_NAME_SLUG}.interhospital
+      - CONSISTENT_STORAGE_ADDR=${HOSPITAL_NAME_SLUG}.loadtesting.local
+      - ZK_ADDR=zookeeper:2181
+      - KEY_PREFIX=/hrms/hospitals/
+      - GRPC_LISTEN_ADDR=:8080
+    expose:
+      - "8080"
+
+  rabbitmq:
+    image: rabbitmq:3
+    networks:
+      - rabbitmq
+
+  consistent_storage:
+    env_file: .env
+    build:
+      context: .
+      dockerfile: ./build/consistent_storage/Dockerfile
+    ports:
+      - "127.0.0.1:${CONSISTENT_STORAGE_PORT:-8200}:80"
+    networks:
+      default: {}
+      rabbitmq: {}
+      hospital-centraldb: {}
+      loadtesting:
+        aliases:
+          - ${HOSPITAL_NAME_SLUG}.loadtesting.local # DNS hostname within the loadtesting network
+    environment:
+      - CONSISTENT_STORAGE_BACKEND=${CONSISTENT_STORAGE_BACKEND:-sagas}
+      - SAGAS_GRPC_ADDR=sagas:8080
+      - BIGCHAIN_GRPC_ADDR=bigchaindb_client:8080
+      - CENTRALDB_GRPC_ADDR=centraldb:8080
+
+networks:
+  rabbitmq: {}
+  hospital-discovery:
+    external:
+      name: hrms-hospital-discovery
+  hospital-centraldb:
+    external:
+      name: hrms-hospital-centraldb
+  loadtesting:
+    external:
+      name: hrms-loadtesting
