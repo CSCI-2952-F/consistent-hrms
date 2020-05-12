@@ -92,9 +92,13 @@ class PatientService:
         if not res['ok']:
             raise PatientRegistrationViolation(uid, res['owner'])
 
+        print("put something in consistent storage", flush=True)
+
         # Store medical record in local storage
         record = MedicalRecord(self.hospital_name, uid, notes=f'New registration at {self.hospital_name}')
         self.local_storage.insert_item(hash_uid, pub_key, record)
+
+        print("stored in local storage", flush=True)
 
         # Return patient unique identifier
         return uid

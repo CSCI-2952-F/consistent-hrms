@@ -103,6 +103,7 @@ class BigchaindbBackend(BaseStorageBackend):
         error = None
         if len(query_results) == 0:
             error = 'Key does not exist'
+            return {'ok': False, 'owner': ""}
 
         tx_id = query_results[0]['id']
         patient_block = self.bdb.transactions.retrieve(tx_id)
@@ -142,6 +143,7 @@ class BigchaindbBackend(BaseStorageBackend):
             return {'ok': False, 'owner': ""}
         else:
             return {'ok': True, 'owner': self.public_key}
+
         # self._debug_print(f"Called PUT with key: {key} and value: {value}")
         # self._debug_print(f"Public key: {self.public_key}")
         # self._debug_print(f"Private key: {self.private_key}")

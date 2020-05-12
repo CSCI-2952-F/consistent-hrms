@@ -4,6 +4,7 @@ from os import getenv
 import traceback
 import csv
 
+from lib import hasher
 from bigchaindb_client.bigchain_backend import BigchaindbBackend
 from bigchaindb_driver.crypto import generate_keypair  # TODO: replace with crypto subtle
 
@@ -30,22 +31,23 @@ def prepopulate():
 
     temp_backend = BigchaindbBackend(bdb_root_url)
 
-    for i in range(100):
-        name = "bob"
+    for i in range(5):
+        name = "anx"
         patient_id = str(i)
-        uuid = name + patient_id
+        uid = name + patient_id
+        hash_uid = hasher.hash(uid)
         keys = generate_keypair()  # TODO: replace with crypto subtle
-        temp_backend.init_put(uuid, keys.public_key)
+        temp_backend.init_put(hash_uid, keys.public_key)
 
-        _debug_print(f"{uuid} with pub_key:{keys.public_key} put to bigchaindb")
+        _debug_print(f"{hash_uid} with pub_key:{keys.public_key} put to bigchaindb")
 
-        file_name = PATH_TO_VOLUME + uuid + "_patient_card.csv"
+        file_name = PATH_TO_VOLUME + uid + "_patient_card.csv"
         with open(file_name, 'w') as f:
             writer = csv.writer(f, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
             writer.writerow(['NAME', 'ID', 'PUB_KEY', 'PRIV_KEY'])
             writer.writerow([name, patient_id, keys.public_key, keys.private_key])
 
-        _debug_print(f"{uuid} with priv_key:{keys.public_key} written to csv")
+        _debug_print(f"{hash_uid} with priv_key:{keys.public_key} written to csv")
 
 
 def _debug_print(msg: str) -> None:

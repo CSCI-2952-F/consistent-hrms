@@ -5,16 +5,29 @@
 <div class="row p-3 justify-content-center">
   <form class="form-inline">
     <div class="form-group">
+      <label for="files">Upload Personal Card:</label>
+      <div class="pl-3">
+        <input type="file" id="personal_files" class="form-control" accept=".csv" required />
+      </div>
+    </div>
+    <div class="pl-3 form-group">
+      <button type="submit" class="btn btn-secondary" onclick="removePersonalCard(); return false;">Remove Card</button>
+    </div>
+  </form>
+</div>
+<div class="row p-3 justify-content-center">
+  <form class="form-inline">
+    <div class="form-group">
       <label for="files">Upload Patient Card:</label>
       <div class="pl-3">
-        <input type="file" id="files" class="form-control" accept=".csv" required />
+        <input type="file" id="patient_files" class="form-control" accept=".csv" required />
       </div>
     </div>
     <div class="pl-3 form-group">
       <button type="submit" class="btn btn-info" onclick="downloadCard(); return false;">Download Card</button>
     </div>
     <div class="pl-3 form-group">
-      <button type="submit" class="btn btn-secondary" onclick="removeCard(); return false;">Remove Card</button>
+      <button type="submit" class="btn btn-secondary" onclick="removePatientCard(); return false;">Remove Card</button>
     </div>
   </form>
 </div>
@@ -105,12 +118,20 @@
         <div class="row">
             <div id="patient_card" class="card w-75 mb-2 ml-2 mr-2">
                 <div class="card-body">
-                    <h4 class="card-title">Patient Card</h4>
+                    <h4 class="card-title">Personal Card</h4>
                     <div class="card-subtitle mb-2 text-muted">Patient Name: <span class="card-text" id="patient_card_name"></span></div>
                     <div class="card-subtitle mb-2 text-muted">Patient ID: <span class="card-text" id="patient_card_id"></span></div>
-                    <div class="card-subtitle mb-2 text-muted">Patient UID: <span class="card-text" id="patient_card_uid"></span></div>
                     <div class="card-subtitle mb-2 text-muted">Public Key: <span class="card-text" id="patient_card_pub_key"></span></div>
                     <div class="card-subtitle mb-2 text-muted">Private Key: <span class="card-text" id="patient_card_priv_key"></span></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div id="patient_card" class="card w-75 mb-2 ml-2 mr-2">
+                <div class="card-body">
+                    <h4 class="card-title">Patient Card</h4>
+                    <div class="card-subtitle mb-2 text-muted">Patient UID: <span class="card-text" id="patient_card_uid"></span></div>
+                    <div class="card-subtitle mb-2 text-muted">Private Key: <span class="card-text" id="patient_card_private_key"></span></div>
                 </div>
             </div>
         </div>
@@ -374,8 +395,27 @@
   /* UI Helper Functions */
   /*************/
 
-  function removeCard() {
-    var fileInput = document.getElementById('files');
+  function removePersonalCard() {
+    var fileInput = document.getElementById('personal_files');
+    fileInput.value = '';
+
+    let card_patient_name_div = document.getElementById('patient_card_name');
+    card_patient_name_div.innerHTML = '';
+
+    let card_patient_id_div = document.getElementById('patient_card_id');
+    card_patient_id_div.innerHTML = '';
+
+    let card_patient_pub_key_div = document.getElementById('patient_card_pub_key');
+    card_patient_pub_key_div.innerHTML = '';
+
+    let card_patient_priv_key_div = document.getElementById('patient_card_priv_key');
+    card_patient_priv_key_div.innerHTML = '';
+
+    return false;
+  }
+
+  function removePatientCard() {
+    var fileInput = document.getElementById('patient_files');
     fileInput.value = '';
 
     let card_patient_uid_div = document.getElementById('patient_card_uid');
@@ -390,63 +430,63 @@
     return false;
   }
 
-  var newFileInput = document.getElementById('files'),
-      newReadFile = function () {
-          var reader = new FileReader();
-          reader.onload = function () {
-              let rows = reader.result.split('\n');
+  var newFileInput = document.getElementById('personal_files'),
+    newReadFile = function () {
+    var reader = new FileReader();
+    reader.onload = function () {
+        let rows = reader.result.split('\n');
 
-              // first row is labels, second row is data
-              let data_row = rows[1];
+        // first row is labels, second row is data
+        let data_row = rows[1];
 
-              // columns are [name, id, pub_key, priv_key]
-              let cols = data_row.split(',');
-              let name = cols[0];
-              let patient_id = cols[1];
-              let pub_key = cols[2];
-              let priv_key = cols[3];
+        // columns are [name, id, pub_key, priv_key]
+        let cols = data_row.split(',');
+        let name = cols[0];
+        let patient_id = cols[1];
+        let pub_key = cols[2];
+        let priv_key = cols[3];
 
-              let card_patient_name_div = document.getElementById('patient_card_name');
-              card_patient_name_div.innerHTML = name;
+        let card_patient_name_div = document.getElementById('patient_card_name');
+        card_patient_name_div.innerHTML = name;
 
-              let card_patient_id_div = document.getElementById('patient_card_id');
-              card_patient_id_div.innerHTML = patient_id;
+        let card_patient_id_div = document.getElementById('patient_card_id');
+        card_patient_id_div.innerHTML = patient_id;
 
-              let card_patient_pub_key_div = document.getElementById('patient_card_pub_key');
-              card_patient_pub_key_div.innerHTML = pub_key;
+        let card_patient_pub_key_div = document.getElementById('patient_card_pub_key');
+        card_patient_pub_key_div.innerHTML = pub_key;
 
-              let card_patient_priv_key_div = document.getElementById('patient_card_priv_key');
-              card_patient_priv_key_div.innerHTML = priv_key;
-          };
-          // Read the file.
-          reader.readAsBinaryString(newFileInput.files[0]);
-      };
+        let card_patient_priv_key_div = document.getElementById('patient_card_priv_key');
+        card_patient_priv_key_div.innerHTML = priv_key;
+    };
+    // Read the file.
+    reader.readAsBinaryString(newFileInput.files[0]);
+  };
 
   newFileInput.addEventListener('change', newReadFile);
 
   /* Upload/Download Helper Functions */
 
-  {#var fileInput = document.getElementById('files'),#}
-  {#  readFile = function () {#}
-  {#    var reader = new FileReader();#}
-  {#    var uid = '';#}
-  {#    var result = '';#}
-  {#    reader.onload = function () {#}
-  {#      // Ugly code to get params from file.#}
-  {#      result = reader.result.split(',');#}
-  {#      uid = reader.result.split(',')[1].split('\n')[1];#}
-  {##}
-  {#      let card_patient_uid_div = document.getElementById('patient_card_uid');#}
-  {#      card_patient_uid_div.innerHTML = uid;#}
-  {##}
-  {#      let card_private_key_div = document.getElementById('patient_card_private_key');#}
-  {#      card_private_key_div.innerHTML = result[2];#}
-  {#    };#}
-  {#    // Read the file.#}
-  {#    reader.readAsBinaryString(fileInput.files[0]);#}
-  {#  };#}
-  {##}
-  {#fileInput.addEventListener('change', readFile);#}
+  var fileInput = document.getElementById('patient_files'),
+    readFile = function () {
+    var reader = new FileReader();
+    var uid = '';
+    var result = '';
+    reader.onload = function () {
+      // Ugly code to get params from file.
+      result = reader.result.split(',');
+      uid = reader.result.split(',')[1].split('\n')[1];
+
+      let card_patient_uid_div = document.getElementById('patient_card_uid');
+      card_patient_uid_div.innerHTML = uid;
+
+      let card_private_key_div = document.getElementById('patient_card_private_key');
+      card_private_key_div.innerHTML = result[2];
+    };
+    // Read the file.
+    reader.readAsBinaryString(fileInput.files[0]);
+  };
+  
+  fileInput.addEventListener('change', readFile);
 
   function downloadCard() {
     let data = [['', '']];
