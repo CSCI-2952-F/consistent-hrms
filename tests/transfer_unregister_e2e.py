@@ -5,16 +5,14 @@ then unregistering the patient at hospital B.
 
 from __future__ import print_function
 
-import random
 import re
-import string
 import sys
 import time
 
 import jwt
 
 from common import fail, succeed
-from keys import PRIVATE_KEY, PUBLIC_KEY
+from keys import PATIENT_NAME, PATIENT_ID, PUBLIC_KEY, PRIVATE_KEY
 
 
 def main():
@@ -27,28 +25,24 @@ def main():
         print('There needs to be at least 2 hospitals running.')
         return False
 
-    # Generate patient name and ID
-    patient_name = ''.join(random.choice(string.ascii_lowercase) for _ in range(8))
-    patient_id = ''.join(random.choice(string.ascii_lowercase) for _ in range(8))
-
     # Create JWT token; one valid and one invalid
     valid_token = jwt.encode({
-        'name': patient_name,
-        'id': patient_id,
+        'name': PATIENT_NAME,
+        'id': PATIENT_ID,
         'exp': int(time.time()) + 60,
     }, PRIVATE_KEY, algorithm='RS256').decode('utf-8')
 
     invalid_token = jwt.encode({
-        'name': patient_name,
-        'id': patient_id,
+        'name': PATIENT_NAME,
+        'id': PATIENT_ID,
         'exp': int(time.time()) - 60,
     }, PRIVATE_KEY, algorithm='RS256').decode('utf-8')
 
     # Register patient at hospital A
-    print(f'[*] Registering name={patient_name} id={patient_id} at {hospitals[0]}...')
+    print(f'[*] Registering name={PATIENT_NAME} id={PATIENT_ID} at {hospitals[0]}...')
     res = succeed('http://localhost:8100/patient_reg', {
-        'id': patient_id,
-        'name': patient_name,
+        'id': PATIENT_ID,
+        'name': PATIENT_NAME,
         'pub_key': PUBLIC_KEY,
     })
 
