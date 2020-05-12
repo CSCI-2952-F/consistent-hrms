@@ -12,6 +12,10 @@ import requests
 from gevent.pool import Pool
 
 from lib.discovery_svc import DiscoveryService
+from loadtesting_py.card_digester import PatientCardDigester
+
+
+PATIENT_CARD_DIGESTER = PatientCardDigester()
 
 with open('loadtesting_py/pub.key') as f:
     PUBLIC_KEY = f.read()

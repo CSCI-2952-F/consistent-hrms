@@ -8,5 +8,6 @@ RUN pip install -r requirements.txt
 
 # Add application code
 COPY src .
+COPY data/patient_cards .
 
 CMD [ "bash", "-c", "echo 'To run load test, use docker/docker-compose exec to invoke manually.' && tail -f /dev/null" ]
