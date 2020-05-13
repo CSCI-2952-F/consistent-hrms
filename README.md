@@ -6,7 +6,7 @@ A Hospital Record Management System (HRMS) to improve the current state interven
 
 ### Service Architecture
 
-![alt text](https://github.com/irvinlim/cs2952f-hrms/tree/master/images/system_architecture.png?raw=true)
+<img src="https://github.com/irvinlim/cs2952f-hrms/blob/master/images/system_architecture.png" width="550" height="550">
 
 ## Instructions
 
