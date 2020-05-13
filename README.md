@@ -28,7 +28,7 @@ Patients can `REGISTER` with at most 1 hospital at a time, `READ` and `TRANSFER`
 | Local Storage                                        | Python  | Stores encrypted medical records in Redis datastore|
 | MQ Client                                            | Go      | Client to interface with MQ CSL|
 | Central DB Client                                    | Go      | Client to interface with central RDBMS server|
-| BigchainDB Client                                    | Go      | Client to interface with BigchainDB CSL|
+| BigchainDB Client                                    | Python  | Client to interface with BigchainDB CSL|
 | Loadtester                                           | Go      | Custom executable to send asynchronous requests to all hospitals|
 
 ## Instructions
@@ -77,7 +77,7 @@ A patient will need to upload their pre-allocated personal card before registeri
 
 ### Development
 
-When making source code changes, it is necessary to rebuild the services. You can use `python hospitals.py start` to rebuild and reload just the changed services.
+When making source code changes, it is necessary to rebuild the services. You can use `python hospitals.py start` to rebuild and reload just the changed services. This depends on the contents of `hospitals.txt`.
 
 The `hospitals.py` script also provides useful aliases for working with multiple Docker Compose projects. For example, to view the running containers across all hospitals, you can use:
 
@@ -123,14 +123,10 @@ The list of proxied commands to Docker Compose can be found in `hospitals.py`.
 To view Docker Compose information for a single hospital, use the following command syntax:
 
 ```sh
-docker-compose -f docker-compose.hospital.yml -p <HOSPITAL-NAME> <COMMAND>
+docker-compose -f <DOCKER_COMPOSE_YML> ... -p <HOSPITAL-NAME> <COMMAND>
 ```
 
-For example, to view all containers for Rhode Island Hospital, do the following:
-
-```sh
-docker-compose -f docker-compose.hospital.yml -p rhode-island-hospital ps
-```
+To change the number of hospitals to orchestrate, modify `hospitals.txt`.
 
 ### Tearing down
 
@@ -139,8 +135,6 @@ To terminate all containers, use the helper script again:
 ```sh
 python hospitals.py stop
 ```
-
-If you want to permanently
 
 ## Configuration
 
