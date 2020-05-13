@@ -1,6 +1,6 @@
 # Consistent Storage Between Mutual Distrustful Parties
 
-A **Hospital Record Management System (HRMS)** to improve the current state intervention in the US called [Prescription Drug Monitoring Programs (PDMPs)](https://www.cdc.gov/drugoverdose/pdmp/states.html). This application is built using a microservice architecture with 3 different consistent storage layer (CSL) solutions that can be toggled. The 3 CSL solutions entail a blockchain (BigchainDB), a message queue (Apache Kafka), and a central RDBMS (InnoDB MySQL). 
+A **Hospital Record Management System (HRMS)** to improve the current state intervention in the US called [Prescription Drug Monitoring Programs (PDMPs)](https://www.cdc.gov/drugoverdose/pdmp/states.html). This application is built using a microservice architecture with 3 different consistent storage layer (CSL) solutions that can be toggled. The 3 CSL solutions entail a blockchain ([BigchainDB](https://www.bigchaindb.com/)), a message queue ([Apache Kafka](https://kafka.apache.org/)), and a central RDBMS ([InnoDB MySQL](https://dev.mysql.com/doc/refman/8.0/en/innodb-storage-engine.html)). 
 
 ## Screenshots
 <p align="center">
@@ -15,6 +15,19 @@ Our HRMS is composed of many microservices written in different languages that t
 <p align="center">
   <img src="https://github.com/irvinlim/cs2952f-hrms/blob/master/images/system_architecture.png" width="550" height="550">
 </p>
+
+| Service                                              | Language      | Description                                                                                                                       |
+| ---------------------------------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Frontend                                             | HTML/CSS/JS  | UI for patients and physicians |
+| API Gateway                                          | Python  | Funnels requests to patient/physician service |
+| Patient Service                                      | Python  | Handles patient requests |
+| Physician Service                                    | Python  | Handles physician requests |
+| Discovery Service                                    | Go      | Acts as a DNS for the services |
+| Local Storage                                        | Python  | Stores encrypted medical records in Redis datastore|
+| MQ Client                                            | Go      | Client to interface with MQ CSL|
+| Central DB Client                                    | Go      | Client to interface with central RDBMS server|
+| BigchainDB Client                                    | Go      | Client to interface with BigchainDB CSL|
+| Loadtester                                           | Go      | Custom executable to send asynchronous requests to all hospitals|
 
 ## Instructions
 
