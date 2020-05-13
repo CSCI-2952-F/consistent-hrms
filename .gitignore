@@ -42,5 +42,5 @@ src/.env
 *.swp
 *.swo
 
-# Ignore patient cards
-/src/bigchaindb_client/patient_cards/*
+# Ignore pre-populated cards
+/src/bigchaindb_client/personal_cards/*

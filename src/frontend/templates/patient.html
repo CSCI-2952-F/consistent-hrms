@@ -368,8 +368,8 @@
 
         let name = reader.result.split('\n')[1].split(",")[0];
         let patient_id = reader.result.split('\n')[1].split(",")[1];
-        let pub_key = data[5];
-        let priv_key = data[6];
+        let pub_key = data[7];
+        let priv_key = data[8];
 
         let card_patient_name_div = document.getElementById('patient_card_name');
         card_patient_name_div.innerHTML = name;

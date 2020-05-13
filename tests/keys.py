@@ -1,7 +1,7 @@
 import csv
 from glob import glob
 
-for card_file in glob("src/bigchaindb_client/patient_cards/*.csv"):
+for card_file in glob("src/bigchaindb_client/personal_cards/*.csv"):
     with open(card_file, "r") as f:
         reader = csv.reader(f, delimiter=",", quotechar='"')
         for i, row in enumerate(reader):
