@@ -12,7 +12,7 @@ A **Hospital Record Management System (HRMS)** to improve the current state inte
 ## Service Architecture
 Our HRMS is composed of many microservices written in different languages that talk to each other using [Nameko](https://github.com/nameko/nameko) (our main microservice framework for implementing RPC servers). 
 
-Patients can `REGSITER` with at most 1 hospital at a time, `READ` and `TRANSFER` their medical records, and can `UNREGISTER` from our ecosystem. Physicians can `REGISTER` with many hospitals and can `READ` and `WRITE` medical records for a patient if given consent by the patient i.e. the patient has provided their card which contains their personal credentials.
+Patients can `REGISTER` with at most 1 hospital at a time, `READ` and `TRANSFER` their medical records, and can `UNREGISTER` from our ecosystem. Physicians can `REGISTER` with many hospitals and can `READ` and `WRITE` medical records for a patient if given consent by the patient i.e. the patient has provided their card which contains their personal credentials.
 
 <p align="center">
   <img src="https://github.com/irvinlim/cs2952f-hrms/blob/master/images/system_architecture.png" width="550" height="550">
