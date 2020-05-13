@@ -2,18 +2,15 @@
 
 A Hospital Record Management System (HRMS) to improve the current state intervention in the US called Prescription Drug Monitoring Programs (PDMPs). This application is built using a microservice architecture with 3 different consistent storage layer (CSL) solutions that can be toggled. The 3 CSL solutions entail a blockchain (BigchainDB), a message queue (Apache Kafka), and a central RDBMS (InnoDB MySQL). 
 
-### Screenshots
+## Screenshots
 <p align="center">
   <img src="https://github.com/irvinlim/cs2952f-hrms/blob/master/images/home.png" width="650" height="350">
-</p>
-<p align="center">
   <img src="https://github.com/irvinlim/cs2952f-hrms/blob/master/images/patient.png" width="650" height="350">
-</p>
-<p align="center">
   <img src="https://github.com/irvinlim/cs2952f-hrms/blob/master/images/physician.png" width="650" height="350">
 </p>
 
-### Service Architecture
+## Service Architecture
+Our HRMS is composed of many microservices written in different languages that talk to each other Nameko (our main microservice framework for implementing RPC servers).
 
 <p align="center">
   <img src="https://github.com/irvinlim/cs2952f-hrms/blob/master/images/system_architecture.png" width="550" height="550">
