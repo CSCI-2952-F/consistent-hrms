@@ -148,6 +148,12 @@ The following environment variables are used:
 
 You can also choose to spin up more hospitals by adding or removing lines in `data/hospitals.txt`.
 
+## Testing
+
+### End-to-end tests
+
+There are several end-to-end tests for testing the correctness of CSLs and patient workflows in the `tests/` directory.
+
 ## Style Guide
 
 ### General
