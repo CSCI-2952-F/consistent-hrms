@@ -8,7 +8,7 @@ from lib import hasher
 from bigchaindb_client.bigchain_backend import BigchaindbBackend
 from lib import crypto, hasher
 
-PATH_TO_VOLUME = "/usr/src/app/bigchaindb_client/patient_cards/"
+PATH_TO_VOLUME = "/usr/src/app/bigchaindb_client/personal_cards/"
 
 
 def catch_exc(func):
@@ -48,7 +48,7 @@ def prepopulate(num_cards, name):
 
         _debug_print(f"{hash_uid} with pub_key:{public_key} put to bigchaindb")
 
-        file_name = PATH_TO_VOLUME + name + patient_id + "_patient_card.csv"
+        file_name = PATH_TO_VOLUME + name + patient_id + "_personal_card.csv"
 
         with open(file_name, 'w') as f:
             writer = csv.writer(f, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
