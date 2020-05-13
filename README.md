@@ -148,7 +148,7 @@ You can specify various configuration for running different types of experiments
 
 The following environment variables are used:
 
-- `CONSISTENT_STORAGE_BACKEND`: Choose the backend used for consistent storage. Options: `sagas`, `bigchain`
+- `CONSISTENT_STORAGE_BACKEND`: Choose the backend used for consistent storage. Options: `sagas`, `bigchain`, `centraldb`
 - `SAGAS_NUM_PARTITIONS`: Number of partitions in the Kafka topic, to increase parallelism.
   - When changing this, Kafka will probably complain. It's best to delete the topic whenever you need to change the number of partitions in order to run experiments.
 
