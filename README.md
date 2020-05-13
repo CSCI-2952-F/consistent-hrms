@@ -1,5 +1,13 @@
 # Consistent Storage Between Mutual Distrustful Parties
 
+A Hospital Record Management System (HRMS) to improve the current state intervention in the US called Prescription Drug Monitoring Programs (PDMPs). This application is built using a microservice architecture with 3 different consistent storage layer (CSL) solutions that can be toggled. The 3 CSL solutions entail a blockchain (BigchainDB), a message queue (Apache Kafka), and a central RDBMS (InnoDB MySQL). 
+
+### Screenshots
+
+### Service Architecture
+
+![alt text](https://github.com/irvinlim/cs2952f-hrms/images/system_architecture.png?raw=true)
+
 ## Instructions
 
 ### Starting up
