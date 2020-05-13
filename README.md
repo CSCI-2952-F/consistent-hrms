@@ -37,6 +37,11 @@ python hospitals.py start
 You need to seed bigchaindb with unregistered patient assets. Run the following commands:
 
 ```sh
+./preopulate.sh <num_cards> <patient_name>
+```
+
+For example:
+```sh
 ./prepopulate.sh 1 alice
 ./prepopulate.sh 1 bob
 ./prepopulate.sh 1 charlie
