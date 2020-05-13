@@ -47,7 +47,7 @@ For example:
 ./prepopulate.sh 1 charlie
 ```
 
-The patient cards will be found in `src/bigchaindb_client/patient_cards/`.
+The patient cards will be found in `src/bigchaindb_client/personal_cards/`.
 
 If you would like to reseed bigchain, do this:
 
@@ -57,6 +57,8 @@ docker-compose -f docker-compose.bigchain.yml -p cs2952f-bigchain up -d --build
 ```
 
 The frontend servers will be listening on the local interface, at ports starting from 8000.
+
+A patient will need to upload their pre-allocated personal card before registering with any hospital in our ecosystem. A successful registration will result in a patient card that can be downloaded and used for that patient from that point onwards.
 
 ### Development
 
