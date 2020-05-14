@@ -83,6 +83,8 @@ class BigchaindbBackend(BaseStorageBackend):
             raise MissingAssetException(key)
 
         asset_id = res[0]['id']
+        
+        # TODO: get hospital name corresponding to public key.
         owner = self.bdb.transactions.get(asset_id=asset_id)[-1]['outputs'][0]['public_keys'][0]
         self._debug_print(f"Owner for {key}: {owner}")
 

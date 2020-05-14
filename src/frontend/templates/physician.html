@@ -116,6 +116,7 @@
     const physician_name = physician_name_div.val();
     const physician_id_div = $('#physician_id');
     const physician_id = physician_id_div.val();
+    const reg_div = document.getElementById('registration-output');
 
     // Send AJAX request
     const data = { name: physician_name, id: physician_id };
@@ -129,10 +130,13 @@
         reg_div.innerHTML = 'Registration Unsuccessful.';
       },
       success: function (response) {
-        const reg_div = document.getElementById('registration-output');
-        reg_div.innerHTML = 'Registration Successful.';
-        const card_physician_uid = document.getElementById('physician_card_uid');
-        card_physician_uid.innerHTML = response.uid;
+        if (response.error) {
+          reg_div.innerHTML = 'Registration Unsuccessful: ' + response.error;
+        } else {
+          reg_div.innerHTML = 'Registration Successful.';
+          const card_physician_uid = document.getElementById('physician_card_uid');
+          card_physician_uid.innerHTML = response.uid;
+        }
       },
     });
     physician_name_div.val('');
@@ -163,12 +167,16 @@
         read_output_div.innerHTML = 'Read Unsuccessful.';
       },
       success: function (response) {
-        read_output_div.innerHTML = '';
+        if (response.error) {
+          read_output_div.innerHTML = 'Read Unsuccessful: ' + response.error;
+        } else {
+          read_output_div.innerHTML = '';
 
-        for (let i = 0; i < response.data.length; i++) {
-          const elem = document.createElement('div');
-          elem.innerHTML = decrypt(response.data[i]);
-          read_output_div.append(elem);
+          for (let i = 0; i < response.data.length; i++) {
+            const elem = document.createElement('div');
+            elem.innerHTML = decrypt(response.data[i]);
+            read_output_div.append(elem);
+          }
         }
       },
     });
@@ -204,7 +212,11 @@
         write_output_div.innerHTML = 'Write Unsuccessful.';
       },
       success: function (response) {
-        write_output_div.innerHTML = 'Write Successful.';
+        if (response.error) {
+          write_output_div.innerHTML = 'Write Unsuccessful: ' + response.error;
+        } else {
+          write_output_div.innerHTML = 'Write Successful.';
+        }
       },
     });
     note_div.val('');

@@ -160,15 +160,13 @@
     let reg_div = document.getElementById('registration-output');
 
     if (patient_name == "" || patient_id == "" || patient_pub_key == "") {
-        alert('Please upload your patient card.');
+        alert('Please upload your personal card.');
         reg_div.innerHTML = 'Registration Unsuccessful.';
         return;
     }
 
     const data = { name: patient_name, id: patient_id, pub_key: patient_pub_key };
     
-    console.log(data);
-
     $.ajax({
         url: 'http://localhost:{{api_gateway_port}}/patient_reg',
         type: 'POST',
@@ -178,12 +176,16 @@
             reg_div.innerHTML = 'Registration Unsuccessful: ' + error;
         },
         success: function (response) {
-          reg_div.innerHTML = 'Registration Successful!';
-          // Update patient card UI.
-          let card_patient_uid_div = document.getElementById('patient_card_uid');
-          card_patient_uid_div.innerHTML = response.uid;
-          let card_private_key_div = document.getElementById('patient_card_private_key');
-          card_private_key_div.innerHTML = document.getElementById('patient_card_priv_key').innerHTML;
+          if (response.error) {
+            reg_div.innerHTML = 'Registration Unsuccessful: ' + response.error;
+          } else {
+            reg_div.innerHTML = 'Registration Successful!';
+            // Update patient card UI.
+            let card_patient_uid_div = document.getElementById('patient_card_uid');
+            card_patient_uid_div.innerHTML = response.uid;
+            let card_private_key_div = document.getElementById('patient_card_private_key');
+            card_private_key_div.innerHTML = document.getElementById('patient_card_priv_key').innerHTML;
+          }
         },
     });
   }
@@ -217,13 +219,17 @@
         read_output_div.innerHTML = 'Read Unsuccessful.';
       },
       success: function (response) {
-        // Clear div before printing responses
-        read_output_div.innerHTML = '';
+        if (response.error) {
+          read_output_div.innerHTML  = 'Read Unsuccessful: ' + response.error;
+        } else {
+          // Clear div before printing responses
+          read_output_div.innerHTML = '';
 
-        for (let i = 0; i < response.data.length; i++) {
-          var elem = document.createElement('div');
-          elem.innerHTML = decrypt(response.data[i]);
-          read_output_div.append(elem);
+          for (let i = 0; i < response.data.length; i++) {
+            var elem = document.createElement('div');
+            elem.innerHTML = decrypt(response.data[i]);
+            read_output_div.append(elem);
+          }
         }
       },
     });
@@ -274,7 +280,11 @@
         transfer_output_div.innerHTML = 'Transfer Unsuccessful.';
       },
       success: function (response) {
-        transfer_output_div.innerHTML = 'Transfer Successful.';
+        if (response.error) {
+          transfer_output_div.innerHTML = 'Transfer Unsuccessful: ' + response.error;
+        } else {
+          transfer_output_div.innerHTML = 'Transfer Successful.';
+        }
       },
     });
   }
@@ -315,7 +325,11 @@
         unregister_output_div.innerHTML = 'Unregister Unsuccessful.';
       },
       success: function (response) {
-        unregister_output_div.innerHTML = 'Unregister Successful.';
+        if (response.error) {
+          unregister_output_div.innerHTML = 'Unregister Unsuccessful: ' + response.error;
+        } else {
+          unregister_output_div.innerHTML = 'Unregister Successful.';
+        }
       },
     });
   }

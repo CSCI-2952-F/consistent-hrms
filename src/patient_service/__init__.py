@@ -23,7 +23,7 @@ class Unauthorized(Exception):
 
 class PatientRegistrationExists(Exception):
     def __init__(self, patient_id):
-        super().__init__(f'Patient "{patient_id}" is already registered as "{get_hospital_name()}"')
+        super().__init__(f'Patient "{patient_id}" is already registered at "{get_hospital_name()}"')
 
 
 class PatientRegistrationViolation(Exception):
@@ -95,8 +95,6 @@ class PatientService:
         # Store medical record in local storage
         record = MedicalRecord(self.hospital_name, uid, notes=f'New registration at {self.hospital_name}')
         self.local_storage.insert_item(hash_uid, pub_key, record)
-
-        print("stored in local storage", flush=True)
 
         # Return patient unique identifier
         return uid
