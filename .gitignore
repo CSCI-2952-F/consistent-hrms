@@ -42,5 +42,8 @@ src/.env
 *.swp
 *.swo
 
-# Ignore pre-populated cards
+# Ignore pre-populated cards, except for the example ones
 /src/bigchaindb_client/personal_cards/*
+!/src/bigchaindb_client/personal_cards/alice*
+!/src/bigchaindb_client/personal_cards/bob*
+!/src/bigchaindb_client/personal_cards/charlie*

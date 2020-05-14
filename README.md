@@ -12,7 +12,7 @@ A **Hospital Record Management System (HRMS)** to improve the current state inte
 ## Service Architecture
 Our HRMS is composed of many microservices written in different languages that talk to each other using [Nameko](https://github.com/nameko/nameko) (our main microservice framework for implementing RPC servers). 
 
-Patients can `REGSITER` with at most 1 hospital at a time, `READ` and `TRANSFER` their medical records, and can `UNREGISTER` from our ecosystem. Physicians can `REGISTER` with many hospitals and can `READ` and `WRITE` medical records for a patient if given consent by the patient i.e. the patient has provided their card which contains their personal credentials.
+Patients can `REGISTER` with at most 1 hospital at a time, `READ` and `TRANSFER` their medical records, and can `UNREGISTER` from our ecosystem. Physicians can `REGISTER` with many hospitals and can `READ` and `WRITE` medical records for a patient if given consent by the patient i.e. the patient has provided their card which contains their personal credentials.
 
 <p align="center">
   <img src="https://github.com/irvinlim/cs2952f-hrms/blob/master/images/system_architecture.png" width="550" height="550">
@@ -28,7 +28,7 @@ Patients can `REGSITER` with at most 1 hospital at a time, `READ` and `TRANSFER`
 | Local Storage                                        | Python  | Stores encrypted medical records in Redis datastore|
 | MQ Client                                            | Go      | Client to interface with MQ CSL|
 | Central DB Client                                    | Go      | Client to interface with central RDBMS server|
-| BigchainDB Client                                    | Go      | Client to interface with BigchainDB CSL|
+| BigchainDB Client                                    | Python  | Client to interface with BigchainDB CSL|
 | Loadtester                                           | Go      | Custom executable to send asynchronous requests to all hospitals|
 
 ## Instructions
@@ -77,7 +77,7 @@ A patient will need to upload their pre-allocated personal card before registeri
 
 ### Development
 
-When making source code changes, it is necessary to rebuild the services. You can use `python hospitals.py start` to rebuild and reload just the changed services.
+When making source code changes, it is necessary to rebuild the services. You can use `python hospitals.py start` to rebuild and reload just the changed services. This depends on the contents of `hospitals.txt`.
 
 The `hospitals.py` script also provides useful aliases for working with multiple Docker Compose projects. For example, to view the running containers across all hospitals, you can use:
 
@@ -123,14 +123,10 @@ The list of proxied commands to Docker Compose can be found in `hospitals.py`.
 To view Docker Compose information for a single hospital, use the following command syntax:
 
 ```sh
-docker-compose -f docker-compose.hospital.yml -p <HOSPITAL-NAME> <COMMAND>
+docker-compose -f <DOCKER_COMPOSE_YML> ... -p <HOSPITAL-NAME> <COMMAND>
 ```
 
-For example, to view all containers for Rhode Island Hospital, do the following:
-
-```sh
-docker-compose -f docker-compose.hospital.yml -p rhode-island-hospital ps
-```
+To change the number of hospitals to orchestrate, modify `hospitals.txt`.
 
 ### Tearing down
 
@@ -140,19 +136,23 @@ To terminate all containers, use the helper script again:
 python hospitals.py stop
 ```
 
-If you want to permanently
-
 ## Configuration
 
 You can specify various configuration for running different types of experiments on the architecture.
 
 The following environment variables are used:
 
-- `CONSISTENT_STORAGE_BACKEND`: Choose the backend used for consistent storage. Options: `sagas`, `bigchain`
+- `CONSISTENT_STORAGE_BACKEND`: Choose the backend used for consistent storage. Options: `sagas`, `bigchain`, `centraldb`
 - `SAGAS_NUM_PARTITIONS`: Number of partitions in the Kafka topic, to increase parallelism.
   - When changing this, Kafka will probably complain. It's best to delete the topic whenever you need to change the number of partitions in order to run experiments.
 
 You can also choose to spin up more hospitals by adding or removing lines in `data/hospitals.txt`.
+
+## Testing
+
+### End-to-end tests
+
+There are several end-to-end tests for testing the correctness of CSLs and patient workflows in the `tests/` directory.
 
 ## Style Guide
 
