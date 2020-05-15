@@ -2,9 +2,10 @@ Developers: [Ankita Sharma](https://github.com/ankitasharma1), [Irvin Lim](https
 
 # Consistent Storage Between Mutual Distrustful Parties
 
-A **Hospital Record Management System (HRMS)** to improve the current state intervention in the US called [Prescription Drug Monitoring Programs (PDMPs)](https://www.cdc.gov/drugoverdose/pdmp/states.html). This application is built using a microservice architecture with 3 different consistent storage layer (CSL) solutions that can be toggled. The 3 CSL solutions entail a blockchain ([BigchainDB](https://www.bigchaindb.com/)), a message queue ([Apache Kafka](https://kafka.apache.org/)), and a central RDBMS ([InnoDB MySQL](https://dev.mysql.com/doc/refman/8.0/en/innodb-storage-engine.html)). 
+A **Hospital Record Management System (HRMS)** to improve the current state intervention in the US called [Prescription Drug Monitoring Programs (PDMPs)](https://www.cdc.gov/drugoverdose/pdmp/states.html). This application is built using a microservice architecture with 3 different consistent storage layer (CSL) solutions that can be toggled. The 3 CSL solutions entail a blockchain ([BigchainDB](https://www.bigchaindb.com/)), a message queue ([Apache Kafka](https://kafka.apache.org/)), and a central RDBMS ([InnoDB MySQL](https://dev.mysql.com/doc/refman/8.0/en/innodb-storage-engine.html)).
 
 ## Screenshots
+
 <p align="center">
   <img src="https://github.com/irvinlim/cs2952f-hrms/blob/master/images/home.png" width="650" height="350">
   <img src="https://github.com/irvinlim/cs2952f-hrms/blob/master/images/patient.png" width="650" height="350">
@@ -12,7 +13,8 @@ A **Hospital Record Management System (HRMS)** to improve the current state inte
 </p>
 
 ## Service Architecture
-Our HRMS is composed of many microservices written in different languages that talk to each other using [Nameko](https://github.com/nameko/nameko) (our main microservice framework for implementing RPC servers). 
+
+Our HRMS is composed of many microservices written in different languages that talk to each other using [Nameko](https://github.com/nameko/nameko) (our main microservice framework for implementing RPC servers).
 
 Patients can `REGISTER` with at most 1 hospital at a time, `READ` and `TRANSFER` their medical records, and can `UNREGISTER` from our ecosystem. Physicians can `REGISTER` with many hospitals and can `READ` and `WRITE` medical records for a patient if given consent by the patient i.e. the patient has provided their card which contains their personal credentials.
 
@@ -20,18 +22,68 @@ Patients can `REGISTER` with at most 1 hospital at a time, `READ` and `TRANSFER`
   <img src="https://github.com/irvinlim/cs2952f-hrms/blob/master/images/system_architecture.png" width="550" height="550">
 </p>
 
-| Service                                              | Language      | Description                                                                                                                       |
-| ---------------------------------------------------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| Frontend                                             | HTML/CSS/JS  | UI for patients and physicians |
-| API Gateway                                          | Python  | Funnels requests to patient/physician service |
-| Patient Service                                      | Python  | Handles patient requests |
-| Physician Service                                    | Python  | Handles physician requests |
-| Discovery Service                                    | Go      | Acts as a DNS for the services |
-| Local Storage                                        | Python  | Stores encrypted medical records in Redis datastore|
-| MQ Client                                            | Go      | Client to interface with MQ CSL|
-| Central DB Client                                    | Go      | Client to interface with central RDBMS server|
-| BigchainDB Client                                    | Python  | Client to interface with BigchainDB CSL|
-| Loadtester                                           | Go      | Custom executable to send asynchronous requests to all hospitals|
+The following is a list of core services that will be deployed in each hospital. We expect that these microservices will have full access to each other within a private network.
+
+| Service                                         | Language    | Description                                                            |
+| ----------------------------------------------- | ----------- | ---------------------------------------------------------------------- |
+| Frontend (`frontend`)                           | HTML/CSS/JS | UI for patients and physicians                                         |
+| API Gateway (`api_gateway`)                     | Python      | Entrypoint. Funnels requests to patient/physician services             |
+| Patient Service (`patient_service`)             | Python      | Handles business logic for patient requests                            |
+| Physician Service (`physician_service`)         | Python      | Handles business logic for physician requests                          |
+| Discovery Service (`discovery_service`)         | Go          | Acts as service discovery and key management service for the hospitals |
+| Consistent Storage Proxy (`consistent_storage`) | Python      | Server that proxies consistent storage operations to the CSL backend   |
+| MQ Client (`sagas`)                             | Go          | Server that provides the MQ CSL interface                              |
+| Central DB Server (`centraldb`)                 | Go          | Server that provides the RDBMS CSL interface                           |
+| BigchainDB Client (`bigchaindb_client`)         | Python      | Server that provides the BigchainDB CSL interface                      |
+
+Other auxiliary services located within each hospital include:
+
+| Service | Purpose |
+| `rabbitmq` | RabbitMQ server, which provides the data plane for the AMQP protocol, used by Nameko services |
+| `local_storage` | Redis server for storing encrypted medical records, or other data that does not need consistent inter-hospital synchronization |
+
+The rest of the services are deployed centrally, where all hospitals will connect via an overlay network to the necessary centralized service. Services that do not define a network below means that hospitals do not have direct access to them.
+
+| Namespace | Service | Hospital Overlay Network | Purpose |
+| `cs2952f-sagas` | `kafka` | `hrms-hospital-sagas` | Kafka server that all hospital `sagas` services will communicate with |
+| `cs2952f-sagas` | `zookeeper` | - | Used by `cs2952f-sagas_kafka` as its backing datastore |
+| `cs2952f-centraldb` | `centraldb` | `hrms-hospital-centraldb` | gRPC server for providing the RDBMS CSL |
+| `cs2952f-centraldb` | `mysql` | - | Used by `cs2952f-centraldb_centraldb` as its backing datastore |
+| `cs2952f-bigchain` | `bigchaindb` | `hrms-hospital-bigchain` | HTTP server for a single BigchainDB node |
+| `cs2952f-bigchain` | `tendermint` | - | Consensus engine that is used by `cs2952f-bigchain_bigchaindb` to resolve and achieve consensus; it is the heart of the BigchainDB node within the bigger consortium |
+| `cs2952f-bigchain` | `mongodb` | - | Local datastore for the BigchainDB node |
+| `cs2952f-discovery` | `discovery_service` | `hrms-hospital-discovery` | A non-hospital node within the discovery service mesh; simply exposes discovery service information from within the network, used by auxiliary stuff like loadtesting |
+| `cs2952f-discovery` | `zookeeper` | `hrms-hospital-discovery` | Used for hospitals to register themselves on an inter-hospital service mesh, provides IDs, hostnames, and public key announcements. Uses [ZK ACLs](https://zookeeper.apache.org/doc/r3.1.2/zookeeperProgrammers.html#sc_ZooKeeperAccessControl) to secure its Znode, so that other hospitals cannot tamper with it as long as the (ephemeral) Znode exists |
+| `cs2952f-loadtesting` | `loadtester` | `hrms-loadtesting` | Sidecar for injecting HTTP requests to all `consistent_storage` services discovered on the discovery service, for loadtesting and benchmarking purposes |
+| `cs2952f-loadtesting` | `loadtester_py` | `hrms-loadtesting` | Same thing as above, but in Python (not used due to poor performance) |
+
+### MQ CSL Architecture
+
+![sagas-architecture](images/sagas-architecture.png)
+
+Each hospital runs its own `sagas` server, which participates and consumes from a single Kafka topic. Apache Kafka will help to provide a global total order over all messages, providing CSL semantics.
+
+The `sagas` server implements the [`ConsistentStorage`](https://github.com/CSCI-2952-F/consistent-hrms/blob/master/protos/consistent_storage.proto) interface, and provides Python bindings for making the gRPC requests within the hospital private network.
+
+Since messages published to Kafka are not authenticated, we implement a PKI-based solution to authenticate and verify the integrity of a sender.
+
+### RDBMS CSL Architecture
+
+![centraldb-architecture](images/centraldb-architecture.png)
+
+The `centraldb` server is a single server that all hospitals will connect to, federating reads and writes to an InnoDB MySQL database/cluster.
+
+The `centraldb` server implements the [`CentralConsistentStorage`](https://github.com/CSCI-2952-F/consistent-hrms/blob/master/protos/consistent_storage.proto) interface, which is a wrapper interface around `ConsistentStorage`, adding authentication and identification to the protocol.
+
+### BigchainDB CSL Architecture
+
+Each hospital runs its own `bigchaindb_client` server (contrary to its name), which interfaces directly with a BigchainDB consortium.
+
+The `bigchaindb_client` server also implements the [`ConsistentStorage`](https://github.com/CSCI-2952-F/consistent-hrms/blob/master/protos/consistent_storage.proto) interface over gRPC.
+
+The following is the architecture of a BigchainDB consortium, in which `bigchaindb_client` servers are "users".
+
+![bigchaindb-architecture](https://www.researchgate.net/profile/Anastasios_Kalogeropoulos/publication/328342750/figure/fig6/AS:682737056874496@1539788607025/BigchainDB-architecture.png)
 
 ## Instructions
 
@@ -58,6 +110,7 @@ You need to seed bigchaindb with unregistered patient assets. Run the following 
 ```
 
 For example:
+
 ```sh
 ./prepopulate.sh 1 alice
 ./prepopulate.sh 1 bob
