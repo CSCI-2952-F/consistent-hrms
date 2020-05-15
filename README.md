@@ -211,6 +211,14 @@ You can also choose to spin up more hospitals by adding or removing lines in `da
 
 There are several end-to-end tests for testing the correctness of CSLs and patient workflows in the `tests/` directory.
 
+### Benchmark tests
+
+We also implemented loadtesting within the project, which measures request latency and QPS on the consistent storage layer as we scale the number of hospitals between 1 to 8 hospitals.
+
+Some results:
+
+![benchmark-results](images/benchmark-results.png)
+
 ## Style Guide
 
 ### General
