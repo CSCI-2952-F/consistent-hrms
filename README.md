@@ -83,7 +83,7 @@ Each hospital runs its own `bigchaindb_client` server (contrary to its name), wh
 
 The `bigchaindb_client` server also implements the [`ConsistentStorage`](https://github.com/CSCI-2952-F/consistent-hrms/blob/master/protos/consistent_storage.proto) interface over gRPC.
 
-The following is the architecture of a BigchainDB consortium, in which `bigchaindb_client` servers are "users".
+The following is the architecture of a BigchainDB consortium, in which `bigchaindb_client` servers are "users". We did not implement authentication over the communication between the hospital to the BigchainDB node, since mutually distrustful hospitals could simply not rely on the same BigchainDB node.
 
 ![bigchaindb-architecture](https://www.researchgate.net/profile/Anastasios_Kalogeropoulos/publication/328342750/figure/fig6/AS:682737056874496@1539788607025/BigchainDB-architecture.png)
 
