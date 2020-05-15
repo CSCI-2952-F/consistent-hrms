@@ -1,3 +1,5 @@
+Developers: [Ankita Sharma](https://github.com/ankitasharma1), [Irvin Lim](https://github.com/irvinlim/), [James Rolfe](https://github.com/jnrolfe)
+
 # Consistent Storage Between Mutual Distrustful Parties
 
 A **Hospital Record Management System (HRMS)** to improve the current state intervention in the US called [Prescription Drug Monitoring Programs (PDMPs)](https://www.cdc.gov/drugoverdose/pdmp/states.html). This application is built using a microservice architecture with 3 different consistent storage layer (CSL) solutions that can be toggled. The 3 CSL solutions entail a blockchain ([BigchainDB](https://www.bigchaindb.com/)), a message queue ([Apache Kafka](https://kafka.apache.org/)), and a central RDBMS ([InnoDB MySQL](https://dev.mysql.com/doc/refman/8.0/en/innodb-storage-engine.html)). 
