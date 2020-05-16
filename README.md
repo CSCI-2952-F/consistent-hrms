@@ -61,7 +61,9 @@ The rest of the services are deployed centrally, where all hospitals will connec
 
 ### MQ CSL Architecture
 
-![sagas-architecture](images/sagas-architecture.png)
+<p align="center">
+  <img src="https://github.com/irvinlim/cs2952f-hrms/blob/master/images/sagas-architecture.png" width="350" height="200">
+</p>
 
 Each hospital runs its own `sagas` server, which participates and consumes from a single Kafka topic. Apache Kafka will help to provide a global total order over all messages, providing CSL semantics.
 
@@ -71,7 +73,9 @@ Since messages published to Kafka are not authenticated, we implement a PKI-base
 
 ### RDBMS CSL Architecture
 
-![centraldb-architecture](images/centraldb-architecture.png)
+<p align="center">
+  <img src="https://github.com/irvinlim/cs2952f-hrms/blob/master/images/centraldb-architecture.png" width="400" height="300">
+</p>
 
 The `centraldb` server is a single server that all hospitals will connect to, federating reads and writes to an InnoDB MySQL database/cluster.
 
@@ -85,7 +89,9 @@ The `bigchaindb_client` server also implements the [`ConsistentStorage`](https:/
 
 The following is the architecture of a BigchainDB consortium, in which `bigchaindb_client` servers are "users". We did not implement authentication over the communication between the hospital to the BigchainDB node, since mutually distrustful hospitals could simply not rely on the same BigchainDB node.
 
-![bigchaindb-architecture](https://www.researchgate.net/profile/Anastasios_Kalogeropoulos/publication/328342750/figure/fig6/AS:682737056874496@1539788607025/BigchainDB-architecture.png)
+<p align="center">
+  <img src="https://www.researchgate.net/profile/Anastasios_Kalogeropoulos/publication/328342750/figure/fig6/AS:682737056874496@1539788607025/BigchainDB-architecture.png" width="400" height="250">
+</p>
 
 ## Instructions
 
