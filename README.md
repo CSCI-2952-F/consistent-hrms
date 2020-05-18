@@ -193,11 +193,15 @@ To change the number of hospitals to orchestrate, modify `hospitals.txt`.
 
 ### Tearing down
 
-To terminate all containers, use the helper script again:
+To tear down all resources, do the following:
 
 ```sh
-python hospitals.py stop
+python hospitals.py down -v 
+./deinit.sh
 ```
+
+This will remove all containers, images, networks and volumes created during
+this project.
 
 ## Configuration
 
